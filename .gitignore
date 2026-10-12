@@ -1,0 +1,32 @@
+node_modules/
+.turbo/
+.cache/
+dist/
+build/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+pnpm-debug.log*
+
+# OS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Env
+.env
+.env.local
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Test
+playwright-report/
+test-results/
+.vitest/

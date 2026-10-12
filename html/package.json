@@ -1,0 +1,21 @@
+{
+  "name": "@ui/html-gallery",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@ui/components": "workspace:*",
+    "@ui/core": "workspace:*",
+    "@ui/motion": "workspace:*",
+    "@ui/tokens": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "5.6.3",
+    "vite": "5.4.21"
+  }
+}

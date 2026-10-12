@@ -1,0 +1,25 @@
+{
+  "name": "ui-core-workspace",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Universal, framework-agnostic component/core library — Web Components + TypeScript. Architecture in CORE_ARCHITECTURE.md.",
+  "type": "module",
+  "packageManager": "pnpm@10.14.0",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "dev": "pnpm --filter @ui/html-gallery dev",
+    "dev:all": "pnpm --filter @ui/html-gallery dev & pnpm --filter @ui/docs dev",
+    "test:e2e": "echo \"(e2e not yet implemented)\" && exit 0",
+    "lint": "echo \"(lint not yet configured)\" && exit 0",
+    "format": "echo \"(format not yet configured)\" && exit 0",
+    "clean": "pnpm -r exec rm -rf dist && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "typescript": "5.6.3"
+  }
+}

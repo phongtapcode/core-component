@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "noEmit": false,
+    "paths": {}
+  },
+  "include": ["src"],
+  "exclude": ["../tokens/src", "test", "vitest.config.ts"]
+}

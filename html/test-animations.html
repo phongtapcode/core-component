@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Animation Test</title>
+  <style>
+    body { font-family: sans-serif; padding: 2rem; max-width: 600px; margin: 0 auto; }
+    section { padding: 3rem 0; border-bottom: 1px solid #ddd; }
+    .target {
+      padding: 2rem;
+      background: #4f46e5;
+      color: white;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+    button { padding: 0.5rem 1rem; margin: 0.5rem; }
+    pre { background: #f5f5f5; padding: 1rem; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>Animation debug test</h1>
+  <p>Open console and watch.</p>
+
+  <button id="b1">Force play all</button>
+  <button id="b2">Check IO count</button>
+
+  <section>
+    <h2>1. Already visible (in viewport on load)</h2>
+    <p>If IO fires, this should be visible immediately.</p>
+    <ui-animate effect="fade-up" duration="1000" id="a1">
+      <div class="target">Should fade in</div>
+    </ui-animate>
+  </section>
+
+  <section>
+    <h2>2. Below the fold (scroll to reveal)</h2>
+    <p>This is far down. Scroll down to see if it appears.</p>
+    <ui-animate effect="zoom-in" duration="500" id="a2">
+      <div class="target">Scroll-triggered animation</div>
+    </ui-animate>
+  </section>
+
+  <section>
+    <h2>3. Manual CSS (no library — for comparison)</h2>
+    <div class="target" style="animation: fade-in 1s;">This is a hardcoded CSS animation</div>
+  </section>
+
+  <pre id="log"></pre>
+
+  <style>
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+
+  <script type="module">
+    import '@ui/components';
+    import '@ui/tokens/css/tokens.css';
+    import '@ui/motion/css/motion.css';
+
+    const log = document.getElementById('log');
+    const log_ = (m) => { log.textContent += m + '\n'; console.log(m); };
+
+    // Wait for customElements to upgrade
+    setTimeout(() => {
+      const a1 = document.getElementById('a1');
+      const a2 = document.getElementById('a2');
+
+      log_(`a1 effect attr: "${a1?.getAttribute('data-effect')}"`);
+      log_(`a1 revealed: ${a1?.hasAttribute('data-revealed')}`);
+      log_(`a1 opacity: ${getComputedStyle(a1).opacity}`);
+      log_((`a1 transform: ${getComputedStyle(a1).transform}`));
+      log_(`a1 --ui-animate-duration: ${getComputedStyle(a1).getPropertyValue('--ui-animate-duration')}`);
+      log_(`a1 children opacity: ${getComputedStyle(a1.firstElementChild).opacity}`);
+
+      document.getElementById('b1').addEventListener('click', () => {
+        a1?.play();
+        a2?.play();
+        log_('Force played.');
+        setTimeout(() => {
+          log_(`after force-play a1 revealed: ${a1?.hasAttribute('data-revealed')}`);
+          log_(`after force-play a1 child opacity: ${getComputedStyle(a1.firstElementChild).opacity}`);
+        }, 100);
+      });
+
+      document.getElementById('b2').addEventListener('click', () => {
+        log_('IO entries registered: see console');
+      });
+
+      // Scroll event listener
+      window.addEventListener('scroll', () => {
+        const r2 = a2.getBoundingClientRect();
+        log_(`scroll: a2.top=${Math.round(r2.top)} (window.innerHeight=${window.innerHeight})`);
+      });
+    }, 200);
+  </script>
+</body>
+</html>

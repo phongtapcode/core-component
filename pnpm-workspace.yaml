@@ -1,0 +1,4 @@
+packages:
+  - 'packages/*'
+  - 'html'
+  - 'docs'

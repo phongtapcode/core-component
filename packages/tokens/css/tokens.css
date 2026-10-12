@@ -1,0 +1,68 @@
+/**
+ * @ui/tokens — global CSS Custom Properties.
+ * Consumed by every component via var(--ui-*).
+ * Override at :root or any ancestor to retheme without touching component CSS.
+ */
+
+:root {
+  /* ---------- Motion: design tokens ---------- */
+  --ui-duration-instant: 80ms;
+  --ui-duration-fast: 150ms;
+  --ui-duration-base: 300ms;
+  --ui-duration-slow: 600ms;
+
+  --ui-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ui-easing-decelerate: cubic-bezier(0, 0, 0, 1);
+  --ui-easing-accelerate: cubic-bezier(0.3, 0, 1, 1);
+  --ui-easing-emphasized: cubic-bezier(0.2, 0, 0, 1);
+
+  --ui-distance-short: 0.5rem;
+  --ui-distance-base: 1rem;
+  --ui-distance-long: 2rem;
+
+  /* ---------- Z-index scale ---------- */
+  --ui-z-hide: -1;
+  --ui-z-base: 1;
+  --ui-z-sticky: 100;
+  --ui-z-overlay: 1000;
+  --ui-z-modal: 1100;
+  --ui-z-toast: 1200;
+  --ui-z-tooltip: 1300;
+
+  /* ---------- Surfaces ---------- */
+  --ui-color-surface: #ffffff;
+  --ui-color-surface-raised: #fafafa;
+  --ui-color-text: #111111;
+  --ui-color-text-muted: #555555;
+  --ui-color-border: #e5e5e5;
+  --ui-color-accent: #2563eb;
+  --ui-color-focus: #2563eb;
+
+  /* ---------- Layout ---------- */
+  --ui-radius-sm: 4px;
+  --ui-radius-base: 8px;
+  --ui-radius-lg: 16px;
+  --ui-shadow-1: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --ui-shadow-2: 0 8px 24px rgba(0, 0, 0, 0.08);
+
+  /* ---------- Breakpoints (consumed via JS, declared for parity) ---------- */
+  --ui-bp-sm: 640px;
+  --ui-bp-md: 768px;
+  --ui-bp-lg: 1024px;
+  --ui-bp-xl: 1280px;
+}
+
+/**
+ * Reduced-motion override: when the user prefers reduced motion,
+ * collapse durations to near-instant so transitions still complete but
+ * without animating. Components MUST additionally check this media query
+ * via matchMedia and disable JS-driven animations.
+ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ui-duration-instant: 0ms;
+    --ui-duration-fast: 0ms;
+    --ui-duration-base: 0ms;
+    --ui-duration-slow: 0ms;
+  }
+}

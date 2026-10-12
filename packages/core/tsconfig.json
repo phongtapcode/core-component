@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "types": ["vitest/globals"],
+    "paths": {
+      "@ui/tokens": ["../tokens/src/index.ts"],
+      "@ui/tokens/*": ["../tokens/src/*"]
+    }
+  },
+  "include": ["src", "../tokens/src"]
+}

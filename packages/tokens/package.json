@@ -1,0 +1,31 @@
+{
+  "name": "@ui/tokens",
+  "version": "0.1.0",
+  "description": "Design tokens (CSS custom properties + JS constants). The visual vocabulary of the library.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./css": "./css/tokens.css"
+  },
+  "files": [
+    "dist",
+    "css"
+  ],
+  "sideEffects": [
+    "css/*.css"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "echo \"(@ui/tokens has no runtime logic — no tests)\" && exit 0"
+  },
+  "devDependencies": {
+    "typescript": "5.6.3"
+  }
+}

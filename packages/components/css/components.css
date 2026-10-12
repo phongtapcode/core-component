@@ -1,0 +1,953 @@
+/**
+ * @ui/components — default stylesheet.
+ *
+ * Animation philosophy (Senior FE standard):
+ *  - Modal:   backdrop fade + dialog scale-in from 96% → 100%
+ *  - Drawer:  slide from off-screen with cubic-bezier for snappy feel
+ *  - Carousel: smooth translate with dot indicators + arrow buttons
+ *  - All:     respects prefers-reduced-motion
+ */
+
+/* ============================================================
+   <ui-toggle> — switch / checkbox replacement
+   ============================================================ */
+
+/* Switch styles (when used as switch) */
+ui-toggle[role='switch'],
+ui-toggle:not([xo-name]):not([name]):not([xo-outside-click-enabled]):not([outside-click-enabled]) {
+  display: inline-flex;
+  align-items: center;
+  width: 44px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--ui-toggle-track, var(--ui-color-border));
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background var(--ui-duration-fast) var(--ui-easing-standard),
+    box-shadow var(--ui-duration-fast) var(--ui-easing-standard);
+  border: none;
+  padding: 0;
+}
+
+ui-toggle[role='switch']:focus-visible,
+ui-toggle:not([xo-name]):not([name]):focus-visible {
+  outline: 2px solid var(--ui-color-focus);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ui-color-accent) 20%, transparent);
+}
+
+ui-toggle[role='switch']::before,
+ui-toggle:not([xo-name]):not([name]):not([xo-outside-click-enabled]):not([outside-click-enabled])::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--ui-toggle-thumb, white);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.1);
+  transition: transform var(--ui-duration-fast) var(--ui-easing-standard);
+}
+
+ui-toggle[aria-checked='true'] {
+  background: var(--ui-toggle-track-on, var(--ui-color-accent));
+}
+
+ui-toggle[aria-checked='true']::before {
+  transform: translateX(20px);
+}
+
+ui-toggle[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ============================================================
+   <xo-toggle> / <core-toggle> / <ui-toggle> — disclosure container & triggers
+   ============================================================ */
+
+xo-toggle,
+core-toggle,
+ui-toggle[xo-name],
+ui-toggle[name] {
+  display: block;
+}
+
+xo-toggle:not([xo-active]):not([active]),
+core-toggle:not([xo-active]):not([active]),
+ui-toggle[xo-name]:not([xo-active]):not([active]),
+ui-toggle[name]:not([xo-active]):not([active]) {
+  display: none !important;
+}
+
+xo-toggle[xo-active],
+xo-toggle[active],
+core-toggle[xo-active],
+core-toggle[active],
+ui-toggle[xo-name][xo-active],
+ui-toggle[xo-name][active],
+ui-toggle[name][xo-active],
+ui-toggle[name][active] {
+  display: block;
+}
+
+/* Trigger */
+xo-toggle-trigger,
+core-toggle-trigger,
+ui-toggle-trigger {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+xo-toggle-trigger:focus-visible,
+core-toggle-trigger:focus-visible,
+ui-toggle-trigger:focus-visible {
+  outline: 2px solid var(--ui-color-focus, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   <ui-collapse> & <ui-collapse-trigger>
+   ============================================================ */
+
+ui-collapse,
+core-collapse,
+xo-collapse {
+  display: block;
+  box-sizing: border-box;
+}
+
+ui-collapse:not([active]):not([ui-active]):not([open]):not([aria-hidden="false"]),
+core-collapse:not([active]):not([ui-active]):not([open]):not([aria-hidden="false"]),
+xo-collapse:not([active]):not([ui-active]):not([open]):not([aria-hidden="false"]) {
+  overflow: hidden;
+}
+
+ui-collapse > [data-collapse-body] {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--ui-duration-base) var(--ui-easing-standard);
+}
+
+ui-collapse[open] > [data-collapse-body] {
+  grid-template-rows: 1fr;
+}
+
+ui-collapse > [data-collapse-body] > * {
+  overflow: hidden;
+  min-height: 0;
+}
+
+ui-collapse-trigger,
+core-collapse-trigger,
+xo-collapse-trigger {
+  display: block;
+  cursor: pointer;
+  user-select: none;
+}
+
+ui-collapse-trigger:focus-visible,
+core-collapse-trigger:focus-visible,
+xo-collapse-trigger:focus-visible {
+  outline: 2px solid var(--ui-color-focus, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   <ui-collapse-provider> & <ui-accordion>
+   ============================================================ */
+
+ui-collapse-provider,
+core-collapse-provider,
+xo-collapse-provider,
+ui-accordion {
+  display: block;
+}
+
+/* ============================================================
+   <ui-tabs>
+   ============================================================ */
+
+ui-tabs {
+  display: block;
+}
+
+ui-tabs > [role='tablist'] {
+  display: flex;
+  gap: var(--ui-distance-base);
+  border-bottom: 1px solid var(--ui-color-border);
+}
+
+ui-tabs [role='tab'] {
+  background: transparent;
+  border: none;
+  padding: 0.625rem var(--ui-distance-base);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 500;
+  font-size: 0.9375rem;
+  color: var(--ui-color-text-muted);
+  transition:
+    color var(--ui-duration-fast) var(--ui-easing-standard),
+    border-color var(--ui-duration-fast) var(--ui-easing-standard);
+}
+
+ui-tabs [role='tab']:hover:not([aria-selected='true']) {
+  color: var(--ui-color-text);
+}
+
+ui-tabs [role='tab'][aria-selected='true'] {
+  color: var(--ui-color-accent);
+  border-bottom-color: var(--ui-color-accent);
+}
+
+ui-tabs [role='tab']:focus-visible {
+  outline: 2px solid var(--ui-color-focus);
+  outline-offset: -2px;
+  border-radius: 4px 4px 0 0;
+}
+
+ui-tabs [role='tab'][hidden] {
+  display: none;
+}
+
+ui-tabs [role='tabpanel'] {
+  padding-top: var(--ui-distance-base);
+}
+
+/* ============================================================
+   <ui-modal>  — backdrop fade + dialog scale
+   ============================================================ */
+
+/* Keyframes */
+@keyframes ui-modal-backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes ui-modal-backdrop-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+@keyframes ui-modal-dialog-in {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+@keyframes ui-modal-dialog-out {
+  from {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.94) translateY(8px);
+  }
+}
+
+ui-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--ui-z-modal);
+  pointer-events: none;
+  visibility: hidden;
+}
+
+/* Hidden → animated entry */
+ui-modal[data-state='entering'],
+ui-modal[data-state='open'] {
+  pointer-events: auto;
+  visibility: visible;
+}
+
+ui-modal[data-state='leaving'] {
+  pointer-events: none;
+  visibility: visible;
+}
+
+/* Backdrop (overlay element) */
+ui-modal > [data-modal-overlay] {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+ui-modal[data-state='entering'] > [data-modal-overlay] {
+  animation: ui-modal-backdrop-in var(--ui-modal-duration, 220ms) var(--ui-easing-decelerate) both;
+}
+
+ui-modal[data-state='leaving'] > [data-modal-overlay] {
+  animation: ui-modal-backdrop-out var(--ui-modal-duration, 180ms) var(--ui-easing-accelerate) both;
+}
+
+ui-modal[data-state='open'] > [data-modal-overlay] {
+  opacity: 1;
+}
+
+/* Dialog */
+ui-modal > [data-modal-dialog] {
+  position: relative;
+  background: var(--ui-color-surface);
+  border-radius: var(--ui-radius-lg);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 20px 60px -10px rgba(0, 0, 0, 0.25);
+  padding: var(--ui-distance-long);
+  max-width: var(--ui-modal-width, 480px);
+  width: calc(100% - 2rem);
+  max-height: var(--ui-modal-max-height, 90vh);
+  overflow: auto;
+  z-index: 1;
+  transform-origin: center center;
+}
+
+ui-modal[data-state='entering'] > [data-modal-dialog] {
+  animation: ui-modal-dialog-in var(--ui-modal-duration, 240ms) var(--ui-easing-decelerate) both;
+}
+
+ui-modal[data-state='leaving'] > [data-modal-dialog] {
+  animation: ui-modal-dialog-out var(--ui-modal-duration, 180ms) var(--ui-easing-accelerate) both;
+}
+
+ui-modal[data-state='open'] > [data-modal-dialog] {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+/* ============================================================
+   <ui-drawer> — slide-in side panel with backdrop
+   ============================================================ */
+
+/* Keyframes */
+@keyframes ui-drawer-backdrop-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes ui-drawer-backdrop-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+@keyframes ui-drawer-left-in {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+@keyframes ui-drawer-left-out {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-100%); }
+}
+@keyframes ui-drawer-right-in {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
+@keyframes ui-drawer-right-out {
+  from { transform: translateX(0); }
+  to   { transform: translateX(100%); }
+}
+
+/* Backdrop rendered as a sibling (injected by JS) */
+.ui-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  z-index: calc(var(--ui-z-overlay) - 1);
+  animation: ui-drawer-backdrop-in var(--ui-drawer-duration, 220ms) var(--ui-easing-decelerate) both;
+}
+
+.ui-drawer-backdrop[data-leaving] {
+  animation: ui-drawer-backdrop-out var(--ui-drawer-duration, 180ms) var(--ui-easing-accelerate) both;
+}
+
+ui-drawer {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  background: var(--ui-color-surface);
+  box-shadow: var(--ui-shadow-2);
+  width: var(--ui-drawer-size, 320px);
+  max-width: 90vw;
+  z-index: var(--ui-z-overlay);
+  visibility: hidden;
+  pointer-events: none;
+  overflow-y: auto;
+  padding: var(--ui-distance-long);
+}
+
+ui-drawer[placement='left'],
+ui-drawer:not([placement]) {
+  left: 0;
+  border-radius: 0 var(--ui-radius-lg) var(--ui-radius-lg) 0;
+}
+
+ui-drawer[placement='right'] {
+  right: 0;
+  border-radius: var(--ui-radius-lg) 0 0 var(--ui-radius-lg);
+}
+
+/* Entering */
+ui-drawer[data-state='entering'],
+ui-drawer[data-state='open'] {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+ui-drawer[data-state='leaving'] {
+  visibility: visible;
+  pointer-events: none;
+}
+
+ui-drawer[placement='left'][data-state='entering'],
+ui-drawer:not([placement])[data-state='entering'] {
+  animation: ui-drawer-left-in var(--ui-drawer-duration, 280ms)
+    cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+ui-drawer[placement='left'][data-state='leaving'],
+ui-drawer:not([placement])[data-state='leaving'] {
+  animation: ui-drawer-left-out var(--ui-drawer-duration, 200ms)
+    cubic-bezier(0.72, 0, 0.68, 0.28) both;
+}
+
+ui-drawer[placement='right'][data-state='entering'] {
+  animation: ui-drawer-right-in var(--ui-drawer-duration, 280ms)
+    cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+ui-drawer[placement='right'][data-state='leaving'] {
+  animation: ui-drawer-right-out var(--ui-drawer-duration, 200ms)
+    cubic-bezier(0.72, 0, 0.68, 0.28) both;
+}
+
+ui-drawer[data-state='open'][placement='left'],
+ui-drawer[data-state='open']:not([placement]) {
+  transform: translateX(0);
+}
+
+ui-drawer[data-state='open'][placement='right'] {
+  transform: translateX(0);
+}
+
+/* ============================================================
+   <ui-popover>
+   ============================================================ */
+
+@keyframes ui-popover-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+ui-popover {
+  position: relative;
+  display: inline-block;
+}
+
+ui-popover > [data-popover-content] {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  background: var(--ui-color-surface);
+  border: 1px solid var(--ui-color-border);
+  border-radius: var(--ui-radius-base);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.06);
+  padding: var(--ui-distance-base);
+  z-index: var(--ui-z-tooltip);
+  display: none;
+  min-width: 180px;
+  transform-origin: top left;
+}
+
+ui-popover[open] > [data-popover-content] {
+  display: block;
+  animation: ui-popover-in 160ms var(--ui-easing-decelerate) both;
+}
+
+ui-popover[placement='top'] > [data-popover-content] {
+  top: auto;
+  bottom: calc(100% + 6px);
+  transform-origin: bottom left;
+}
+
+ui-popover[placement='right'] > [data-popover-content] {
+  top: 0;
+  left: calc(100% + 6px);
+  transform-origin: top left;
+}
+
+ui-popover[placement='bottom'] > [data-popover-content] {
+  top: calc(100% + 6px);
+  transform-origin: top left;
+}
+
+ui-popover[placement='left'] > [data-popover-content] {
+  top: 0;
+  left: auto;
+  right: calc(100% + 6px);
+  transform-origin: top right;
+}
+
+/* ============================================================
+   <ui-lazyload>
+   ============================================================ */
+
+ui-lazyload {
+  display: inline-block;
+}
+
+ui-lazyload img {
+  transition: opacity var(--ui-duration-base) var(--ui-easing-standard);
+}
+
+ui-lazyload img[data-loading] {
+  opacity: 0;
+}
+
+/* ============================================================
+   <ui-image-zoom>
+   ============================================================ */
+
+ui-image-zoom {
+  display: inline-block;
+}
+
+/* ============================================================
+   <ui-image-comparison>
+   ============================================================ */
+
+ui-image-comparison {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  width: var(--ui-image-comparison-width, 100%);
+  height: var(--ui-image-comparison-height, 300px);
+}
+
+ui-image-comparison > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ============================================================
+   <ui-counter>
+   ============================================================ */
+
+ui-counter {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============================================================
+   <ui-marquee> / <core-marquee> / <xo-marquee>
+   ============================================================ */
+
+ui-marquee,
+core-marquee,
+xo-marquee {
+  display: block;
+  overflow: hidden;
+  position: relative;
+  --ui-marquee-duration: 20s;
+  --xo-marquee-duration: 20s;
+}
+
+[data-marquee-viewport] {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+[data-marquee-track] {
+  display: inline-flex;
+  width: max-content;
+  will-change: transform;
+}
+
+/* Horizontal Directions */
+[data-marquee-viewport][data-direction='rtl'] > [data-marquee-track] {
+  animation: ui-marquee-rtl var(--ui-marquee-duration, 20s) linear infinite;
+}
+
+[data-marquee-viewport][data-direction='ltr'] > [data-marquee-track] {
+  animation: ui-marquee-ltr var(--ui-marquee-duration, 20s) linear infinite;
+}
+
+/* Vertical Orientation & Directions */
+ui-marquee[vertical],
+core-marquee[vertical],
+xo-marquee[vertical] {
+  height: 100%;
+}
+
+ui-marquee[vertical] [data-marquee-track],
+core-marquee[vertical] [data-marquee-track],
+xo-marquee[vertical] [data-marquee-track] {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: max-content;
+}
+
+[data-marquee-viewport][data-direction='btt'] > [data-marquee-track] {
+  animation: ui-marquee-btt var(--ui-marquee-duration, 20s) linear infinite;
+}
+
+[data-marquee-viewport][data-direction='ttb'] > [data-marquee-track] {
+  animation: ui-marquee-ttb var(--ui-marquee-duration, 20s) linear infinite;
+}
+
+/* Content groups */
+[data-marquee-content],
+[data-marquee-clone] {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+ui-marquee[vertical] [data-marquee-content],
+ui-marquee[vertical] [data-marquee-clone],
+core-marquee[vertical] [data-marquee-content],
+core-marquee[vertical] [data-marquee-clone],
+xo-marquee[vertical] [data-marquee-content],
+xo-marquee[vertical] [data-marquee-clone] {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Hover pause */
+ui-marquee[pause-on-hover]:not([pause-on-hover='false']):hover [data-marquee-track],
+core-marquee[pause-on-hover]:not([pause-on-hover='false']):hover [data-marquee-track],
+xo-marquee[pause-on-hover]:not([pause-on-hover='false']):hover [data-marquee-track],
+ui-marquee[xo-pause-on-hover]:not([xo-pause-on-hover='false']):hover [data-marquee-track],
+core-marquee[xo-pause-on-hover]:not([xo-pause-on-hover='false']):hover [data-marquee-track],
+xo-marquee[xo-pause-on-hover]:not([xo-pause-on-hover='false']):hover [data-marquee-track] {
+  animation-play-state: paused;
+}
+
+/* Keyframes with seamless loop & scroll offset support */
+@keyframes ui-marquee-rtl {
+  0%   { transform: translate3d(var(--ui-marquee-scroll-offset, 0px), 0, 0); }
+  100% { transform: translate3d(calc(-50% + var(--ui-marquee-scroll-offset, 0px)), 0, 0); }
+}
+
+@keyframes ui-marquee-ltr {
+  0%   { transform: translate3d(calc(-50% + var(--ui-marquee-scroll-offset, 0px)), 0, 0); }
+  100% { transform: translate3d(var(--ui-marquee-scroll-offset, 0px), 0, 0); }
+}
+
+@keyframes ui-marquee-btt {
+  0%   { transform: translate3d(0, var(--ui-marquee-scroll-offset, 0px), 0); }
+  100% { transform: translate3d(0, calc(-50% + var(--ui-marquee-scroll-offset, 0px)), 0); }
+}
+
+@keyframes ui-marquee-ttb {
+  0%   { transform: translate3d(0, calc(-50% + var(--ui-marquee-scroll-offset, 0px)), 0); }
+  100% { transform: translate3d(0, var(--ui-marquee-scroll-offset, 0px), 0); }
+}
+
+/* ============================================================
+   <ui-carousel> / <core-carousel> — modern responsive slider
+   ============================================================ */
+
+ui-carousel,
+core-carousel {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+ui-carousel { overflow: visible; }
+ui-carousel-inner,
+ui-carousel-thumbnail,
+ui-carousel-thumbnail > ui-carousel-inner { display: block; width: 100%; min-width: 0; }
+ui-carousel-inner { overflow: hidden; }
+ui-carousel-list,
+ui-carousel-thumbnail ui-carousel-list { display: flex; width: 100%; min-width: 0; }
+ui-carousel-slide { display: block; min-width: 0; box-sizing: border-box; }
+ui-carousel-thumbnail > ui-carousel-inner { overflow: auto hidden; scrollbar-width: thin; }
+ui-carousel-thumbnail ui-carousel-slide { cursor: pointer; opacity: .58; transition: opacity var(--ui-duration-fast), outline-color var(--ui-duration-fast); }
+ui-carousel-thumbnail ui-carousel-slide[active] { opacity: 1; }
+ui-carousel-thumbnail ui-carousel-slide:focus-visible { outline: 2px solid var(--ui-color-focus); outline-offset: -2px; }
+ui-carousel-prev,
+ui-carousel-next { display: inline-flex; align-items: center; justify-content: center; cursor: pointer; }
+ui-carousel-prev[hidden],
+ui-carousel-next[hidden] { display: none; }
+ui-carousel-prev > button,
+ui-carousel-next > button { cursor: inherit; }
+ui-carousel-prev[disabled],
+ui-carousel-next[disabled] { opacity: .45; cursor: not-allowed; }
+ui-carousel-pagination { display: flex; justify-content: center; align-items: center; gap: 8px; margin-top: 1rem; }
+ui-carousel-pagination ui-carousel-bullet { width: auto; height: auto; min-width: 10px; min-height: 10px; display: inline-grid; place-items: center; border-radius: 999px; background: var(--ui-color-border); cursor: pointer; }
+ui-carousel-pagination ui-carousel-bullet[active] { background: var(--ui-color-accent); }
+ui-carousel-pagination ui-carousel-bullet > span { display: block; width: 10px; height: 10px; }
+
+ui-carousel[vertical],
+core-carousel[vertical] {
+  touch-action: pan-x;
+}
+
+ui-carousel[data-dragging],
+core-carousel[data-dragging],
+ui-carousel[data-dragging] *,
+core-carousel[data-dragging] * {
+  cursor: grabbing !important;
+}
+
+/* Viewport and track */
+[data-carousel-viewport] {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+ui-carousel[vertical] [data-carousel-viewport],
+core-carousel[vertical] [data-carousel-viewport] {
+  touch-action: pan-x;
+}
+
+[data-carousel-track] {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  will-change: transform;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+ui-carousel[vertical] [data-carousel-track],
+core-carousel[vertical] [data-carousel-track] {
+  touch-action: pan-x;
+}
+
+/* Slide states */
+[data-carousel-track] > * {
+  flex-shrink: 0;
+  box-sizing: border-box;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
+  transition: opacity var(--ui-duration-base) var(--ui-easing-standard);
+}
+
+ui-carousel[vertical] [data-carousel-track] > *,
+core-carousel[vertical] [data-carousel-track] > * {
+  touch-action: pan-x;
+}
+
+[data-carousel-track] img {
+  pointer-events: none;
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+[data-carousel-track] > [aria-hidden='true'] {
+  /* accessibility visibility handling */
+}
+
+/* Controls: <ui-carousel-prev>, <ui-carousel-next> */
+ui-carousel-prev,
+core-carousel-prev,
+ui-carousel-next,
+core-carousel-next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  color: #111;
+  font-size: 1.25rem;
+  user-select: none;
+  transition:
+    background var(--ui-duration-fast) var(--ui-easing-standard),
+    transform var(--ui-duration-fast) var(--ui-easing-standard),
+    box-shadow var(--ui-duration-fast) var(--ui-easing-standard);
+  z-index: 2;
+}
+
+ui-carousel-prev:hover,
+core-carousel-prev:hover,
+ui-carousel-next:hover,
+core-carousel-next:hover {
+  background: white;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+ui-carousel-prev:active,
+core-carousel-prev:active,
+ui-carousel-next:active,
+core-carousel-next:active {
+  transform: scale(0.95);
+}
+
+ui-carousel-prev:focus-visible,
+core-carousel-prev:focus-visible,
+ui-carousel-next:focus-visible,
+core-carousel-next:focus-visible {
+  outline: 2px solid var(--ui-color-focus);
+  outline-offset: 2px;
+}
+
+ui-carousel-prev[disabled],
+core-carousel-prev[disabled],
+ui-carousel-next[disabled],
+core-carousel-next[disabled] {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Pagination: <ui-carousel-pagination>, <ui-carousel-bullet> */
+ui-carousel-pagination,
+core-carousel-pagination {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+ui-carousel-bullet,
+core-carousel-bullet {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ui-color-border, #ccc);
+  cursor: pointer;
+  transition:
+    background var(--ui-duration-fast) var(--ui-easing-standard),
+    width var(--ui-duration-fast) var(--ui-easing-standard),
+    border-radius var(--ui-duration-fast) var(--ui-easing-standard);
+}
+
+ui-carousel-bullet:hover,
+core-carousel-bullet:hover {
+  background: var(--ui-color-text-muted, #888);
+}
+
+ui-carousel-bullet[active],
+core-carousel-bullet[active] {
+  background: var(--ui-color-accent, #2563eb);
+  width: 24px;
+  border-radius: 4px;
+}
+
+ui-carousel-bullet:focus-visible,
+core-carousel-bullet:focus-visible {
+  outline: 2px solid var(--ui-color-focus);
+  outline-offset: 2px;
+}
+
+/* Pagination Progress: <ui-carousel-pagination-progress> */
+ui-carousel-pagination-progress,
+core-carousel-pagination-progress {
+  display: block;
+  width: 100%;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--ui-color-border, #e5e5e5);
+  position: relative;
+  overflow: hidden;
+}
+
+ui-carousel-pagination-progress::after,
+core-carousel-pagination-progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--ui-carousel-pagination-progress, 0%);
+  background: var(--ui-color-accent, #2563eb);
+  transition: width var(--ui-duration-base) var(--ui-easing-standard);
+}
+
+/* Page & Size */
+ui-carousel-page,
+core-carousel-page,
+ui-carousel-size,
+core-carousel-size {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+/* Triggers */
+ui-carousel-trigger,
+core-carousel-trigger {
+  cursor: pointer;
+  user-select: none;
+}
+
+ui-carousel-trigger[active],
+core-carousel-trigger[active] {
+  font-weight: 700;
+  color: var(--ui-color-accent, #2563eb);
+}
+
+/* ============================================================
+   Reduced-motion fallback
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  ui-collapse > [data-collapse-body],
+  ui-toggle::before,
+  ui-toggle,
+  ui-tabs [role='tab'],
+  [data-carousel-slide],
+  ui-carousel > * {
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+  }
+
+  ui-modal > [data-modal-overlay],
+  ui-modal > [data-modal-dialog],
+  .ui-drawer-backdrop,
+  ui-drawer {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+  }
+}

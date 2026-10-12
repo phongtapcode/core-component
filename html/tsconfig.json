@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "paths": {
+      "@ui/core": ["../packages/core/src/index.ts"],
+      "@ui/motion": ["../packages/motion/src/index.ts"],
+      "@ui/components": ["../packages/components/src/index.ts"],
+      "@ui/tokens": ["../packages/tokens/src/index.ts"]
+    }
+  },
+  "include": ["src", "../packages/components/src", "../packages/motion/src", "../packages/core/src", "../packages/tokens/src"]
+}

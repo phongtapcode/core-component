@@ -1,0 +1,36 @@
+{
+  "name": "@ui/components",
+  "version": "0.1.0",
+  "description": "Basic UI: Toggle, Collapse, Accordion, Tabs, Modal, Drawer, Popover.",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./css": "./css/components.css"
+  },
+  "files": [
+    "dist",
+    "css"
+  ],
+  "sideEffects": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@ui/core": "workspace:*",
+    "@ui/motion": "workspace:*",
+    "@ui/tokens": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "5.6.3",
+    "vitest": "2.1.8",
+    "happy-dom": "15.11.6"
+  }
+}

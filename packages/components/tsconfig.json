@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "types": ["vitest/globals"],
+    "paths": {
+      "@ui/core": ["../core/src/index.ts"],
+      "@ui/core/*": ["../core/src/*"],
+      "@ui/motion": ["../motion/src/index.ts"],
+      "@ui/motion/*": ["../motion/src/*"],
+      "@ui/tokens": ["../tokens/src/index.ts"],
+      "@ui/tokens/*": ["../tokens/src/*"]
+    }
+  },
+  "include": ["src", "../core/src", "../motion/src", "../tokens/src"]
+}
