@@ -8,9 +8,9 @@ Enterprise-grade, gapless infinite looping marquee web component. Supports bidir
 
 ```html
 <ui-marquee speed="6" pause-on-hover="true">
-  <div class="px-6 py-2 text-lg font-semibold">⚡ High Performance Web Components</div>
-  <div class="px-6 py-2 text-lg font-semibold">🚀 Zero Dependencies</div>
-  <div class="px-6 py-2 text-lg font-semibold">💎 Framework Agnostic</div>
+  <figure><img src="coast.jpg" alt="Coast" /><figcaption>The quiet coast</figcaption></figure>
+  <figure><img src="architecture.jpg" alt="Architecture" /><figcaption>Lines and light</figcaption></figure>
+  <figure><img src="botanical.jpg" alt="Botanical garden" /><figcaption>A greener hour</figcaption></figure>
 </ui-marquee>
 ```
 

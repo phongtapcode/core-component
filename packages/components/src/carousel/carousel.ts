@@ -502,6 +502,13 @@ export class UiCarousel extends BaseElement implements CarouselInstance {
     this.#cloneCount = 0;
 
     if (authoredViewport && track) {
+      // Controls belong beside the track inside the viewport. Leaving them in the flex track
+      // creates an extra visual slide even when the slide count filters them.
+      for (const child of [...track.children]) {
+        if (/^(ui|core)-carousel-(prev|next|pagination|pagination-progress|page|size)$/.test(child.localName)) {
+          authoredViewport.appendChild(child);
+        }
+      }
       authoredViewport.setAttribute('data-carousel-viewport', '');
       track.setAttribute('data-carousel-track', '');
       this.#slides = [...track.children].filter((el): el is HTMLElement => el instanceof HTMLElement && /^(ui|core)-carousel-slide$/.test(el.tagName.toLowerCase()));
@@ -552,7 +559,8 @@ export class UiCarousel extends BaseElement implements CarouselInstance {
       for (const s of orphanSlides) {
         track.appendChild(s);
       }
-      this.#slides = [...track.children].filter((el): el is HTMLElement => el instanceof HTMLElement);
+      this.#slides = [...track.children].filter((el): el is HTMLElement => el instanceof HTMLElement &&
+        (!authoredViewport || /^(ui|core)-carousel-slide$/.test(el.localName)));
     }
 
     this.#viewport = viewport;

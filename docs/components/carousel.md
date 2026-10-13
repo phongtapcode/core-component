@@ -15,14 +15,24 @@
       <ui-carousel-slide><div class="carousel-item">5</div></ui-carousel-slide>
       <ui-carousel-slide><div class="carousel-item">6</div></ui-carousel-slide>
     </ui-carousel-list>
+    <ui-carousel-prev><button type="button">Prev</button></ui-carousel-prev>
+    <ui-carousel-pagination></ui-carousel-pagination>
+    <ui-carousel-next><button type="button">Next</button></ui-carousel-next>
   </ui-carousel-inner>
-  <ui-carousel-prev><button type="button">Prev</button></ui-carousel-prev>
-  <ui-carousel-next><button type="button">Next</button></ui-carousel-next>
-  <ui-carousel-pagination></ui-carousel-pagination>
 </ui-carousel>
 ```
 
-The `ui-carousel-inner` element is the viewport. `ui-carousel-list` is the moving track. Put one `ui-carousel-slide` around each item. Use normal CSS to size and style your slide content.
+The `ui-carousel-inner` element is the viewport. `ui-carousel-list` is the moving track. Put only `ui-carousel-slide` elements inside the list. Arrows and pagination can sit beside the list inside `ui-carousel-inner`; position them at the bottom of the viewport with CSS so they never take up slide space. Use normal CSS to size and style your slide content.
+
+```css
+ui-carousel-inner { position: relative; }
+ui-carousel-inner > ui-carousel-prev,
+ui-carousel-inner > ui-carousel-next,
+ui-carousel-inner > ui-carousel-pagination { position: absolute; bottom: 1rem; z-index: 2; }
+ui-carousel-inner > ui-carousel-prev { left: 1rem; }
+ui-carousel-inner > ui-carousel-next { right: 1rem; }
+ui-carousel-inner > ui-carousel-pagination { left: 50%; transform: translateX(-50%); }
+```
 
 ## With thumbnails
 
@@ -45,6 +55,9 @@ The `ui-carousel-inner` element is the viewport. `ui-carousel-list` is the movin
       <ui-carousel-slide><div class="carousel-item">5</div></ui-carousel-slide>
       <ui-carousel-slide><div class="carousel-item">6</div></ui-carousel-slide>
     </ui-carousel-list>
+    <ui-carousel-prev><button type="button">Prev</button></ui-carousel-prev>
+    <ui-carousel-pagination></ui-carousel-pagination>
+    <ui-carousel-next><button type="button">Next</button></ui-carousel-next>
   </ui-carousel-inner>
   <ui-carousel-thumbnail ui-per-view="7">
     <ui-carousel-inner>
@@ -58,9 +71,6 @@ The `ui-carousel-inner` element is the viewport. `ui-carousel-list` is the movin
       </ui-carousel-list>
     </ui-carousel-inner>
   </ui-carousel-thumbnail>
-  <ui-carousel-prev><button type="button">Prev</button></ui-carousel-prev>
-  <ui-carousel-next><button type="button">Next</button></ui-carousel-next>
-  <ui-carousel-pagination></ui-carousel-pagination>
 </ui-carousel>
 ```
 

@@ -165,7 +165,7 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     tagName: 'ui-marquee',
     category: 'Advanced',
     description: 'Infinite horizontal scroller. Pauses on hover.',
-    demos: ['Basic', 'Pause on hover'],
+    demos: ['Photo gallery', 'Pause on hover'],
   },
   {
     name: 'Carousel',
@@ -207,7 +207,7 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     tagName: 'ui-dot-morph',
     category: 'Advanced',
     description: 'Random particles gather into any word when you hover, focus, or tap.',
-    demos: ['Type your word', 'Neon particles'],
+    demos: ['Type your words', 'Neon particles'],
   },
   {
     name: 'Logo Assembly',
@@ -215,5 +215,33 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     category: 'Advanced',
     description: 'Thousands of colored particles gather into a logo, react to the pointer, and rebuild after an explosion.',
     demos: ['Nova mark', 'Prism mark'],
+  },
+  {
+    name: 'Sand Physics',
+    tagName: 'ui-sand-physics',
+    category: 'Advanced',
+    description: 'A real-time falling-sand sandbox with materials, walls, gravity, painting tools, and reactions.',
+    demos: ['Physics sandbox'],
+  },
+  {
+    name: 'Image Solid',
+    tagName: 'ui-image-solid',
+    category: 'Advanced',
+    description: 'Place photos on a real 3D cube, box or polygonal prism and drag to inspect every face.',
+    demos: ['Interactive sculpture'],
+  },
+  {
+    name: 'Image Stack',
+    tagName: 'ui-image-stack',
+    category: 'Advanced',
+    description: 'A layered 3D photo stack that fans out on hover and opens a navigable image preview on click.',
+    demos: ['Editorial stack', 'Compact stack', 'Fanned prints', 'Falling frames', 'Contact sheet', 'Coverflow rail'],
+  },
+  {
+    name: 'Flip Book',
+    tagName: 'ui-flip-book',
+    category: 'Advanced',
+    description: 'An interactive 3D book with a turning cover, double-sided pages, and keyboard navigation.',
+    demos: ['Travel journal'],
   },
 ];

@@ -367,6 +367,45 @@ describe('<ui-carousel> / <core-carousel> Spec Test Suite', () => {
       expect(el.querySelectorAll('ui-carousel-pagination ui-carousel-bullet')[1]?.hasAttribute('active')).toBe(true);
     });
 
+    it('moves misplaced controls out of an authored slide list', () => {
+      const el = document.createElement('ui-carousel') as UiCarousel;
+      el.innerHTML = `<ui-carousel-inner><ui-carousel-list>
+        <ui-carousel-slide>1</ui-carousel-slide><ui-carousel-slide>2</ui-carousel-slide>
+        <ui-carousel-next><button>Next</button></ui-carousel-next>
+        <ui-carousel-pagination></ui-carousel-pagination>
+        </ui-carousel-list></ui-carousel-inner>`;
+      container.appendChild(el);
+
+      const list = el.querySelector('ui-carousel-list')!;
+      expect([...list.children].map((child) => child.localName)).toEqual(['ui-carousel-slide', 'ui-carousel-slide']);
+      expect(el.slidesCount).toBe(2);
+      expect(el.querySelector('ui-carousel-next')?.parentElement).toBe(el.querySelector('ui-carousel-inner'));
+      expect(el.querySelectorAll('ui-carousel-pagination ui-carousel-bullet')).toHaveLength(2);
+      el.querySelector<HTMLButtonElement>('ui-carousel-next button')!.click();
+      expect(el.activeIndex).toBe(1);
+    });
+
+    it('keeps separate controls inside the viewport without counting them as slides', () => {
+      const el = document.createElement('ui-carousel') as UiCarousel;
+      el.innerHTML = `<ui-carousel-inner>
+        <ui-carousel-list><ui-carousel-slide>1</ui-carousel-slide><ui-carousel-slide>2</ui-carousel-slide><ui-carousel-slide>3</ui-carousel-slide></ui-carousel-list>
+        <ui-carousel-prev><button>Prev</button></ui-carousel-prev>
+        <ui-carousel-pagination></ui-carousel-pagination>
+        <ui-carousel-next><button>Next</button></ui-carousel-next>
+        </ui-carousel-inner>`;
+      container.appendChild(el);
+
+      const viewport = el.querySelector('ui-carousel-inner')!;
+      expect([...viewport.children].map((child) => child.localName)).toEqual([
+        'ui-carousel-list', 'ui-carousel-prev', 'ui-carousel-pagination', 'ui-carousel-next',
+      ]);
+      expect(el.slidesCount).toBe(3);
+      el.querySelector<HTMLButtonElement>('ui-carousel-next button')!.click();
+      expect(el.activeIndex).toBe(1);
+      el.querySelectorAll<HTMLElement>('ui-carousel-bullet')[2]!.click();
+      expect(el.activeIndex).toBe(2);
+    });
+
     it('selects the clicked thumbnail and disables infinite loop', () => {
       const el = document.createElement('ui-carousel') as UiCarousel;
       el.setAttribute('ui-per-view', '4');

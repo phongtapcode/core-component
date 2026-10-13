@@ -24,6 +24,10 @@ import './expandable-grid.js';
 import './orbit-gallery.js';
 import './dot-morph.js';
 import './logo-assembly.js';
+import './sand-physics.js';
+import './image-solid.js';
+import './image-stack.js';
+import './flip-book.js';
 import './grid-hover-expand.js';
 import './swipeable-card-stack.js';
 
@@ -79,6 +83,11 @@ export { UiExpandableGrid, UiExpandableGridItem } from './expandable-grid.js';
 export { UiOrbitGallery, UiOrbitGalleryTrack, UiOrbitGalleryItem } from './orbit-gallery.js';
 export { UiDotMorph } from './dot-morph.js';
 export { UiLogoAssembly, sampleLogoPixels } from './logo-assembly.js';
+export { UiSandPhysics } from './sand-physics.js';
+export { SandPhysicsEngine, SandCell, type SandGravity, type SandMaterial, type SandPreset } from './sand-physics-engine.js';
+export { UiImageSolid, UiImageSolidFace, imageSolidGeometry, type ImageSolidShape, type ImageSolidFace } from './image-solid.js';
+export { UiImageStack, UiImageStackItem } from './image-stack.js';
+export { UiFlipBook, UiFlipBookCover, UiFlipBookPage } from './flip-book.js';
 export { UiGridHoverExpand } from './grid-hover-expand.js';
 export { UiSwipeableCardStack } from './swipeable-card-stack.js';
 

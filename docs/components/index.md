@@ -546,4 +546,56 @@ All components share a predictable API — attributes are `kebab-case`, events a
   </div>
 </div>
 
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Sand Physics</h3>
+    <span class="comp-badge advanced">Advanced</span>
+  </div>
+  <p class="comp-tag">&lt;ui-sand-physics&gt;</p>
+  <p class="comp-desc">Paint sand, water, lava, walls and more in a real-time cellular sandbox.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/sand-physics">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5173/#/ui-sand-physics" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Image Solid</h3>
+    <span class="comp-badge advanced">Advanced</span>
+  </div>
+  <p class="comp-tag">&lt;ui-image-solid&gt;</p>
+  <p class="comp-desc">Drag a photo-covered cube, box, or polygonal prism to inspect every side.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/image-solid">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5173/#/ui-image-solid" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Image Stack</h3>
+    <span class="comp-badge advanced">Advanced</span>
+  </div>
+  <p class="comp-tag">&lt;ui-image-stack&gt;</p>
+  <p class="comp-desc">Layer photos in 3D, fan them out on hover, and open a navigable preview on click.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/image-stack">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5173/#/ui-image-stack" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Flip Book</h3>
+    <span class="comp-badge advanced">Advanced</span>
+  </div>
+  <p class="comp-tag">&lt;ui-flip-book&gt;</p>
+  <p class="comp-desc">Open a 3D cover and turn authored, double-sided pages.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/flip-book">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5173/#/ui-flip-book" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
 </div>

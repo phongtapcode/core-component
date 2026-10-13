@@ -42,6 +42,146 @@ export interface ComponentDoc {
 }
 
 export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
+  'flip-book': {
+    slug:'flip-book', tagName:'ui-flip-book', name:'Flip Book', category:'Advanced',
+    summary:'An authored, double-sided book with a hinged cover and 3D page turns. Swipe or drag pages, click the cover, use the API, or navigate with the keyboard.',
+    usage:`<ui-flip-book aria-label="Travel journal">
+  <ui-flip-book-cover><div class="cover-art">My Journal</div></ui-flip-book-cover>
+  <ui-flip-book-page>
+    <div data-page-front><img src="coast.jpg" alt="Coast"></div>
+    <div data-page-back><h2>Chapter one</h2><p>A note about the coast.</p></div>
+  </ui-flip-book-page>
+</ui-flip-book>`,
+    attributes:[
+      { name:'ui-open', type:'boolean', default:'false', description:'Whether the cover is open.' },
+      { name:'ui-page', type:'number', default:'0', description:'Number of leaves already turned, from 0 to the number of pages.' },
+      { name:'data-page-front / data-page-back', type:'attribute', description:'Mark the two authored sides inside each leaf.' },
+      { name:'data-cover-back', type:'attribute', description:'Optional authored inside cover, visible on the first open spread.' },
+    ],
+    methods:[
+      { name:'open() / close()', description:'Turn the cover; closing returns the leaves first.' },
+      { name:'next() / previous()', description:'Turn one leaf in the corresponding direction.' },
+      { name:'goTo(index)', description:'Turn to a zero-based spread.' },
+      { name:'refresh()', description:'Recalculate leaves after editing the markup.' },
+    ],
+    events:[
+      { name:'ui:flip-book:open', detail:'{ page }', description:'The cover starts opening.' },
+      { name:'ui:flip-book:change', detail:'{ page, total }', description:'The active spread changes.' },
+      { name:'ui:flip-book:close', detail:'{ page }', description:'The cover starts closing.' },
+    ],
+    cssVars:[
+      { name:'--ui-flip-book-page-width', default:'300px', description:'Width of one leaf.' },
+      { name:'--ui-flip-book-page-height', default:'410px', description:'Height of the book.' },
+      { name:'--ui-flip-book-duration', default:'650ms', description:'Cover and leaf turn duration.' },
+    ],
+    a11y:'Swipe left or right with touch or pointer to turn pages. The cover can be activated with Enter or Space. When the book has focus, Left and Right turn pages, Home goes to the beginning, and End goes to the final spread. Hidden page faces are inert.',
+  },
+  'image-stack': {
+    slug: 'image-stack', tagName: 'ui-image-stack', name: 'Image Stack', category: 'Advanced',
+    summary: 'Photographs overlap in a tilted 3D stack, spread apart on hover or focus, and open in a full-size navigable viewer when selected.',
+    usage: `<ui-image-stack aria-label="Travel collection">
+  <ui-image-stack-item ui-label="Coast">
+    <img src="coast.jpg" alt="Blue coast">
+    <span data-stack-caption>01 / Coast</span>
+  </ui-image-stack-item>
+  <ui-image-stack-item ui-label="Garden">
+    <img src="garden.jpg" alt="Green garden">
+    <span data-stack-caption>02 / Garden</span>
+  </ui-image-stack-item>
+</ui-image-stack>`,
+    attributes: [
+      { name:'ui-style', type:'fan | fall | sheet | coverflow', default:'layered', description:'Choose a paper fan, falling frames, contact sheet, or perspective rail; omit for the original rightward stack.' },
+      { name:'ui-label', type:'string', description:'Optional label on each ui-image-stack-item; falls back to the image alt text.' },
+      { name:'data-stack-caption', type:'attribute', description:'Place on a child element to show a caption on the small photo.' },
+    ],
+    methods: [
+      { name:'open(index)', description:'Open a zero-based image index in the large viewer.' },
+      { name:'close()', description:'Close the large viewer.' },
+      { name:'next() / previous()', description:'Move through the images, wrapping at the ends.' },
+      { name:'refresh()', description:'Recalculate the layer order after changing items.' },
+    ],
+    events: [
+      { name:'ui:image-stack:open', detail:'{ index }', description:'An image was opened.' },
+      { name:'ui:image-stack:change', detail:'{ index }', description:'The viewer moved to another image.' },
+      { name:'ui:image-stack:close', detail:'{ index }', description:'The viewer was closed.' },
+    ],
+    cssVars: [
+      { name:'--ui-image-stack-width', default:'320px', description:'Width of the first card.' },
+      { name:'--ui-image-stack-height', default:'390px', description:'Height of the first card.' },
+      { name:'--ui-image-stack-step', default:'17px', description:'Size reduction per layer.' },
+      { name:'--ui-image-stack-offset', default:'26px', description:'Rightward position offset per layer.' },
+      { name:'--ui-image-stack-depth', default:'16px', description:'3D distance between layers.' },
+      { name:'--ui-image-stack-hover-spread', default:'2.3', description:'Horizontal spread multiplier on hover or keyboard focus.' },
+      { name:'--ui-image-stack-fan-spread', default:'72px', description:'Horizontal spacing for the open fan style.' },
+      { name:'--ui-image-stack-rail-spread', default:'125px', description:'Horizontal spacing for the coverflow rail.' },
+    ],
+    a11y: 'Each layer is focusable and opens with Enter or Space. The viewer traps focus, supports Escape and arrow keys, and restores focus to the selected layer.',
+  },
+  'image-solid': {
+    slug: 'image-solid', tagName: 'ui-image-solid', name: 'Image Solid', category: 'Advanced',
+    summary: 'Photos wrap real CSS 3D faces on a cube, rectangular box, or triangular, hexagonal, and octagonal prism. Drag both axes, let go for inertia, or enable automatic rotation.',
+    usage: `<ui-image-solid ui-shape="cube" ui-size="220" ui-auto-rotate aria-label="Rotatable photo sculpture">
+  <ui-image-solid-face ui-face="front"><img src="front.jpg" alt="Front view"></ui-image-solid-face>
+  <ui-image-solid-face ui-face="right"><img src="right.jpg" alt="Right view"></ui-image-solid-face>
+  <ui-image-solid-face ui-face="back"><img src="back.jpg" alt="Back view"></ui-image-solid-face>
+  <ui-image-solid-face ui-face="left"><img src="left.jpg" alt="Left view"></ui-image-solid-face>
+  <ui-image-solid-face ui-face="top"><img src="top.jpg" alt="Top view"></ui-image-solid-face>
+  <ui-image-solid-face ui-face="bottom"><img src="bottom.jpg" alt="Bottom view"></ui-image-solid-face>
+</ui-image-solid>`,
+    attributes: [
+      { name:'ui-shape', type:'cube | box | triangle | hexagon | octagon', default:'cube', description:'Solid geometry and number of faces.' },
+      { name:'ui-size', type:'number (px)', default:'220', description:'Cube side or prism panel width.' },
+      { name:'ui-width', type:'number (px)', default:'230', description:'Rectangular box width.' },
+      { name:'ui-height', type:'number (px)', default:'270', description:'Box or prism height.' },
+      { name:'ui-depth', type:'number (px)', default:'150', description:'Rectangular box depth.' },
+      { name:'ui-auto-rotate', type:'boolean', default:'false', description:'Automatically rotate around the vertical axis.' },
+      { name:'ui-spin-speed', type:'degrees/second', default:'16', description:'Automatic rotation speed; negative reverses direction.' },
+      { name:'ui-inertia', type:'number', default:'0.91', description:'Momentum retained after dragging.' },
+      { name:'ui-drag-sensitivity', type:'number', default:'0.55', description:'Degrees rotated per pointer pixel.' },
+      { name:'ui-rotation-x / ui-rotation-y', type:'degrees', default:'-18 / 30', description:'Initial or externally controlled viewing angles.' },
+      { name:'ui-face', type:'face name', description:'Optional face assignment. Box: front/right/back/left/top/bottom; prisms: side-1..side-N/top/bottom.' },
+    ],
+    methods: [
+      { name:'rotateTo(x, y)', description:'Set both rotation angles immediately.' },
+      { name:'reset()', description:'Return to the configured initial angles.' },
+      { name:'refresh()', description:'Recalculate geometry after replacing face elements.' },
+    ],
+    events: [{ name:'ui:image-solid:rotate', detail:'{ x, y }', description:'Emitted when a drag or keyboard command rotates the solid.' }],
+    cssVars: [
+      { name:'--ui-image-solid-height', default:'460px', description:'Height of the 3D stage.' },
+      { name:'--ui-image-solid-perspective', default:'950px', description:'Perspective distance of the 3D stage.' },
+    ],
+    a11y: 'Give the sculpture an accessible label and alt text for each image. Arrow keys rotate 15°; Shift increases the step to 30°; Home resets. Reduced motion disables automatic spin and inertia.',
+  },
+  'sand-physics': {
+    slug: 'sand-physics', tagName: 'ui-sand-physics', name: 'Sand Physics', category: 'Advanced',
+    summary: 'An interactive cellular sandbox. Paint and erase materials, draw walls, rotate gravity, use obstacle presets, and save the result.',
+    usage: `<ui-sand-physics ui-preset="funnel" ui-tool="sand" ui-cell-size="4" ui-brush-size="5" ui-initial-count="1800" ui-auto-rate="180" aria-label="Interactive sand sandbox"></ui-sand-physics>`,
+    attributes: [
+      { name: 'ui-tool', type: 'sand | water | stone | fire | smoke | lava | wood | wall | eraser | brush | attract | explode', default: 'sand', description: 'Current paint material or interaction tool.' },
+      { name: 'ui-cell-size', type: 'number', default: '4', description: 'Displayed cell size in pixels. The grid automatically caps at roughly 130,000 cells.' },
+      { name: 'ui-brush-size', type: 'number', default: '5', description: 'Brush radius in grid cells.' },
+      { name: 'ui-amount', type: 'number', default: '0.68', description: 'Particle density when painting, from 0.05 to 1.' },
+      { name: 'ui-auto-rate', type: 'number', default: '0', description: 'Sand particles generated per second from the edge opposite gravity.' },
+      { name: 'ui-initial-count', type: 'number', default: '0', description: 'Number of multicolored sand cells seeded at startup.' },
+      { name: 'ui-gravity', type: 'down | up | left | right', default: 'down', description: 'Cardinal direction of gravity.' },
+      { name: 'ui-gravity-strength', type: 'number', default: '1', description: 'Simulation steps per elapsed time.' },
+      { name: 'ui-speed', type: 'number', default: '1', description: 'Simulation speed multiplier.' },
+      { name: 'ui-preset', type: 'none | funnel | hourglass | maze | chute', default: 'none', description: 'Built-in obstacle layout.' },
+      { name: 'ui-color', type: 'hex color', default: '#eebd77', description: 'Color of newly painted sand; existing layers retain their original colors.' },
+      { name: 'ui-background', type: 'dark | light | transparent', default: 'dark', description: 'Host background theme.' },
+    ],
+    methods: [
+      { name: 'pause() / resume() / togglePause()', description: 'Control the simulation clock.' },
+      { name: 'undo()', description: 'Restore the state before the last stroke or preset change.' },
+      { name: 'clear() / reset()', description: 'Remove all matter, or rebuild the selected preset.' },
+      { name: 'setPreset(name)', description: 'Switch to a built-in obstacle pattern.' },
+      { name: 'saveImage()', description: 'Return a PNG data URL of the current particles.' },
+    ],
+    events: [{ name: 'ui:sand-physics:change', detail: '{ count, paused, gravity }', description: 'Emitted when the state or controls change.' }],
+    cssVars: [{ name: '--ui-sand-height', default: '500px', description: 'Height of the simulation field.' }],
+    a11y: 'Controls are ordinary HTML elements outside the canvas. Give each simulation an accessible label. Pointer and touch input use the same tools.',
+  },
   'logo-assembly': {
     slug: 'logo-assembly', tagName: 'ui-logo-assembly', name: 'Logo Assembly', category: 'Advanced',
     summary: 'Build a colored logo from thousands of independently moving particles. Supports SVG, PNG, and WebP, pointer repulsion, explosion, and a continuous morph to a new logo.',
@@ -423,17 +563,17 @@ uiToast.push({
     name: 'Carousel',
     category: 'Advanced',
     summary: 'Composable carousel with slide, thumbnail, arrow, and pagination elements. Supports responsive layouts, drag, autoplay, and transition variants.',
-    usage: `<ui-carousel ui-per-view="1" ui-render-bullet="<span></span>">
+    usage: `<ui-carousel ui-per-view="1" ui-gap="0">
   <ui-carousel-inner>
     <ui-carousel-list>
-      <ui-carousel-slide>Slide 1</ui-carousel-slide>
-      <ui-carousel-slide>Slide 2</ui-carousel-slide>
-      <ui-carousel-slide>Slide 3</ui-carousel-slide>
+      <ui-carousel-slide><img src="/images/coast.jpg" alt="Coast" /></ui-carousel-slide>
+      <ui-carousel-slide><img src="/images/architecture.jpg" alt="Architecture" /></ui-carousel-slide>
+      <ui-carousel-slide><img src="/images/botanical.jpg" alt="Botanical garden" /></ui-carousel-slide>
     </ui-carousel-list>
+    <ui-carousel-prev><button type="button">Prev</button></ui-carousel-prev>
+    <ui-carousel-pagination></ui-carousel-pagination>
+    <ui-carousel-next><button type="button">Next</button></ui-carousel-next>
   </ui-carousel-inner>
-  <ui-carousel-prev><button>Prev</button></ui-carousel-prev>
-  <ui-carousel-next><button>Next</button></ui-carousel-next>
-  <ui-carousel-pagination></ui-carousel-pagination>
 </ui-carousel>`,
     attributes: [
       { name: 'ui-name', type: 'string', default: '—', description: 'Carousel identifier.' },
@@ -838,8 +978,10 @@ uiToast.push({
     name: 'Marquee',
     category: 'Advanced',
     summary: 'Hardware-accelerated continuous scrolling banner with infinite looping, bi-directional and vertical orientation, scroll parallax speed multiplier, and pause on hover.',
-    usage: `<ui-marquee speed="6" pause-on-hover scroll-enabled scroll-speed="1.5">
-  <span>Breaking News • New Components • Web Components Native • Zero Runtime •</span>
+    usage: `<ui-marquee speed="6" pause-on-hover="true">
+  <figure><img src="/images/coast.jpg" alt="Coast" /><figcaption>The quiet coast</figcaption></figure>
+  <figure><img src="/images/architecture.jpg" alt="Architecture" /><figcaption>Lines and light</figcaption></figure>
+  <figure><img src="/images/botanical.jpg" alt="Botanical garden" /><figcaption>A greener hour</figcaption></figure>
 </ui-marquee>`,
     attributes: [
       { name: 'speed', type: 'number', default: '6', description: 'Auto-scroll speed (higher = faster).' },

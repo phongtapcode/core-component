@@ -262,7 +262,7 @@ function thumbFor(tag: string): string {
     'ui-collapse': '⌄', 'ui-accordion': '☷', 'ui-tabs': '▤', 'ui-modal': '▣', 'ui-cursor': '◎',
     'ui-drawer': '◧', 'ui-popover': '▢', 'ui-tooltip': '?', 'ui-lazyload': '◐',
     'ui-image-comparison': '◒', 'ui-counter': '99', 'ui-dark-mode': '☼',
-    'ui-marquee': '→', 'ui-carousel': '◫', 'ui-expandable-grid': '▦', 'ui-grid-hover-expand': '▥', 'ui-swipeable-card-stack': '▤', 'ui-orbit-gallery': '◌', 'ui-dot-morph': '✳', 'ui-logo-assembly': '✦',
+    'ui-marquee': '→', 'ui-carousel': '◫', 'ui-expandable-grid': '▦', 'ui-grid-hover-expand': '▥', 'ui-swipeable-card-stack': '▤', 'ui-orbit-gallery': '◌', 'ui-dot-morph': '✳', 'ui-logo-assembly': '✦', 'ui-sand-physics': '▨', 'ui-image-solid': '⬡', 'ui-image-stack': '▰', 'ui-flip-book': '▣',
   };
   return `<span class="thumb-art thumb-${tag}" aria-hidden="true"><span class="thumb-orbit"></span><span class="thumb-symbol">${symbols[tag] ?? '✦'}</span><span class="thumb-caption">${tag.replace(/^ui-/, '')}</span></span>`;
 }
@@ -449,6 +449,9 @@ function renderDocPage(rawSlug: string): void {
   wireToastDemo(appRoot);
   wireDotMorphDemo(appRoot);
   wireLogoAssemblyDemo(appRoot);
+  wireSandPhysicsDemo(appRoot);
+  wireImageSolidDemo(appRoot);
+  wireFlipBookDemo(appRoot);
 }
 
 /* ============================================================
@@ -492,6 +495,9 @@ function renderDemo(tagName: string): void {
   wireToastDemo(appRoot);
   wireDotMorphDemo(appRoot);
   wireLogoAssemblyDemo(appRoot);
+  wireSandPhysicsDemo(appRoot);
+  wireImageSolidDemo(appRoot);
+  wireFlipBookDemo(appRoot);
 }
 
 function renderFlyingWord(word: string, firstIndex: number): string {
@@ -1175,86 +1181,54 @@ function renderDemoBody(tag: string, variant: string): string {
         <p class="demo-text">Click the button to cycle light / dark / auto. Set <code>data-theme</code> on <code>:root</code>.</p>
         <ui-dark-mode mode="auto" id="theme-toggle" class="btn ghost">Click to cycle theme</ui-dark-mode>
       `;
-    case 'ui-marquee':
-      return `
-        <p class="demo-text">Enterprise infinite looping marquee component (<code style="color:var(--ui-color-accent)">&lt;ui-marquee&gt;</code>). Dynamic gapless clones, pause-on-hover, bi-directional horizontal & vertical orientations, and scroll parallax scrubbing.</p>
-
-        <!-- 1. Interactive Horizontal Marquee with Controls -->
-        <div style="background:var(--gallery-panel-strong);padding:1.5rem;border-radius:12px;margin-bottom:1.5rem">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem">
-            <h3 style="margin:0;font-size:1.1rem;font-weight:600">Horizontal Marquee (RTL & LTR)</h3>
-            <div style="display:flex;gap:0.5rem;align-items:center">
-              <button class="btn btn-sm" id="marquee-toggle" style="border-radius:4px;padding:3px 10px;font-size:0.8rem">Pause</button>
-              <button class="btn btn-sm marquee-speed" data-speed="3" style="border-radius:4px;padding:3px 8px;font-size:0.8rem">Slow (3)</button>
-              <button class="btn btn-sm marquee-speed" data-speed="6" style="border-radius:4px;padding:3px 8px;font-size:0.8rem;background:#3b82f6;color:white">Normal (6)</button>
-              <button class="btn btn-sm marquee-speed" data-speed="14" style="border-radius:4px;padding:3px 8px;font-size:0.8rem">Fast (14)</button>
-            </div>
-          </div>
-          <ui-marquee id="demo-marquee-horiz" speed="6" pause-on-hover="true" style="padding:0.75rem 0;background:var(--gallery-panel);border-radius:8px">
-            <span class="marquee-cell" style="padding:0.25rem 1rem;font-weight:600;color:var(--ui-color-accent)">⚡ Real-time Speed Adjustment</span>
-            <span class="marquee-cell" style="padding:0.25rem 1rem;font-weight:600;color:#34d399">🚀 Dynamic Gapless Clones</span>
-            <span class="marquee-cell" style="padding:0.25rem 1rem;font-weight:600;color:#f472b6">💎 Hover to Pause</span>
-            <span class="marquee-cell" style="padding:0.25rem 1rem;font-weight:600;color:#fbbf24">✨ Zero Dependencies</span>
-          </ui-marquee>
-
-          <!-- Opposite Direction LTR -->
-          <ui-marquee direction="ltr" speed="5" pause-on-hover="true" style="margin-top:0.75rem;padding:0.75rem 0;background:var(--gallery-panel);border-radius:8px">
-            <span class="marquee-cell" style="padding:0.25rem 1rem;color:var(--ui-color-text-muted)">← Reverse Direction (LTR)</span>
-            <span class="marquee-cell" style="padding:0.25rem 1rem;color:var(--ui-color-text-muted)">Accessible ARIA Role Region</span>
-            <span class="marquee-cell" style="padding:0.25rem 1rem;color:var(--ui-color-text-muted)">Custom Elements V1</span>
-            <span class="marquee-cell" style="padding:0.25rem 1rem;color:var(--ui-color-text-muted)">120 FPS GPU Accelerated</span>
-          </ui-marquee>
+    case 'ui-marquee': {
+      const pauseOnHover = variant === 'Pause on hover';
+      const photos = [
+        { src: 'coast', title: 'The quiet coast', label: '01 / PLACES', position: 'center 54%' },
+        { src: 'architecture', title: 'Lines & light', label: '02 / SPACES', position: 'center 48%' },
+        { src: 'botanical', title: 'A greener hour', label: '03 / NATURE', position: 'center 54%' },
+        { src: 'coast', title: 'Last light', label: '04 / JOURNEYS', position: '74% center' },
+      ];
+      const card = (photo: typeof photos[number], style = '') => `<figure class="marquee-showcase__card${style ? ` marquee-showcase__card--${style}` : ''}"><img src="/images/${photo.src}.jpg" alt="${photo.title}" style="object-position:${photo.position}" draggable="false"><figcaption><small>${photo.label}</small><strong>${photo.title}</strong></figcaption></figure>`;
+      return `<section class="marquee-showcase">
+        <div class="marquee-showcase__intro"><span class="eyebrow">AN EVER-MOVING GALLERY / 01</span><h2>Stories in <em>motion.</em></h2><p>Photography moving in two directions. ${pauseOnHover ? 'Move your pointer over a rail to pause and look closer.' : 'Try the speed controls, then explore the vertical and scroll-driven views.'}</p></div>
+        <div class="marquee-showcase__stage">
+          <div class="marquee-showcase__stage-header"><div><span>01 — DIRECTION / RIGHT TO LEFT</span><strong>Places & perspectives</strong></div><div class="marquee-showcase__controls"><button type="button" data-marquee-toggle aria-pressed="false">Pause</button><button type="button" class="marquee-speed" data-speed="3" aria-pressed="false">Slow</button><button type="button" class="marquee-speed" data-speed="6" aria-pressed="true">Normal</button><button type="button" class="marquee-speed" data-speed="14" aria-pressed="false">Fast</button></div></div>
+          <ui-marquee class="marquee-showcase__rail marquee-showcase__rail--main" speed="6" pause-on-hover="${pauseOnHover}" aria-label="Moving photography gallery">${photos.map((photo) => card(photo)).join('')}</ui-marquee>
+          <div class="marquee-showcase__direction"><span>02 — LEFT TO RIGHT</span><span>THE JOURNEY CONTINUES</span></div>
+          <ui-marquee class="marquee-showcase__rail marquee-showcase__rail--reverse" direction="ltr" speed="5" pause-on-hover="${pauseOnHover}" aria-label="Photography gallery moving in the opposite direction">${[...photos].reverse().map((photo) => card(photo, 'compact')).join('')}</ui-marquee>
         </div>
-
-        <!-- 2. Vertical Marquee & Scroll Parallax -->
-        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:1.5rem">
-          <!-- Vertical Ticker -->
-          <div style="background:var(--gallery-panel-strong);padding:1.5rem;border-radius:12px">
-            <h3 style="margin:0 0 0.75rem 0;font-size:1.1rem;font-weight:600">Vertical Marquee (vertical)</h3>
-            <ui-marquee vertical="true" direction="btt" speed="5" pause-on-hover="true" style="height:150px;background:var(--gallery-panel);border-radius:8px;padding:0.5rem 1rem">
-              <div style="padding:0.4rem 0;border-bottom:1px solid var(--ui-color-border);color:var(--ui-color-text);font-size:0.9rem">📢 Notice: System update scheduled</div>
-              <div style="padding:0.4rem 0;border-bottom:1px solid var(--ui-color-border);color:var(--ui-color-text);font-size:0.9rem">📈 Traffic increased by 42%</div>
-              <div style="padding:0.4rem 0;border-bottom:1px solid var(--ui-color-border);color:var(--ui-color-text);font-size:0.9rem">🛡️ Security audit: 100% passed</div>
-              <div style="padding:0.4rem 0;border-bottom:1px solid var(--ui-color-border);color:var(--ui-color-text);font-size:0.9rem">⚡ Web Component loaded in 1.2ms</div>
-            </ui-marquee>
-          </div>
-
-          <!-- Scroll Parallax Scrubbing -->
-          <div style="background:var(--gallery-panel-strong);padding:1.5rem;border-radius:12px">
-            <h3 style="margin:0 0 0.75rem 0;font-size:1.1rem;font-weight:600">Scroll Parallax (scroll-enabled)</h3>
-            <p style="font-size:0.8rem;color:var(--ui-color-text-muted);margin-top:0;margin-bottom:0.75rem">Scroll the page up/down to observe parallax acceleration!</p>
-            <ui-marquee scroll-enabled="true" scroll-speed="2.5" speed="8" style="background:var(--gallery-panel);border-radius:8px;padding:0.75rem 0">
-              <span style="font-size:1.1rem;font-weight:800;letter-spacing:1px;color:#a855f7;padding:0 1rem">✦ SCROLL ACCELERATION</span>
-              <span style="font-size:1.1rem;font-weight:800;letter-spacing:1px;color:#06b6d4;padding:0 1rem">✦ PARALLAX SCRUBBING</span>
-              <span style="font-size:1.1rem;font-weight:800;letter-spacing:1px;color:#ec4899;padding:0 1rem">✦ 120 FPS FLUID</span>
-            </ui-marquee>
-          </div>
+        <div class="marquee-showcase__examples">
+          <div class="marquee-showcase__example marquee-showcase__example--vertical"><div class="marquee-showcase__example-heading"><span>03 / VERTICAL</span><h3>Upward <em>glance.</em></h3><p>Images rise through a narrow window. Hover to pause.</p></div><ui-marquee class="marquee-showcase__vertical" vertical direction="btt" speed="4" pause-on-hover="true" aria-label="Vertical photography marquee">${photos.slice(0, 3).map((photo) => card(photo, 'vertical')).join('')}</ui-marquee></div>
+          <div class="marquee-showcase__example marquee-showcase__example--scroll"><div class="marquee-showcase__example-heading"><span>04 / SCROLL REACTIVE</span><h3>Follow the <em>flow.</em></h3><p>Scroll the page to change the pace of this photo strip.</p></div><ui-marquee class="marquee-showcase__scroll" scroll-enabled="true" scroll-speed="2.5" speed="5" aria-label="Scroll reactive photography marquee">${photos.map((photo) => card(photo, 'scroll')).join('')}</ui-marquee><div class="marquee-showcase__scroll-note">SCROLL TO INTERACT <span>↓</span></div></div>
         </div>
-      `;
+      </section>`;
+    }
     case 'ui-carousel': {
-      const slides = [1, 2, 3, 4, 5, 6].map((number) =>
-        `<ui-carousel-slide><div class="carousel-item carousel-item-${number}"><span>Slide</span><strong>${number}</strong></div></ui-carousel-slide>`,
+      const withThumbnails = variant === 'With thumbnails';
+      const photos = [
+        { image: 'coast', title: 'Where the sea slows time', category: 'COASTAL JOURNAL', number: '01', position: 'center 52%' },
+        { image: 'architecture', title: 'The beauty of quiet lines', category: 'SPACES & FORM', number: '02', position: 'center 48%' },
+        { image: 'botanical', title: 'A little closer to nature', category: 'BOTANICAL STUDY', number: '03', position: 'center 55%' },
+      ];
+      const slides = photos.map((photo) =>
+        `<ui-carousel-slide><article class="carousel-photo"><img src="/images/${photo.image}.jpg" alt="${photo.title}" draggable="false" style="object-position:${photo.position}"><div class="carousel-photo__content"><span>${photo.category} / ${photo.number}</span><h3>${photo.title}</h3><p>Explore the collection →</p></div></article></ui-carousel-slide>`,
       ).join('');
-      const controls = `<div class="carousel-controls">
-        <ui-carousel-prev><button type="button" aria-label="Previous slide">← Prev</button></ui-carousel-prev>
-        <ui-carousel-next><button type="button" aria-label="Next slide">Next →</button></ui-carousel-next>
-      </div><ui-carousel-pagination></ui-carousel-pagination>`;
-      if (variant === 'With thumbnails') {
-        const thumbnails = [1, 2, 3, 4, 5, 6].map((number) =>
-          `<ui-carousel-slide><div class="carousel-item-thumb carousel-item-${number}">${number}</div></ui-carousel-slide>`,
-        ).join('');
-        return `<p class="demo-text">Select a thumbnail, swipe the slides, or use the arrows. The main view adapts to the available width.</p>
-          <ui-carousel class="gallery-carousel" ui-rewind ui-per-view="4" ui-breakpoints="{ 600: { perView: 1, perMove: 1, gap: 10, overflow: 'visible' }, 1000: { perView: 2, perMove: 2 } }" ui-render-bullet="<span></span>">
-            <ui-carousel-inner><ui-carousel-list>${slides}</ui-carousel-list></ui-carousel-inner>
-            <ui-carousel-thumbnail ui-per-view="7" class="gallery-thumbnail"><ui-carousel-inner><ui-carousel-list>${thumbnails}</ui-carousel-list></ui-carousel-inner></ui-carousel-thumbnail>
-            ${controls}
-          </ui-carousel>`;
-      }
-      return `<p class="demo-text">A simple carousel with six slides. Use the arrows, bullets, or keyboard.</p>
-        <ui-carousel class="gallery-carousel" ui-per-view="1" ui-render-bullet="<span></span>">
-          <ui-carousel-inner><ui-carousel-list>${slides}</ui-carousel-list></ui-carousel-inner>
-          ${controls}
-        </ui-carousel>`;
+      const thumbnails = photos.map((photo) =>
+        `<ui-carousel-slide><div class="carousel-photo-thumb"><img src="/images/${photo.image}.jpg" alt="" draggable="false" style="object-position:${photo.position}"><span>${photo.number} · ${photo.category}</span></div></ui-carousel-slide>`,
+      ).join('');
+      return `<section class="carousel-showcase">
+        <div class="carousel-showcase__heading"><div><span class="eyebrow">VISUAL STORIES / ${withThumbnails ? 'THUMBNAILS' : 'EDITORIAL'}</span><h2>Moments worth <em>exploring.</em></h2></div><p>Swipe the images or use the controls to move through the collection.</p></div>
+        <ui-carousel class="gallery-carousel" ui-per-view="1" ui-gap="0" ui-speed="550" aria-label="Visual stories gallery">
+          <ui-carousel-inner>
+            <ui-carousel-list>${slides}</ui-carousel-list>
+            <ui-carousel-prev><button type="button" aria-label="Previous photo">←</button></ui-carousel-prev>
+            <ui-carousel-pagination></ui-carousel-pagination>
+            <ui-carousel-next><button type="button" aria-label="Next photo">→</button></ui-carousel-next>
+          </ui-carousel-inner>
+          ${withThumbnails ? `<ui-carousel-thumbnail ui-per-view="3" class="gallery-thumbnail"><ui-carousel-inner><ui-carousel-list>${thumbnails}</ui-carousel-list></ui-carousel-inner></ui-carousel-thumbnail>` : ''}
+        </ui-carousel>
+      </section>`;
     }
     case 'ui-grid-hover-expand': {
       const compact = variant === 'Compact cards';
@@ -1348,9 +1322,9 @@ function renderDemoBody(tag: string, variant: string): string {
       const neon = variant === 'Neon particles';
       const words = neon ? ['MOTION', 'ENERGY', 'FLOW'] : ['CREATE', 'EXPLORE', 'INSPIRE'];
       return `<section class="dot-morph-demo${neon ? ' dot-morph-demo--neon' : ''}">
-        <div class="dot-morph-demo__intro"><span class="eyebrow">PARTICLE STUDY / ${neon ? '02' : '01'}</span><h2>Chaos becomes <em>meaning.</em></h2><p>Hover, focus, or tap the field. The particles move through three words; edit the first one below.</p></div>
+        <div class="dot-morph-demo__intro"><span class="eyebrow">PARTICLE STUDY / ${neon ? '02' : '01'}</span><h2>Chaos becomes <em>meaning.</em></h2><p>Enter your own words below, one per line. Hover, focus, or tap the field to see the particles form each one.</p></div>
         <ui-dot-morph ui-text='${JSON.stringify(words)}' ui-duration="3000" ui-interval="1500"></ui-dot-morph>
-        <div class="dot-morph-demo__footer"><label>FIRST WORD <input data-dot-morph-input type="text" maxlength="18" value="${words[0]}" aria-label="First word to form with particles" /></label><span>MOVE INTO THE FIELD ↗</span></div>
+        <div class="dot-morph-demo__footer"><label>YOUR WORDS <span>One word or short phrase per line</span><textarea data-dot-morph-input rows="3" aria-label="Words to form with particles, one per line">${words.join('\n')}</textarea></label><span>MOVE INTO THE FIELD ↗</span></div>
       </section>`;
     }
     case 'ui-logo-assembly': {
@@ -1374,6 +1348,80 @@ function renderDemoBody(tag: string, variant: string): string {
           <label>Particle color <input type="color" value="#8deaff" data-logo-color aria-label="Override particle color" /><button type="button" data-logo-original-color>Original colors</button></label>
           <label>Interaction <select data-logo-interaction><option value="all">Hover + click</option><option value="hover">Hover only</option><option value="click">Click only</option><option value="none">None</option></select></label>
         </div>
+      </section>`;
+    }
+    case 'ui-sand-physics':
+      return `<section class="sand-demo">
+        <div class="sand-demo__heading"><span class="eyebrow">MATERIAL LAB / 001</span><h2>Make a little <em>world.</em></h2><p>Hold and drag to pour particles. Draw real walls, reverse gravity, then watch water, lava, fire and smoke interact.</p></div>
+        <div class="sand-demo__stage"><ui-sand-physics ui-preset="funnel" ui-initial-count="1800" ui-auto-rate="180" ui-tool="sand" ui-cell-size="4" ui-brush-size="5" aria-label="Interactive sand simulation"></ui-sand-physics><div class="sand-demo__status"><span data-sand-count>0 PARTICLES</span><span data-sand-status>SIMULATING</span></div></div>
+        <div class="sand-demo__toolbar" role="group" aria-label="Sandbox actions">
+          <button type="button" data-sand-action="pause">Ⅱ Pause</button><button type="button" data-sand-action="undo">↶ Undo</button><button type="button" data-sand-action="reset">⟳ Reset</button><button type="button" data-sand-action="clear">⌫ Clear</button><button type="button" data-sand-action="save">↓ Save PNG</button>
+        </div>
+        <div class="sand-demo__controls">
+          <label>Material / tool<select data-sand-attribute="ui-tool"><option value="sand">Sand</option><option value="water">Water</option><option value="stone">Stone</option><option value="fire">Fire</option><option value="smoke">Smoke</option><option value="lava">Lava</option><option value="wood">Wood (burnable)</option><option value="wall">Wall</option><option value="eraser">Eraser</option><option value="brush">Push brush</option><option value="attract">Attract</option><option value="explode">Explosion</option></select></label>
+          <label>Gravity<select data-sand-attribute="ui-gravity"><option value="down">↓ Down</option><option value="left">← Left</option><option value="up">↑ Up</option><option value="right">→ Right</option></select></label>
+          <label>Obstacle preset<select data-sand-attribute="ui-preset"><option value="funnel">Funnel</option><option value="hourglass">Hourglass</option><option value="maze">Maze</option><option value="chute">Chute</option><option value="none">Empty box</option></select></label>
+          <label>Background<select data-sand-attribute="ui-background"><option value="dark">Dark</option><option value="light">Light</option><option value="transparent">Transparent</option></select></label>
+          <label>Brush size <output>5</output><input type="range" min="1" max="22" value="5" data-sand-attribute="ui-brush-size"></label>
+          <label>Amount <output>0.68</output><input type="range" min="0.1" max="1" step="0.05" value="0.68" data-sand-attribute="ui-amount"></label>
+          <label>Simulation speed <output>1</output><input type="range" min="0.2" max="3" step="0.1" value="1" data-sand-attribute="ui-speed"></label>
+          <label>Gravity strength <output>1</output><input type="range" min="0.2" max="3" step="0.1" value="1" data-sand-attribute="ui-gravity-strength"></label>
+          <label>Top feed / second <output>180</output><input type="range" min="0" max="600" step="20" value="180" data-sand-attribute="ui-auto-rate"></label>
+          <label>Sand color <input type="color" value="#eebd77" data-sand-attribute="ui-color"></label>
+          <label>Particle size<select data-sand-attribute="ui-cell-size"><option value="3">Fine</option><option value="4" selected>Normal</option><option value="6">Coarse</option></select></label>
+        </div>
+        <p class="sand-demo__hint">Try: paint a wood wall, pour lava, then add water. Draw across the box to test collision; choose Explosion and click a pile to disturb it.</p>
+      </section>`;
+    case 'ui-image-solid': {
+      const photos = ['architecture','coast','botanical','coast','architecture','botanical','architecture','botanical','coast','architecture'];
+      const captions = ['A new angle','Blue hour','Soft forms','Wide horizon','Urban light','Botanical study','Still motion','Open space','Tidal lines','Afterglow'];
+      return `<section class="image-solid-demo">
+        <div class="image-solid-demo__heading"><span class="eyebrow">DIMENSION STUDY / 001</span><h2>Every side tells <em>a story.</em></h2><p>Drag in any direction to see the images wrap around a true 3D form. Change its geometry, then upload your own photo to a face.</p></div>
+        <div class="image-solid-demo__stage"><ui-image-solid ui-shape="cube" ui-size="230" ui-height="260" ui-auto-rotate ui-spin-speed="13" aria-label="Rotatable photo sculpture">
+          ${photos.map((photo,index) => `<ui-image-solid-face><img src="/images/${photo}.jpg" alt="${captions[index]}" draggable="false" /><span class="image-solid-demo__face-caption"><small>FORM / ${String(index+1).padStart(2,'0')}</small><strong>${captions[index]}</strong></span></ui-image-solid-face>`).join('')}
+        </ui-image-solid><div class="image-solid-demo__scene-label"><span data-solid-shape>CUBE / 06 FACES</span><span>DRAG TO ROTATE ↗</span></div></div>
+        <div class="image-solid-demo__controls">
+          <label>Shape<select data-solid-setting="ui-shape"><option value="cube">Cube · 6 faces</option><option value="box">Rectangular box · 6 faces</option><option value="triangle">Triangular prism · 5 faces</option><option value="hexagon">Hexagonal prism · 8 faces</option><option value="octagon">Octagonal prism · 10 faces</option></select></label>
+          <label>Rotation speed <output>13°/s</output><input data-solid-setting="ui-spin-speed" type="range" min="-60" max="60" step="1" value="13"></label>
+          <label>Face to replace<select data-solid-face>${Array.from({length:10},(_,index)=>`<option value="${index}">Photo ${String(index+1).padStart(2,'0')}</option>`).join('')}</select></label>
+          <label class="image-solid-demo__upload">↑ Upload photo<input data-solid-upload type="file" accept="image/*"></label>
+          <button type="button" data-solid-action="spin">Ⅱ Pause rotation</button><button type="button" data-solid-action="reset">⟳ Reset view</button>
+        </div>
+        <p class="image-solid-demo__hint">Arrow keys rotate by 15°. Hold Shift for 30°. Press Home to return to the opening angle.</p>
+      </section>`;
+    }
+    case 'ui-image-stack': {
+      const compact = variant === 'Compact stack';
+      const fan = variant === 'Fanned prints';
+      const fall = variant === 'Falling frames';
+      const sheet = variant === 'Contact sheet';
+      const coverflow = variant === 'Coverflow rail';
+      const photos = compact ? ['botanical','coast','architecture'] : fan ? ['coast','botanical','architecture','coast','botanical'] : fall ? ['botanical','architecture','coast','botanical','architecture'] : sheet ? ['architecture','coast','botanical','coast','architecture','botanical'] : ['architecture','coast','botanical','architecture','coast'];
+      const titles = compact ? ['Quiet growth','Coastal light','Structures'] : fan ? ['Salt air','Morning garden','Concrete poetry','Blue distance','Slow afternoon'] : fall ? ['Chapter one','A softer line','The open sea','Green interlude','After the rain'] : sheet ? ['First light','Open water','Greenhouse','Blue afternoon','Geometry','Soft leaves'] : coverflow ? ['Modern lines','Salt and sky','Wild growth','Still forms','A blue ending'] : ['The architecture of light','Where the sky meets water','A study in green','Lines of the city','The last blue hour'];
+      const heading = compact ? 'Small stack. Big story.' : fan ? 'A handful of moments.' : fall ? 'Let the frames fall.' : sheet ? 'From pile to contact sheet.' : coverflow ? 'A gallery in perspective.' : 'A story in every layer.';
+      const kicker = compact ? 'STUDY / 02' : fan ? 'PAPER STUDY / 03' : fall ? 'MOTION STUDY / 04' : sheet ? 'CONTACT SHEET / 05' : coverflow ? 'PERSPECTIVE / 06' : 'THE COLLECTION / 01';
+      const style = fan ? 'fan' : fall ? 'fall' : sheet ? 'sheet' : coverflow ? 'coverflow' : '';
+      const description = fan ? 'Five photographs open like prints in your hand. Hover to fan them wide, then choose any card to see it in full.' : fall ? 'Each frame drops into its own position, revealing a small gallery underneath. Choose a frame to explore it.' : sheet ? 'A pile of prints assembles into a six-photo contact sheet. Each thumbnail opens its own full-size view.' : coverflow ? 'Five frames glide into a wide perspective rail. Follow the row and select any photo to open the viewer.' : 'Move over the stack to separate the photographs. Select any exposed edge to open that image; use the arrows to browse the collection.';
+      return `<section class="image-stack-demo${compact ? ' image-stack-demo--compact' : ''}${style ? ` image-stack-demo--${style}` : ''}">
+        <div class="image-stack-demo__copy"><span class="eyebrow">${kicker}</span><h2>${heading}</h2><p>${description}</p><div class="image-stack-demo__rule"><span>01 — ${String(photos.length).padStart(2,'0')}</span><span>HOVER · SELECT · EXPLORE</span></div></div>
+        <div class="image-stack-demo__scene"><div class="image-stack-demo__halo"></div><ui-image-stack ${style ? `ui-style="${style}"` : ''} aria-label="${variant} photo collection" style="--ui-image-stack-width:${compact ? '260px' : fan ? '280px' : fall ? '290px' : sheet ? '390px' : coverflow ? '680px' : '320px'};--ui-image-stack-height:${compact ? '330px' : fan ? '360px' : fall ? '330px' : sheet ? '380px' : coverflow ? '340px' : '390px'};--ui-image-stack-step:${compact ? '21px' : '17px'};--ui-image-stack-offset:${compact ? '29px' : '26px'}">
+          ${photos.map((photo,index) => `<ui-image-stack-item ui-label="${titles[index]}"><img src="/images/${photo}.jpg" alt="${titles[index]}" draggable="false"><span data-stack-caption>${String(index+1).padStart(2,'0')} / ${titles[index]}</span></ui-image-stack-item>`).join('')}
+        </ui-image-stack><span class="image-stack-demo__scene-note">CLICK A LAYER ↗</span></div>
+      </section>`;
+    }
+    case 'ui-flip-book': {
+      const notes = [
+        { title:'The quiet coast', place:'CHAPTER 01 · COAST', image:'coast', text:'A horizon that makes every hurried thought feel a little smaller.' },
+        { title:'The green hour', place:'CHAPTER 02 · GARDEN', image:'botanical', text:'Some places ask us to slow down and notice the light.' },
+        { title:'Lines of a city', place:'CHAPTER 03 · FORM', image:'architecture', text:'The spaces between buildings become stories of their own.' },
+      ];
+      return `<section class="flip-book-demo">
+        <div class="flip-book-demo__intro"><span class="eyebrow">AN INTERACTIVE JOURNAL / 01</span><h2>Stories you can <em>turn.</em></h2><p>Open the cover, then turn each leaf to discover a small collection of places and thoughts. Every page has two sides, like a real book.</p><div class="flip-book-demo__controls"><button type="button" data-book-action="toggle">Open the book</button><button type="button" data-book-action="previous" aria-label="Previous page">←</button><span data-book-counter>Closed · 4 spreads</span><button type="button" data-book-action="next" aria-label="Next page">→</button></div><p class="flip-book-demo__hint">Click or swipe the cover. Drag left/right to turn pages; keyboard: ← / →, Home, End.</p></div>
+        <div class="flip-book-demo__stage"><div class="flip-book-demo__glow"></div><ui-flip-book aria-label="Atlas of Elsewhere travel journal">
+          <div class="flip-book-demo__last-page" data-book-last-page><span>THE END</span><small>Every ending opens<br>another journey.</small></div>
+          <ui-flip-book-cover><div class="flip-book-demo__cover"><span class="flip-book-demo__cover-kicker">THE TRAVEL EDITION · Nº 01</span><strong>Atlas<br>of<br><i>Elsewhere</i></strong><span class="flip-book-demo__cover-foot">OPEN TO EXPLORE <span>↗</span></span></div><div data-cover-back class="flip-book-demo__inside-cover"><span>ATLAS<br>OF<br>ELSEWHERE</span><small>A COLLECTION OF MOMENTS<br>VOL. 01 / 2026</small></div></ui-flip-book-cover>
+          ${notes.map((note,index) => `<ui-flip-book-page><div data-page-front class="flip-book-demo__page flip-book-demo__page--photo"><img src="/images/${note.image}.jpg" alt="${note.title}"><span>${note.place}</span></div><div data-page-back class="flip-book-demo__page flip-book-demo__page--note"><small>FIELD NOTE / ${String(index+1).padStart(2,'0')}</small><strong>${note.title}</strong><p>${note.text}</p><span class="flip-book-demo__page-number">${String(index*2+2).padStart(2,'0')}</span></div></ui-flip-book-page>`).join('')}
+        </ui-flip-book><div class="flip-book-demo__stage-caption"><span>THE ART OF SLOW EXPLORATION</span><span>TURN THE PAGE ↗</span></div></div>
       </section>`;
     }
     default:
@@ -1505,13 +1553,12 @@ function wireToastDemo(root: HTMLElement): void {
 }
 
 function wireDotMorphDemo(root: HTMLElement): void {
-  root.querySelectorAll<HTMLInputElement>('[data-dot-morph-input]').forEach((input) => {
+  root.querySelectorAll<HTMLTextAreaElement>('[data-dot-morph-input]').forEach((input) => {
     input.addEventListener('input', () => {
       const morph = input.closest('.dot-morph-demo')?.querySelector('ui-dot-morph');
       if (!morph) return;
-      const words = JSON.parse(morph.getAttribute('ui-text') || '[]') as string[];
-      words[0] = input.value.slice(0, 18) || 'UI';
-      morph.setAttribute('ui-text', JSON.stringify(words));
+      const words = input.value.split(/\r?\n/).map((word) => word.trim()).filter(Boolean);
+      morph.setAttribute('ui-text', JSON.stringify(words.length ? words : ['UI']));
     });
   });
 }
@@ -1573,6 +1620,131 @@ function wireLogoAssemblyDemo(root: HTMLElement): void {
   });
 }
 
+function wireSandPhysicsDemo(root: HTMLElement): void {
+  root.querySelectorAll<HTMLElement>('.sand-demo').forEach((demo) => {
+    const sand = demo.querySelector('ui-sand-physics') as HTMLElement & {
+      readonly particleCount: number;
+      readonly isPaused: boolean;
+      togglePause(): void;
+      undo(): boolean;
+      reset(): void;
+      clear(): void;
+      saveImage(): string;
+    } | null;
+    if (!sand) return;
+    const update = (): void => {
+      const count = demo.querySelector('[data-sand-count]');
+      const status = demo.querySelector('[data-sand-status]');
+      if (count) count.textContent = `${sand.particleCount.toLocaleString()} PARTICLES`;
+      if (status) status.textContent = sand.isPaused ? 'PAUSED' : 'SIMULATING';
+      const pause = demo.querySelector<HTMLButtonElement>('[data-sand-action="pause"]');
+      if (pause) pause.textContent = sand.isPaused ? '▶ Resume' : 'Ⅱ Pause';
+    };
+    sand.addEventListener('ui:sand-physics:change', update);
+    demo.querySelectorAll<HTMLButtonElement>('[data-sand-action]').forEach((button) => button.addEventListener('click', () => {
+      const action = button.dataset['sandAction'];
+      if (action === 'pause') sand.togglePause();
+      else if (action === 'undo') sand.undo();
+      else if (action === 'reset') sand.reset();
+      else if (action === 'clear') sand.clear();
+      else if (action === 'save') {
+        const link = document.createElement('a');
+        link.href = sand.saveImage();
+        link.download = 'sand-physics.png';
+        link.click();
+      }
+      update();
+    }));
+    demo.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[data-sand-attribute]').forEach((input) => {
+      const eventName = input.type === 'range' && input.dataset['sandAttribute'] !== 'ui-cell-size' ? 'input' : 'change';
+      input.addEventListener(eventName, () => {
+        const attribute = input.dataset['sandAttribute'];
+        if (attribute) sand.setAttribute(attribute, input.value);
+        const output = input.parentElement?.querySelector('output');
+        if (output) output.textContent = input.value;
+        update();
+      });
+    });
+    update();
+  });
+}
+
+function wireImageSolidDemo(root: HTMLElement): void {
+  root.querySelectorAll<HTMLElement>('.image-solid-demo').forEach((demo) => {
+    const solid = demo.querySelector('ui-image-solid') as HTMLElement & { refresh(): void; reset(): void } | null;
+    if (!solid) return;
+    const label = demo.querySelector<HTMLElement>('[data-solid-shape]');
+    const update = (): void => {
+      const shape = solid.getAttribute('ui-shape') || 'cube';
+      const count = shape === 'triangle' ? 5 : shape === 'hexagon' ? 8 : shape === 'octagon' ? 10 : 6;
+      if (label) label.textContent = `${shape.toUpperCase()} / ${String(count).padStart(2,'0')} FACES`;
+      const faceSelect = demo.querySelector<HTMLSelectElement>('[data-solid-face]');
+      if (faceSelect) {
+        for (const option of faceSelect.options) option.disabled = Number(option.value) >= count;
+        if (Number(faceSelect.value) >= count) faceSelect.value = '0';
+      }
+      const spin = demo.querySelector<HTMLButtonElement>('[data-solid-action="spin"]');
+      if (spin) spin.textContent = solid.hasAttribute('ui-auto-rotate') ? 'Ⅱ Pause rotation' : '▶ Auto rotate';
+    };
+    demo.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[data-solid-setting]').forEach((input) => {
+      input.addEventListener(input.type === 'range' ? 'input' : 'change', () => {
+        const name = input.dataset['solidSetting'];
+        if (name) solid.setAttribute(name,input.value);
+        const output = input.parentElement?.querySelector('output');
+        if (output) output.textContent = `${input.value}°/s`;
+        update();
+      });
+    });
+    demo.querySelectorAll<HTMLButtonElement>('[data-solid-action]').forEach((button) => button.addEventListener('click', () => {
+      if (button.dataset['solidAction'] === 'spin') solid.toggleAttribute('ui-auto-rotate');
+      else solid.reset();
+      update();
+    }));
+    demo.querySelector<HTMLInputElement>('[data-solid-upload]')?.addEventListener('change',(event) => {
+      const input = event.currentTarget as HTMLInputElement;
+      const file = input.files?.[0];
+      if (!file || !file.type.startsWith('image/')) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const index = Number(demo.querySelector<HTMLSelectElement>('[data-solid-face]')?.value || '0');
+        const face = solid.querySelectorAll<HTMLElement>('ui-image-solid-face:not([data-ui-generated])')[index];
+        const image = face?.querySelector('img');
+        if (image && typeof reader.result === 'string') {
+          image.src = reader.result;
+          image.alt = file.name;
+          face?.querySelector<HTMLElement>('.image-solid-demo__face-caption strong')?.replaceChildren(file.name.replace(/\.[^.]+$/,'').slice(0,25));
+          solid.refresh();
+        }
+        input.value = '';
+      };
+      reader.readAsDataURL(file);
+    });
+    update();
+  });
+}
+
+function wireFlipBookDemo(root: HTMLElement): void {
+  root.querySelectorAll<HTMLElement>('.flip-book-demo').forEach((demo) => {
+    const book = demo.querySelector('ui-flip-book') as HTMLElement & { open(): void; close(): void; next(): void; previous(): void; page: number; pages: HTMLElement[]; openState: boolean } | null;
+    if (!book) return;
+    const counter = demo.querySelector<HTMLElement>('[data-book-counter]');
+    const toggle = demo.querySelector<HTMLButtonElement>('[data-book-action="toggle"]');
+    const update = (): void => {
+      if (counter) counter.textContent = book.openState ? `Spread ${book.page + 1} / ${book.pages.length + 1}` : `Closed · ${book.pages.length + 1} spreads`;
+      if (toggle) toggle.textContent = book.openState ? 'Close the book' : 'Open the book';
+    };
+    demo.querySelectorAll<HTMLButtonElement>('[data-book-action]').forEach((button) => button.addEventListener('click', () => {
+      const action = button.dataset['bookAction'];
+      if (action === 'toggle') { if (book.openState) book.close(); else book.open(); }
+      else if (action === 'next') book.next();
+      else if (action === 'previous') book.previous();
+      update();
+    }));
+    for (const eventName of ['ui:flip-book:open','ui:flip-book:close','ui:flip-book:change']) book.addEventListener(eventName, update);
+    update();
+  });
+}
+
 function wireButtons(): void {
   document.addEventListener(
     'click',
@@ -1590,15 +1762,18 @@ function wireButtons(): void {
         (document.getElementById('drawer-right') as UiDrawer | null)?.openDrawer();
       }
       // Marquee toggle play/pause
-      if (t.id === 'marquee-toggle') {
-        const m = document.getElementById('demo-marquee-horiz') as unknown as { isRunning: boolean; play(): void; pause(): void } | null;
+      const marqueeToggle = t.closest<HTMLButtonElement>('[data-marquee-toggle]');
+      if (marqueeToggle) {
+        const m = marqueeToggle.closest('.marquee-showcase')?.querySelector('ui-marquee.marquee-showcase__rail--main') as unknown as { isRunning: boolean; play(): void; pause(): void } | null;
         if (m) {
           if (m.isRunning) {
             m.pause();
-            t.textContent = 'Play';
+            marqueeToggle.textContent = 'Play';
+            marqueeToggle.setAttribute('aria-pressed', 'true');
           } else {
             m.play();
-            t.textContent = 'Pause';
+            marqueeToggle.textContent = 'Pause';
+            marqueeToggle.setAttribute('aria-pressed', 'false');
           }
         }
       }
@@ -1606,15 +1781,12 @@ function wireButtons(): void {
       const speedBtn = t.closest('.marquee-speed') as HTMLElement | null;
       if (speedBtn) {
         const speed = speedBtn.getAttribute('data-speed') || '6';
-        const m = document.getElementById('demo-marquee-horiz') as HTMLElement | null;
+        const showcase = speedBtn.closest('.marquee-showcase');
+        const m = showcase?.querySelector('ui-marquee.marquee-showcase__rail--main');
         if (m) {
           m.setAttribute('speed', speed);
-          document.querySelectorAll('.marquee-speed').forEach((b) => {
-            (b as HTMLElement).style.background = '';
-            (b as HTMLElement).style.color = '';
-          });
-          speedBtn.style.background = '#3b82f6';
-          speedBtn.style.color = 'white';
+          showcase?.querySelectorAll('.marquee-speed').forEach((button) =>
+            button.setAttribute('aria-pressed', String(button === speedBtn)));
         }
       }
     },
