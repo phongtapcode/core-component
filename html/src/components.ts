@@ -25,7 +25,7 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     tagName: 'ui-parallax',
     category: 'Motion',
     description: 'Scroll keyframes and pointer-driven depth inside a measured container.',
-    demos: ['Coastal story', 'Photo aperture', 'Botanical layers', 'Circular scroll', 'Scroll keyframes', 'Hover & 3D', 'Custom effect'],
+    demos: ['Coastal story', 'Photo aperture', 'Botanical layers', 'Circular scroll', 'Text fly', 'Scroll keyframes', 'Hover & 3D', 'Custom effect'],
   },
   {
     name: 'Scroll X',
@@ -180,6 +180,20 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     category: 'Advanced',
     description: 'Open a photo card inside its grid while neighboring cards animate into place.',
     demos: ['Editorial gallery', 'Compact grid'],
+  },
+  {
+    name: 'Grid Hover Expand',
+    tagName: 'ui-grid-hover-expand',
+    category: 'Advanced',
+    description: 'Grow the hovered image card while its neighbors in the same row make room.',
+    demos: ['Photo stories', 'Compact cards', 'Edge to edge'],
+  },
+  {
+    name: 'Swipeable Card Stack',
+    tagName: 'ui-swipeable-card-stack',
+    category: 'Advanced',
+    description: 'Drag the front card away to reveal the next one in a layered photo deck.',
+    demos: ['Side stack', 'Down stack', 'Scattered deck'],
   },
   {
     name: 'Orbit Gallery',

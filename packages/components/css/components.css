@@ -1230,3 +1230,56 @@ ui-dot-morph[data-ui-dot-fallback] .ui-dot-morph-fallback { display: flex; }
   ui-dot-morph .ui-dot-morph-canvas { display: none; }
   ui-dot-morph .ui-dot-morph-fallback { display: flex; }
 }
+
+/* Hover expansion only changes widths within the active row. */
+ui-grid-hover-expand {
+  --ui-grid-hover-columns: var(--xs, 1);
+  display: flex;
+  flex-wrap: wrap;
+  margin-inline: calc(var(--ui-grid-hover-gap-attr, var(--ui-grid-hover-column-gap, 20px)) / -2);
+  margin-top: calc(var(--ui-grid-hover-gap-attr, var(--ui-grid-hover-row-gap, 20px)) * -1);
+}
+ui-grid-hover-expand > * {
+  box-sizing: border-box;
+  flex: 0 0 var(--ui-grid-hover-width, calc(100% / var(--ui-grid-hover-columns)));
+  min-width: 0;
+  padding-inline: calc(var(--ui-grid-hover-gap-attr, var(--ui-grid-hover-column-gap, 20px)) / 2);
+  padding-top: var(--ui-grid-hover-gap-attr, var(--ui-grid-hover-row-gap, 20px));
+  transition: flex-basis var(--ui-grid-hover-duration, 200ms) cubic-bezier(.22,1,.36,1);
+}
+@media (min-width: 576px) { ui-grid-hover-expand { --ui-grid-hover-columns: var(--sm, var(--xs, 1)); } }
+@media (min-width: 768px) { ui-grid-hover-expand { --ui-grid-hover-columns: var(--md, var(--sm, var(--xs, 1))); } }
+@media (min-width: 992px) { ui-grid-hover-expand { --ui-grid-hover-columns: var(--lg, var(--md, var(--sm, var(--xs, 1)))); } }
+@media (prefers-reduced-motion: reduce) { ui-grid-hover-expand > * { transition: none; } }
+
+/* Swipeable cards use transforms so drag feedback never changes document layout. */
+ui-swipeable-card-stack {
+  display: block;
+  position: relative;
+  width: var(--ui-stack-width, 300px);
+  max-width: 100%;
+  height: var(--ui-stack-height, 400px);
+  user-select: none;
+  touch-action: pan-y;
+  cursor: grab;
+}
+ui-swipeable-card-stack[data-dragging] { cursor: grabbing; }
+ui-swipeable-card-stack > * {
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  min-height: var(--ui-stack-card-height, 400px);
+  transform-origin: center center;
+  backface-visibility: hidden;
+  transition: transform var(--ui-stack-duration, 600ms) var(--ui-stack-easing, cubic-bezier(.18,1.32,.42,1)),
+    opacity var(--ui-stack-duration, 600ms) ease;
+  will-change: transform;
+}
+ui-swipeable-card-stack[data-dragging] > * { transition: none; }
+ui-swipeable-card-stack > *[aria-hidden='true'] { pointer-events: none; }
+ui-swipeable-card-stack:focus-visible { outline: 2px solid var(--ui-color-focus, #5567ee); outline-offset: 12px; }
+@media (prefers-reduced-motion: reduce) {
+  ui-swipeable-card-stack > * { transition: none !important; animation: none !important; }
+}

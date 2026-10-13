@@ -496,6 +496,32 @@ All components share a predictable API — attributes are `kebab-case`, events a
 
 <div class="comp-card">
   <div class="comp-card-header">
+    <h3>Grid Hover Expand</h3>
+    <span class="comp-badge advanced">Advanced</span>
+  </div>
+  <p class="comp-tag">&lt;ui-grid-hover-expand&gt;</p>
+  <p class="comp-desc">Expand the hovered card within its row while neighboring cards make room.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/grid-hover-expand">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5173/#/ui-grid-hover-expand" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Swipeable Card Stack</h3>
+    <span class="comp-badge advanced">Advanced</span>
+  </div>
+  <p class="comp-tag">&lt;ui-swipeable-card-stack&gt;</p>
+  <p class="comp-desc">Swipe the front card in either direction to reveal the next layered card.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/swipeable-card-stack">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5173/#/ui-swipeable-card-stack" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
     <h3>Dot Morph</h3>
     <span class="comp-badge advanced">Advanced</span>
   </div>

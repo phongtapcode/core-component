@@ -43,6 +43,8 @@ export default defineConfig({
           { text: 'DarkMode', link: '/components/dark-mode' },
           { text: 'Carousel', link: '/components/carousel' },
           { text: 'Expandable Grid', link: '/components/expandable-grid' },
+          { text: 'Grid Hover Expand', link: '/components/grid-hover-expand' },
+          { text: 'Swipeable Card Stack', link: '/components/swipeable-card-stack' },
           { text: 'Orbit Gallery', link: '/components/orbit-gallery' },
           { text: 'Dot Morph', link: '/components/dot-morph' },
           { text: 'Marquee', link: '/components/marquee' },

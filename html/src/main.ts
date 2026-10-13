@@ -262,7 +262,7 @@ function thumbFor(tag: string): string {
     'ui-collapse': '⌄', 'ui-accordion': '☷', 'ui-tabs': '▤', 'ui-modal': '▣', 'ui-cursor': '◎',
     'ui-drawer': '◧', 'ui-popover': '▢', 'ui-tooltip': '?', 'ui-lazyload': '◐',
     'ui-image-comparison': '◒', 'ui-counter': '99', 'ui-dark-mode': '☼',
-    'ui-marquee': '→', 'ui-carousel': '◫', 'ui-expandable-grid': '▦', 'ui-orbit-gallery': '◌', 'ui-dot-morph': '✳',
+    'ui-marquee': '→', 'ui-carousel': '◫', 'ui-expandable-grid': '▦', 'ui-grid-hover-expand': '▥', 'ui-swipeable-card-stack': '▤', 'ui-orbit-gallery': '◌', 'ui-dot-morph': '✳',
   };
   return `<span class="thumb-art thumb-${tag}" aria-hidden="true"><span class="thumb-orbit"></span><span class="thumb-symbol">${symbols[tag] ?? '✦'}</span><span class="thumb-caption">${tag.replace(/^ui-/, '')}</span></span>`;
 }
@@ -445,6 +445,7 @@ function renderDocPage(rawSlug: string): void {
   wireButtons();
   wireAnimateReplay(appRoot);
   wireParallaxDemo(appRoot);
+  wireSwipeableStackDemo(appRoot);
   wireToastDemo(appRoot);
   wireDotMorphDemo(appRoot);
 }
@@ -486,8 +487,21 @@ function renderDemo(tagName: string): void {
   wireButtons();
   wireAnimateReplay(appRoot);
   wireParallaxDemo(appRoot);
+  wireSwipeableStackDemo(appRoot);
   wireToastDemo(appRoot);
   wireDotMorphDemo(appRoot);
+}
+
+function renderFlyingWord(word: string, firstIndex: number): string {
+  return `<span class="text-fly-word" aria-hidden="true">${Array.from(word).map((letter, position) => {
+    const index = firstIndex + position;
+    const from = index * 3.76;
+    const to = Math.min(100, from + 6);
+    const y = (index * 23) % 41 - 20;
+    const rotate = (index * 37) % 81 - 40;
+    const frames = { [`${from}%`]: { y: `${y}vh`, rotate }, [`${to}%`]: { y: '0vh', rotate: 0 } };
+    return `<ui-parallax-scroll class="text-fly-letter" ui-start="offset" ui-end="offset + container.offsetHeight - window.innerHeight" ui-keyframes='${JSON.stringify(frames)}'>${letter}</ui-parallax-scroll>`;
+  }).join('')}</span>`;
 }
 
 function renderDemoBody(tag: string, variant: string): string {
@@ -555,6 +569,35 @@ function renderDemoBody(tag: string, variant: string): string {
       `;
     }
     case 'ui-parallax': {
+      if (variant === 'Text fly') return `
+        <div class="text-fly-intro"><span>SCROLL STUDY / TYPE & IMAGE</span><h2>Chữ cũng có thể<br /><em>kể chuyện.</em></h2><p>Kéo xuống: câu chữ dài đi từ phải sang trái, từng ký tự ghép vào nhau; ảnh bay quanh dòng chữ để trang trí.</p><span aria-hidden="true">↓</span></div>
+        <ui-parallax class="text-fly-section">
+          <div class="text-fly-stage">
+            <div class="text-fly-topline"><span>01 / THE WORDS</span><span>KEEP SCROLLING ↓</span></div>
+            <ui-parallax-scroll class="text-fly-track" ui-fit-content="false" ui-start="offset" ui-end="offset + container.offsetHeight - window.innerHeight" ui-keyframes="{'0%': {travel: 0}, '100%': {travel: 1}}">
+              <h2 class="text-fly-headline" aria-label="we wannabe where the people are">
+                ${renderFlyingWord('we', 0)}
+                ${renderFlyingWord('wannabe', 2)}
+                ${renderFlyingWord('where', 9)}
+                ${renderFlyingWord('the', 14)}
+                ${renderFlyingWord('people', 17)}
+                ${renderFlyingWord('are', 23)}
+                <ui-parallax-scroll class="text-fly-decor text-fly-decor--one" ui-fit-content="false" ui-start="offset" ui-end="offset + container.offsetHeight - window.innerHeight" ui-keyframes="{'22%': {y: '-40vh', rotate: -35, scale: 0, opacity: 0}, '38%': {y: '0vh', rotate: -9, scale: 1, opacity: 1}, '46%': {y: '2vh', rotate: -5, scale: .94, opacity: 1}, '54%': {y: '0vh', rotate: -9, scale: 1, opacity: 1}}"><img src="/images/coast.jpg" alt="" loading="lazy" /></ui-parallax-scroll>
+                <ui-parallax-scroll class="text-fly-decor text-fly-decor--two" ui-fit-content="false" ui-start="offset" ui-end="offset + container.offsetHeight - window.innerHeight" ui-keyframes="{'43%': {y: '28vh', rotate: 25, scale: 0, opacity: 0}, '60%': {y: '0vh', rotate: 8, scale: 1, opacity: 1}, '68%': {y: '3vh', rotate: 4, scale: .94, opacity: 1}, '76%': {y: '0vh', rotate: 8, scale: 1, opacity: 1}}"><img src="/images/botanical.jpg" alt="" loading="lazy" /></ui-parallax-scroll>
+              </h2>
+            </ui-parallax-scroll>
+            <ui-parallax-scroll class="text-fly-caption" ui-start="offset" ui-end="offset + container.offsetHeight - window.innerHeight" ui-keyframes="{'0%': {y: 35, opacity: 0}, '32%': {y: 0, opacity: 1}, '100%': {y: 0, opacity: 1}}">The best stories stay with us because they move us.</ui-parallax-scroll>
+            <ui-parallax-scroll class="text-fly-arrow" ui-start="offset" ui-end="offset + container.offsetHeight - window.innerHeight" ui-keyframes="{'0%': {x: -40, opacity: 0}, '46%': {x: 0, opacity: 1}, '100%': {x: 70, opacity: 1}}" aria-hidden="true">↗</ui-parallax-scroll>
+          </div>
+        </ui-parallax>
+        <ui-parallax class="text-fly-photo-section">
+          <div class="text-fly-photo-stage">
+            <ui-parallax-scroll class="text-fly-photo" ui-fit-content="false" ui-start="offset" ui-end="offset + container.offsetHeight - window.innerHeight" ui-keyframes="{'0%': {scale: 1.32}, '100%': {scale: 1}}"><img src="/images/architecture.jpg" alt="Warm light falling across a sculptural staircase" loading="lazy" /></ui-parallax-scroll>
+            <div class="text-fly-photo-shade"></div>
+            <div class="text-fly-photo-copy"><span>02 / THE MOMENT</span><h2 aria-label="We are UI">${['WE', 'ARE', 'UI'].map((word, index) => `<ui-parallax-scroll ui-start="offset" ui-end="offset + container.offsetHeight - window.innerHeight" ui-keyframes="{'${index * 12}%': {x: ${index % 2 ? -160 : 160}, y: 110, rotate: ${index % 2 ? -16 : 16}, opacity: 0, blur: 10}, '${48 + index * 11}%': {x: 0, y: 0, rotate: 0, opacity: 1, blur: 0}}" aria-hidden="true">${word}</ui-parallax-scroll>`).join(' ')}</h2><p>Ảnh và chữ cùng chuyển động theo một vùng cuộn.</p></div>
+            <span class="text-fly-photo-bottom">FORM FOLLOWS FEELING — UI COMPONENTS</span>
+          </div>
+        </ui-parallax>`;
       if (variant === 'Circular scroll') {
         const circularImages = ['/images/coast.jpg', '/images/architecture.jpg', '/images/botanical.jpg'];
         const circularTitles = ['Open horizons', 'A new angle', 'Quiet details', 'Into the light', 'Natural forms', 'Room to breathe', 'Look closer', 'Keep exploring'];
@@ -1211,6 +1254,46 @@ function renderDemoBody(tag: string, variant: string): string {
           ${controls}
         </ui-carousel>`;
     }
+    case 'ui-grid-hover-expand': {
+      const compact = variant === 'Compact cards';
+      const edge = variant === 'Edge to edge';
+      const allCards = [
+        { image: 'coast', name: 'Open water', type: 'Coastal study', position: 'center' },
+        { image: 'architecture', name: 'Quiet lines', type: 'Architecture', position: '22% center' },
+        { image: 'botanical', name: 'New growth', type: 'Botanical study', position: 'center' },
+        { image: 'architecture', name: 'Warm light', type: 'Places', position: '75% center' },
+        { image: 'coast', name: 'Blue hour', type: 'Landscape', position: '75% center' },
+        { image: 'botanical', name: 'Natural forms', type: 'Nature', position: '70% center' },
+      ];
+      const cards = edge ? allCards.slice(0, 3) : allCards;
+      return `<p class="demo-text">Hover a card or focus it with Tab. Only cards in the same row change width; the grid resets when you leave.</p>
+        <ui-grid-hover-expand class="grid-hover-demo${compact ? ' grid-hover-demo--compact' : ''}${edge ? ' grid-hover-demo--edge' : ''}" style="--xs:1;--sm:1;--md:${edge ? 3 : 2};--lg:${compact ? 4 : 3}" ui-gap="${edge ? 0 : 16}" ui-duration="400">
+          ${cards.map((card, index) => `<div><div class="grid-hover-demo__card" tabindex="0" role="img" aria-label="${card.name}, ${card.type}">
+            <img src="/images/${card.image}.jpg" alt="" loading="lazy" style="object-position:${card.position}" />
+            <span class="grid-hover-demo__number">${String(index + 1).padStart(2, '0')} / ${String(cards.length).padStart(2, '0')}</span>
+            <div class="grid-hover-demo__caption"><small>${card.type}</small><h3>${card.name}</h3><span>Discover the story ↗</span></div>
+          </div></div>`).join('')}
+        </ui-grid-hover-expand>`;
+    }
+    case 'ui-swipeable-card-stack': {
+      const style = variant === 'Down stack' ? 2 : variant === 'Scattered deck' ? 3 : 1;
+      const photos = [
+        { image: 'coast', name: 'Open water', category: 'LANDSCAPE', position: 'center' },
+        { image: 'architecture', name: 'Quiet lines', category: 'ARCHITECTURE', position: '25% center' },
+        { image: 'botanical', name: 'New growth', category: 'BOTANICAL', position: 'center' },
+        { image: 'coast', name: 'Blue hour', category: 'LANDSCAPE', position: '78% center' },
+        { image: 'architecture', name: 'Warm light', category: 'ARCHITECTURE', position: '74% center' },
+      ];
+      return `<section class="swipe-stack-demo swipe-stack-demo--${style}">
+        <div class="swipe-stack-demo__intro"><span class="eyebrow">CARD STUDY / 0${style}</span><h2>${style === 1 ? 'A story in layers.' : style === 2 ? 'The next one waits.' : 'A little disorder.'}</h2><p>Drag the front card left or right. A short drag returns it to place; a full swipe brings the next card forward.</p></div>
+        <div class="swipe-stack-demo__stage">
+          <ui-swipeable-card-stack class="ui-swipeable-card-stack--style-${style}" ui-style="${style}" ui-items-to-show="${style === 3 ? 5 : 4}" ui-scale-threshold="0.1" ui-speed="400" ui-easing="${style === 1 ? 'spring' : 'decay'}" aria-label="Photo card stack">
+            ${photos.map((photo, index) => `<article class="swipe-stack-demo__card"><img src="/images/${photo.image}.jpg" alt="${photo.name}" loading="lazy" style="object-position:${photo.position}" /><div class="swipe-stack-demo__shade"></div><div class="swipe-stack-demo__card-top"><span>FIELD NOTES</span><span>${String(index + 1).padStart(2, '0')} / 05</span></div><div class="swipe-stack-demo__card-bottom"><small>${photo.category}</small><h3>${photo.name}</h3></div></article>`).join('')}
+          </ui-swipeable-card-stack>
+        </div>
+        <div class="swipe-stack-demo__controls"><button type="button" data-stack-direction="left" aria-label="Swipe card left">←</button><span data-stack-counter>01 / 05</span><button type="button" data-stack-direction="right" aria-label="Swipe card right">→</button><button type="button" class="swipe-stack-demo__jump" data-stack-goto="4">Go to last card ↗</button></div>
+      </section>`;
+    }
     case 'ui-expandable-grid': {
       const compact = variant === 'Compact grid';
       const photos = [
@@ -1292,6 +1375,18 @@ function wireAnimateReplay(root: HTMLElement): void {
 }
 
 function wireParallaxDemo(root: HTMLElement): void {
+  root.querySelectorAll<HTMLElement>('.text-fly-track').forEach((element) => {
+    const scroll = element as HTMLElement & { customEffects(callback: (params: { element: HTMLElement; createValue: (key: string) => string | number; EMPTY: string }) => void): void };
+    scroll.customEffects(({ element: target, createValue, EMPTY }) => {
+      const value = createValue('travel');
+      if (value === EMPTY) return;
+      const progress = Math.max(0, Math.min(1, Number(value)));
+      const viewportWidth = target.parentElement?.clientWidth ?? window.innerWidth;
+      const start = viewportWidth * 0.78;
+      const end = viewportWidth * 0.64 - target.offsetWidth;
+      target.style.transform = `translate3d(${start + (end - start) * progress}px, 0, 0)`;
+    });
+  });
   root.querySelectorAll<HTMLElement>('.parallax-custom-demo').forEach((element) => {
     const scroll = element as HTMLElement & { customEffects(callback: (params: { element: HTMLElement; createValue: (key: string) => string | number; EMPTY: string }) => void): void };
     scroll.customEffects(({ element: target, createValue, EMPTY }) => {
@@ -1305,6 +1400,29 @@ function wireParallaxDemo(root: HTMLElement): void {
       const value = createValue('orbitShift');
       if (value !== EMPTY) target.style.setProperty('--orbit-shift', `${Number(value)}px`);
     });
+  });
+}
+
+function wireSwipeableStackDemo(root: HTMLElement): void {
+  root.querySelectorAll<HTMLElement>('.swipe-stack-demo').forEach((demo) => {
+    const stack = demo.querySelector('ui-swipeable-card-stack') as HTMLElement & {
+      readonly activeIndex: number;
+      readonly items: HTMLElement[];
+      swipeLeft(): Promise<void>;
+      swipeRight(): Promise<void>;
+      goTo(index: number): Promise<void>;
+    } | null;
+    if (!stack) return;
+    const counter = demo.querySelector<HTMLElement>('[data-stack-counter]');
+    const update = (): void => {
+      if (counter) counter.textContent = `${String(stack.activeIndex + 1).padStart(2, '0')} / ${String(stack.items.length).padStart(2, '0')}`;
+    };
+    stack.addEventListener('ui:swipeable-card-stack:change', update);
+    demo.querySelectorAll<HTMLButtonElement>('[data-stack-direction]').forEach((button) => {
+      button.addEventListener('click', () => { void (button.dataset['stackDirection'] === 'right' ? stack.swipeRight() : stack.swipeLeft()); });
+    });
+    demo.querySelector<HTMLButtonElement>('[data-stack-goto]')?.addEventListener('click', () => { void stack.goTo(4); });
+    update();
   });
 }
 

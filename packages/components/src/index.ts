@@ -23,6 +23,8 @@ import './photoswipe.js';
 import './expandable-grid.js';
 import './orbit-gallery.js';
 import './dot-morph.js';
+import './grid-hover-expand.js';
+import './swipeable-card-stack.js';
 
 export {
   UiToggle,
@@ -75,5 +77,7 @@ export { UiPhotoSwipe, parsePhotoSwipeOptions } from './photoswipe.js';
 export { UiExpandableGrid, UiExpandableGridItem } from './expandable-grid.js';
 export { UiOrbitGallery, UiOrbitGalleryTrack, UiOrbitGalleryItem } from './orbit-gallery.js';
 export { UiDotMorph } from './dot-morph.js';
+export { UiGridHoverExpand } from './grid-hover-expand.js';
+export { UiSwipeableCardStack } from './swipeable-card-stack.js';
 
 export { lockScroll, trapFocus, unlockScroll } from './focus-trap.js';

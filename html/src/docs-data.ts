@@ -42,6 +42,59 @@ export interface ComponentDoc {
 }
 
 export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
+  'swipeable-card-stack': {
+    slug: 'swipeable-card-stack', tagName: 'ui-swipeable-card-stack', name: 'Swipeable Card Stack', category: 'Advanced',
+    summary: 'Swipe the front card left or right to bring the next card forward. Supports pointer, touch, keyboard, and JavaScript control.',
+    usage: `<ui-swipeable-card-stack class="ui-swipeable-card-stack--style-1" ui-items-to-show="4" ui-scale-threshold="0.1" ui-speed="400" ui-easing="decay">
+  <div class="card">First card</div>
+  <div class="card">Second card</div>
+  <div class="card">Third card</div>
+  <div class="card">Fourth card</div>
+</ui-swipeable-card-stack>`,
+    attributes: [
+      { name: 'ui-items-to-show', type: 'number', default: '5', description: 'Maximum number of visible layers. Remaining cards wait behind the stack.' },
+      { name: 'ui-scale-threshold', type: 'number', default: '0.1', description: 'Scale reduction per layer, clamped to keep cards legible.' },
+      { name: 'ui-speed', type: 'milliseconds', default: '600', description: 'Swipe-out and return transition duration.' },
+      { name: 'ui-easing', type: 'spring | decay | linear | ease | easeIn | easeOut | easeInOut', default: 'spring', description: 'Transition easing preset.' },
+      { name: 'ui-style', type: '1 | 2 | 3', default: '1', description: 'Stack arrangement: offset right, offset downward, or scattered fan. The matching style class also works.' },
+      { name: 'ui-active', type: 'boolean', description: 'Reflected on the current front card.' },
+    ],
+    methods: [
+      { name: 'swipeLeft()', description: 'Animate the front card to the left and reveal the next card.' },
+      { name: 'swipeRight()', description: 'Animate the front card to the right and reveal the next card.' },
+      { name: 'goTo(index)', description: 'Advance in DOM order to a zero-based card index.' },
+      { name: 'refresh()', description: 'Recount cards and update layers after changing content or layout.' },
+    ],
+    events: [{ name: 'ui:swipeable-card-stack:change', detail: '{ activeIndex, previousIndex, item, direction }', description: 'Emitted after a committed swipe.' }],
+    cssVars: [
+      { name: '--ui-stack-width', default: '300px', description: 'Stack width.' },
+      { name: '--ui-stack-card-height', default: '400px', description: 'Minimum card height.' },
+      { name: '--ui-layer', default: 'computed', description: 'Each card’s interpolated depth in the stack.' },
+      { name: '--ui-interpolated', default: 'computed', description: 'Each card’s scale during drag.' },
+    ],
+    a11y: 'Focus the stack and use Left/Right arrows to advance. Only the front card is interactive; reduced motion removes transitions. Touch gestures preserve vertical page scrolling.',
+  },
+  'grid-hover-expand': {
+    slug: 'grid-hover-expand', tagName: 'ui-grid-hover-expand', name: 'Grid Hover Expand', category: 'Advanced',
+    summary: 'All cards start with equal widths. Hover or focus a card to expand it inside its own row.',
+    usage: `<ui-grid-hover-expand ui-gap="0" style="--xs: 1; --sm: 1; --md: 3; --lg: 3">
+  <div><img src="photo-1.jpg" alt="Coast" /></div>
+  <div><img src="photo-2.jpg" alt="City" /></div>
+  <div><img src="photo-3.jpg" alt="Garden" /></div>
+</ui-grid-hover-expand>`,
+    attributes: [
+      { name: 'ui-active-index', type: 'number', description: 'Optional zero-based card to expand before hover or after the pointer leaves.' },
+      { name: 'ui-duration', type: 'milliseconds', default: '200', description: 'Width transition duration.' },
+      { name: 'ui-gap', type: 'number (px)', default: '20', description: 'Horizontal and vertical spacing. Set to 0 for cards that touch.' },
+      { name: 'ui-active', type: 'boolean', description: 'Reflected on the expanded direct child.' },
+    ],
+    cssVars: [
+      { name: '--xs / --sm / --md / --lg', default: '1', description: 'Columns at viewport widths below 576, 576+, 768+, and 992+ px.' },
+      { name: '--ui-grid-hover-column-gap', default: '20px', description: 'Horizontal spacing between cards.' },
+      { name: '--ui-grid-hover-row-gap', default: '20px', description: 'Vertical spacing between rows.' },
+    ],
+    a11y: 'Put a focusable link or button inside each card. Focusing it expands the card; touch layouts remain equal width.',
+  },
   'dot-morph': {
     slug: 'dot-morph', tagName: 'ui-dot-morph', name: 'Dot Morph', category: 'Advanced',
     summary: 'Scatter particles randomly, then gather them into arbitrary text on hover, focus, or touch.',

@@ -64,6 +64,55 @@ Demo **Scroll keyframes** trong gallery là một section sticky cao `300vh` v�
 
 Demo đầy đủ có hai lớp ảnh nền, hai thẻ ảnh, hai khối chữ và bố cục tĩnh hiển thị đủ nội dung khi người dùng bật reduced motion.
 
+## Text fly: câu chữ dài ghép dần theo scroll
+
+Demo **Text fly** trong gallery gồm hai cảnh sticky. Cảnh đầu đưa câu dài từ gần mép phải sang trái; từng ký tự bay về vị trí của mình theo thứ tự. Hai ảnh nhỏ bay quanh dòng chữ để trang trí, không chiếm chỗ trong câu. Cảnh sau ghép chữ bay vào với ảnh nền zoom chậm. Tất cả dùng `ui-parallax` và `ui-parallax-scroll`, không cần bật smooth scroll toàn trang.
+
+```html
+<ui-parallax class="text-fly-section">
+  <div class="text-fly-stage">
+    <ui-parallax-scroll class="text-fly-track" ui-fit-content="false"
+      ui-start="offset"
+      ui-end="offset + container.offsetHeight - window.innerHeight"
+      ui-keyframes="{'0%': {travel: 0}, '100%': {travel: 1}}">
+      <h2 class="text-fly-headline" aria-label="we wannabe where the people are">
+        <span>we wannabe where the people are</span>
+        <ui-parallax-scroll class="text-fly-decor" ui-fit-content="false"
+          ui-start="offset"
+          ui-end="offset + container.offsetHeight - window.innerHeight"
+          ui-keyframes="{'18%': {y: -280, rotate: -24, scale: .45, opacity: 0}, '37%': {y: 0, rotate: -7, scale: 1, opacity: 1}}">
+          <img src="/images/coast.jpg" alt="" />
+        </ui-parallax-scroll>
+      </h2>
+    </ui-parallax-scroll>
+  </div>
+</ui-parallax>
+```
+
+```css
+.text-fly-section { height: 280vh; }
+.text-fly-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+.text-fly-track, .text-fly-headline { width: max-content; }
+.text-fly-headline { display: flex; align-items: center; white-space: nowrap; }
+.text-fly-decor { position: absolute; top: -.4em; left: 19%; width: .7em; height: .86em; }
+.text-fly-decor img { width: 100%; height: 100%; object-fit: cover; }
+```
+
+```js
+const track = document.querySelector('.text-fly-track');
+track.customEffects(({ element, createValue, EMPTY }) => {
+  const travel = createValue('travel');
+  if (travel === EMPTY) return;
+  const width = element.parentElement.clientWidth;
+  const start = width * 0.78;
+  const end = width * 0.64 - element.offsetWidth;
+  const x = start + (end - start) * Number(travel);
+  element.style.transform = `translate3d(${x}px, 0, 0)`;
+});
+```
+
+Đoạn HTML trên rút gọn phần ký tự. Trong demo, từng chữ cái cũng là một `ui-parallax-scroll` với hai mốc riêng: `from = index × 3.76%`, `to = from + 6%`. Mốc đầu đặt `y` và `rotate` lệch; mốc sau trả chúng về 0. Phần dịch ngang dùng `customEffects()` đọc `travel` từ 0 đến 1 và đo chiều rộng câu. Chữ đầu bắt đầu ở khoảng 78% chiều rộng màn hình, chữ cuối dừng ở 64% chiều rộng màn hình để còn đủ chỗ thấy các ký tự bay vào. Chuỗi `ui-keyframes` chỉ chứa giá trị đã tính: `random(...)`, phép nhân trong tên mốc và biểu thức `this.offsetWidth` của mẫu XO không được parser của UI thực thi. `ui-start="offset"` và `ui-end="offset + container.offsetHeight - window.innerHeight"` làm hiệu ứng chạy đúng trong quãng stage đang sticky.
+
 ## Circular scroll
 
 Demo **Circular scroll** trong gallery đặt tám `ui-parallax-scroll` trên một `offset-path` hình tròn. Container cao `480vh`; stage cao `100vh` và sticky. Mỗi thẻ cách nhau `360px` trên cung tròn. Một keyframe tùy chỉnh thay đổi quãng đường đi từ `0` đến `-2520px` (bảy khoảng cách giữa tám thẻ).
