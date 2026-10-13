@@ -1283,3 +1283,27 @@ ui-swipeable-card-stack:focus-visible { outline: 2px solid var(--ui-color-focus,
 @media (prefers-reduced-motion: reduce) {
   ui-swipeable-card-stack > * { transition: none !important; animation: none !important; }
 }
+
+/* Each visible dot is drawn on canvas from a sampled logo pixel. */
+ui-logo-assembly {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: var(--ui-logo-assembly-height, 460px);
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: pointer;
+}
+ui-logo-assembly[ui-interaction='none'], ui-logo-assembly[ui-interaction='hover'] { cursor: default; }
+ui-logo-assembly:focus-visible { outline: 2px solid var(--ui-color-focus, #8deaff); outline-offset: 4px; }
+.ui-logo-assembly__canvas { display: block; width: 100%; height: 100%; pointer-events: none; }
+ui-logo-assembly[data-ui-logo-fallback]::after,
+ui-logo-assembly[ui-error]:not([ui-ready])::after {
+  content: 'Logo preview unavailable';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font: 600 1rem/1.4 system-ui, sans-serif;
+}

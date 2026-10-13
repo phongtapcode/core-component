@@ -1485,3 +1485,27 @@ ui-toast[data-toast-live].gallery-toast--custom { --toast-accent:#8b64c7; }
 .dot-morph-demo__footer input { width:min(300px,70vw); padding:.75rem .9rem; border:1px solid #ffffff8a; border-radius:8px; background:#ffffff12; color:#fff; font-family:inherit; font-size:1rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; outline-offset:3px; }
 .dot-morph-demo__footer input:focus { outline:2px solid var(--ui-dot-color); }
 @media (max-width:650px) { .dot-morph-demo__footer { align-items:start; flex-direction:column; } }
+
+.logo-assembly-demo { overflow:hidden; border-radius:28px; padding:clamp(24px,4vw,54px); color:#fff; background:#080e24; box-shadow:inset 0 0 0 1px #ffffff16; }
+.logo-assembly-demo__heading { position:relative; z-index:1; max-width:620px; }
+.logo-assembly-demo__heading .eyebrow { color:#8deaff; }
+.logo-assembly-demo__heading h2 { margin:.6rem 0; font-size:clamp(2.5rem,5vw,5rem); line-height:1; letter-spacing:-.06em; }
+.logo-assembly-demo__heading h2 em { color:#a4b5ff; font-family:Georgia,serif; font-weight:400; }
+.logo-assembly-demo__heading p { max-width:470px; color:#c8d5ed; line-height:1.6; }
+.logo-assembly-demo__stage { position:relative; margin:1.3rem 0; overflow:hidden; border:1px solid #91b5ff30; border-radius:22px; background:radial-gradient(ellipse at 50% 55%,#233b7159,#0a1431 50%,#070d1e 100%); }
+.logo-assembly-demo__stage::before { content:""; position:absolute; inset:0; pointer-events:none; background-image:radial-gradient(#e7f5ff 1px,transparent 1px); background-size:39px 43px; opacity:.14; mask-image:radial-gradient(ellipse,#0002 15%,#000 75%,transparent); }
+.logo-assembly-demo__stage ui-logo-assembly { --ui-logo-assembly-height:clamp(350px,43vw,550px); }
+.logo-assembly-demo__caption { position:absolute; inset:auto 22px 20px; display:flex; justify-content:space-between; gap:1rem; pointer-events:none; color:#bfd4f3; font-size:.68rem; font-weight:700; letter-spacing:.14em; }
+.logo-assembly-demo__actions { display:flex; flex-wrap:wrap; gap:.7rem; align-items:center; }
+.logo-assembly-demo__actions button,.logo-assembly-demo__upload { display:inline-flex; align-items:center; justify-content:center; min-height:44px; padding:.7rem 1rem; border:1px solid #a5c2ff55; border-radius:999px; background:#ffffff0e; color:#f5f8ff; font:600 .85rem/1.2 inherit; cursor:pointer; transition:background .2s,border-color .2s,transform .2s; }
+.logo-assembly-demo__actions button:hover,.logo-assembly-demo__upload:hover { background:#ffffff24; border-color:#a5c2ff; transform:translateY(-2px); }
+.logo-assembly-demo__upload input { position:absolute; width:1px; height:1px; opacity:0; }
+.logo-assembly-demo__upload:focus-within { outline:2px solid #8deaff; outline-offset:3px; }
+.logo-assembly-demo__controls { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:1rem 1.3rem; margin-top:1.8rem; padding-top:1.5rem; border-top:1px solid #ffffff24; }
+.logo-assembly-demo__controls label { display:grid; grid-template-columns:1fr auto; gap:.5rem; align-items:center; color:#c8d5ed; font-size:.75rem; font-weight:600; letter-spacing:.03em; }
+.logo-assembly-demo__controls input { grid-column:1/-1; width:100%; accent-color:#90dfff; }
+.logo-assembly-demo__controls output { color:#fff; font-variant-numeric:tabular-nums; }
+.logo-assembly-demo__controls select { grid-column:1/-1; min-height:36px; padding:.4rem .6rem; border:1px solid #91b5ff55; border-radius:8px; color:#fff; background:#142046; }
+.logo-assembly-demo__controls input[type='color'] { grid-column:1; width:54px; height:34px; padding:2px; border:1px solid #91b5ff55; border-radius:8px; background:#142046; cursor:pointer; }
+.logo-assembly-demo__controls [data-logo-original-color] { grid-column:2; min-height:34px; padding:.35rem .6rem; border:1px solid #91b5ff55; border-radius:8px; color:#fff; background:#ffffff13; cursor:pointer; }
+@media(max-width:650px) { .logo-assembly-demo__caption { font-size:.55rem; inset-inline:14px; } .logo-assembly-demo__actions { display:grid; grid-template-columns:1fr 1fr; } .logo-assembly-demo__actions button,.logo-assembly-demo__upload { width:100%; font-size:.72rem; } }

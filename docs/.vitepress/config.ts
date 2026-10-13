@@ -47,6 +47,7 @@ export default defineConfig({
           { text: 'Swipeable Card Stack', link: '/components/swipeable-card-stack' },
           { text: 'Orbit Gallery', link: '/components/orbit-gallery' },
           { text: 'Dot Morph', link: '/components/dot-morph' },
+          { text: 'Logo Assembly', link: '/components/logo-assembly' },
           { text: 'Marquee', link: '/components/marquee' },
         ],
       },

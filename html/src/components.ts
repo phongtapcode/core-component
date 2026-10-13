@@ -209,4 +209,11 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     description: 'Random particles gather into any word when you hover, focus, or tap.',
     demos: ['Type your word', 'Neon particles'],
   },
+  {
+    name: 'Logo Assembly',
+    tagName: 'ui-logo-assembly',
+    category: 'Advanced',
+    description: 'Thousands of colored particles gather into a logo, react to the pointer, and rebuild after an explosion.',
+    demos: ['Nova mark', 'Prism mark'],
+  },
 ];

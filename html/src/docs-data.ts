@@ -42,6 +42,42 @@ export interface ComponentDoc {
 }
 
 export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
+  'logo-assembly': {
+    slug: 'logo-assembly', tagName: 'ui-logo-assembly', name: 'Logo Assembly', category: 'Advanced',
+    summary: 'Build a colored logo from thousands of independently moving particles. Supports SVG, PNG, and WebP, pointer repulsion, explosion, and a continuous morph to a new logo.',
+    usage: `<ui-logo-assembly ui-src="/logo.svg" ui-count="3600" ui-particle-size="1.7" ui-speed="2300" ui-attraction="0.024" ui-repel="3.2" aria-label="Animated brand logo"></ui-logo-assembly>`,
+    attributes: [
+      { name: 'ui-src', type: 'URL', default: 'built-in mark', description: 'SVG, PNG, or WebP logo. Transparent pixels are excluded; sampled particles retain source colors.' },
+      { name: 'ui-count', type: 'number', default: '3600', description: 'Requested particles. Automatically capped at 1500 on narrow or touch screens.' },
+      { name: 'ui-particle-size', type: 'number', default: '1.7', description: 'Particle size multiplier. At the default value, dot radius adapts to the opaque logo area and actual particle count to avoid gaps.' },
+      { name: 'ui-color', type: 'CSS color', description: 'Optional particle color override. Omit to preserve logo colors.' },
+      { name: 'ui-brightness', type: 'number', default: '1', description: 'Particle opacity and brightness multiplier.' },
+      { name: 'ui-glow', type: 'number', default: '7', description: 'Glow strength on a sparse subset of particles.' },
+      { name: 'ui-speed', type: 'milliseconds', default: '2300', description: 'Assembly and morph timing.' },
+      { name: 'ui-attraction', type: 'number', default: '0.024', description: 'Spring force pulling particles toward their logo positions.' },
+      { name: 'ui-repel', type: 'number', default: '3.2', description: 'Pointer repulsion strength.' },
+      { name: 'ui-repel-radius', type: 'number (px)', default: '110', description: 'Radius around the pointer affected by repulsion.' },
+      { name: 'ui-interaction', type: 'all | hover | click | none', default: 'all', description: 'Enabled pointer interactions.' },
+      { name: 'ui-auto', type: 'boolean string', default: 'true', description: 'Set to false to assemble manually with assemble().' },
+    ],
+    methods: [
+      { name: 'assemble()', description: 'Gather scattered or exploded particles into the logo.' },
+      { name: 'scatter()', description: 'Return particles to the floating star field.' },
+      { name: 'explode()', description: 'Burst the assembled logo and then automatically rebuild it.' },
+      { name: 'setLogo(src)', description: 'Morph the existing particles into another logo URL.' },
+      { name: 'loadFile(file)', description: 'Load a local SVG, PNG, or WebP file.' },
+    ],
+    events: [
+      { name: 'ui:logo-assembly:ready', detail: '{ count }', description: 'A logo has been sampled into particles.' },
+      { name: 'ui:logo-assembly:assemble', description: 'Particles start gathering into the logo.' },
+      { name: 'ui:logo-assembly:assembled', description: 'The logo has completed its assembly.' },
+      { name: 'ui:logo-assembly:scatter', description: 'Particles return to the star field.' },
+      { name: 'ui:logo-assembly:explode', description: 'The explosion has started.' },
+      { name: 'ui:logo-assembly:error', detail: '{ src | reason }', description: 'The image could not be loaded or sampled.' },
+    ],
+    cssVars: [{ name: '--ui-logo-assembly-height', default: '460px', description: 'Height of the particle field.' }],
+    a11y: 'Give the logo an accessible label. Enter or Space triggers an explosion. Offscreen animation pauses; reduced motion shows an assembled, still logo.',
+  },
   'swipeable-card-stack': {
     slug: 'swipeable-card-stack', tagName: 'ui-swipeable-card-stack', name: 'Swipeable Card Stack', category: 'Advanced',
     summary: 'Swipe the front card left or right to bring the next card forward. Supports pointer, touch, keyboard, and JavaScript control.',

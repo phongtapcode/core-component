@@ -262,7 +262,7 @@ function thumbFor(tag: string): string {
     'ui-collapse': '⌄', 'ui-accordion': '☷', 'ui-tabs': '▤', 'ui-modal': '▣', 'ui-cursor': '◎',
     'ui-drawer': '◧', 'ui-popover': '▢', 'ui-tooltip': '?', 'ui-lazyload': '◐',
     'ui-image-comparison': '◒', 'ui-counter': '99', 'ui-dark-mode': '☼',
-    'ui-marquee': '→', 'ui-carousel': '◫', 'ui-expandable-grid': '▦', 'ui-grid-hover-expand': '▥', 'ui-swipeable-card-stack': '▤', 'ui-orbit-gallery': '◌', 'ui-dot-morph': '✳',
+    'ui-marquee': '→', 'ui-carousel': '◫', 'ui-expandable-grid': '▦', 'ui-grid-hover-expand': '▥', 'ui-swipeable-card-stack': '▤', 'ui-orbit-gallery': '◌', 'ui-dot-morph': '✳', 'ui-logo-assembly': '✦',
   };
   return `<span class="thumb-art thumb-${tag}" aria-hidden="true"><span class="thumb-orbit"></span><span class="thumb-symbol">${symbols[tag] ?? '✦'}</span><span class="thumb-caption">${tag.replace(/^ui-/, '')}</span></span>`;
 }
@@ -448,6 +448,7 @@ function renderDocPage(rawSlug: string): void {
   wireSwipeableStackDemo(appRoot);
   wireToastDemo(appRoot);
   wireDotMorphDemo(appRoot);
+  wireLogoAssemblyDemo(appRoot);
 }
 
 /* ============================================================
@@ -490,6 +491,7 @@ function renderDemo(tagName: string): void {
   wireSwipeableStackDemo(appRoot);
   wireToastDemo(appRoot);
   wireDotMorphDemo(appRoot);
+  wireLogoAssemblyDemo(appRoot);
 }
 
 function renderFlyingWord(word: string, firstIndex: number): string {
@@ -1351,6 +1353,29 @@ function renderDemoBody(tag: string, variant: string): string {
         <div class="dot-morph-demo__footer"><label>FIRST WORD <input data-dot-morph-input type="text" maxlength="18" value="${words[0]}" aria-label="First word to form with particles" /></label><span>MOVE INTO THE FIELD ↗</span></div>
       </section>`;
     }
+    case 'ui-logo-assembly': {
+      const prism = variant === 'Prism mark';
+      return `<section class="logo-assembly-demo">
+        <div class="logo-assembly-demo__heading"><span class="eyebrow">PARTICLE LAB / ${prism ? '02' : '01'}</span><h2>Light becomes <em>identity.</em></h2><p>Move through the particles. Click the mark to break it apart, then watch it rebuild.</p></div>
+        <div class="logo-assembly-demo__stage">
+          <ui-logo-assembly ui-src="/images/assembly-${prism ? 'prism' : 'nova'}.svg" ui-count="3600" ui-particle-size="1.7" ui-speed="2300" ui-attraction="0.024" ui-repel="3.2" ui-repel-radius="110" ui-brightness="1" ui-glow="7" aria-label="${prism ? 'Prism' : 'Nova'} particle logo. Click to explode and rebuild."></ui-logo-assembly>
+          <div class="logo-assembly-demo__caption"><span data-logo-status>SCATTERED / WAITING TO ASSEMBLE</span><span data-logo-count>— PARTICLES</span></div>
+        </div>
+        <div class="logo-assembly-demo__actions"><button type="button" data-logo-action="explode">✦ Explode</button><button type="button" data-logo-action="scatter">⁂ Scatter</button><button type="button" data-logo-action="assemble">↗ Assemble</button><button type="button" data-logo-action="switch">⇄ Change logo</button><label class="logo-assembly-demo__upload">↑ Upload SVG / PNG / WebP<input type="file" accept="image/svg+xml,image/png,image/webp" data-logo-upload /></label></div>
+        <div class="logo-assembly-demo__controls">
+          <label>Particles <input data-logo-setting="ui-count" type="range" min="500" max="6000" step="100" value="3600" /><output>3600</output></label>
+          <label>Size <input data-logo-setting="ui-particle-size" type="range" min="0.7" max="3" step="0.1" value="1.7" /><output>1.7</output></label>
+          <label>Brightness <input data-logo-setting="ui-brightness" type="range" min="0.4" max="2" step="0.1" value="1" /><output>1</output></label>
+          <label>Speed <input data-logo-setting="ui-speed" type="range" min="700" max="5000" step="100" value="2300" /><output>2300</output></label>
+          <label>Attraction <input data-logo-setting="ui-attraction" type="range" min="0.005" max="0.08" step="0.005" value="0.024" /><output>0.024</output></label>
+          <label>Repulsion <input data-logo-setting="ui-repel" type="range" min="0" max="10" step="0.2" value="3.2" /><output>3.2</output></label>
+          <label>Repel radius <input data-logo-setting="ui-repel-radius" type="range" min="30" max="240" step="10" value="110" /><output>110</output></label>
+          <label>Glow <input data-logo-setting="ui-glow" type="range" min="0" max="20" step="1" value="7" /><output>7</output></label>
+          <label>Particle color <input type="color" value="#8deaff" data-logo-color aria-label="Override particle color" /><button type="button" data-logo-original-color>Original colors</button></label>
+          <label>Interaction <select data-logo-interaction><option value="all">Hover + click</option><option value="hover">Hover only</option><option value="click">Click only</option><option value="none">None</option></select></label>
+        </div>
+      </section>`;
+    }
     default:
       return `<code>&lt;${tag}&gt;</code>`;
   }
@@ -1488,6 +1513,63 @@ function wireDotMorphDemo(root: HTMLElement): void {
       words[0] = input.value.slice(0, 18) || 'UI';
       morph.setAttribute('ui-text', JSON.stringify(words));
     });
+  });
+}
+
+function wireLogoAssemblyDemo(root: HTMLElement): void {
+  root.querySelectorAll<HTMLElement>('.logo-assembly-demo').forEach((demo) => {
+    const logo = demo.querySelector('ui-logo-assembly') as HTMLElement & {
+      readonly particleCount: number;
+      readonly state: string;
+      assemble(): void;
+      explode(): void;
+      scatter(): void;
+      setLogo(src: string): Promise<void>;
+      loadFile(file: File): Promise<void>;
+    } | null;
+    if (!logo) return;
+    const status = demo.querySelector<HTMLElement>('[data-logo-status]');
+    const count = demo.querySelector<HTMLElement>('[data-logo-count]');
+    const update = (): void => {
+      if (status) status.textContent = logo.hasAttribute('ui-error') ? 'COULD NOT READ LOGO' : `${logo.state.toUpperCase()} / PARTICLE FIELD`;
+      if (count) count.textContent = `${logo.particleCount.toLocaleString()} PARTICLES`;
+    };
+    ['ui:logo-assembly:ready', 'ui:logo-assembly:assemble', 'ui:logo-assembly:assembled', 'ui:logo-assembly:scatter', 'ui:logo-assembly:explode', 'ui:logo-assembly:error'].forEach((name) => logo.addEventListener(name, update));
+    demo.querySelectorAll<HTMLButtonElement>('[data-logo-action]').forEach((button) => button.addEventListener('click', () => {
+      const action = button.dataset['logoAction'];
+      if (action === 'explode') logo.explode();
+      else if (action === 'scatter') logo.scatter();
+      else if (action === 'assemble') logo.assemble();
+      else if (action === 'switch') {
+        const next = logo.getAttribute('ui-src')?.includes('assembly-nova') ? 'prism' : 'nova';
+        void logo.setLogo(`/images/assembly-${next}.svg`).catch(update);
+      }
+      update();
+    }));
+    demo.querySelector<HTMLInputElement>('[data-logo-upload]')?.addEventListener('change', (event) => {
+      const file = (event.currentTarget as HTMLInputElement).files?.[0];
+      if (file) void logo.loadFile(file).then(update, update);
+    });
+    demo.querySelectorAll<HTMLInputElement>('[data-logo-setting]').forEach((input) => input.addEventListener('input', () => {
+      const attribute = input.dataset['logoSetting'];
+      if (attribute && attribute !== 'ui-count') logo.setAttribute(attribute, input.value);
+      const output = input.parentElement?.querySelector('output');
+      if (output) output.textContent = input.value;
+      update();
+    }));
+    demo.querySelector<HTMLInputElement>('[data-logo-setting="ui-count"]')?.addEventListener('change', (event) => {
+      logo.setAttribute('ui-count', (event.currentTarget as HTMLInputElement).value);
+    });
+    demo.querySelector<HTMLSelectElement>('[data-logo-interaction]')?.addEventListener('change', (event) => {
+      logo.setAttribute('ui-interaction', (event.currentTarget as HTMLSelectElement).value);
+    });
+    demo.querySelector<HTMLInputElement>('[data-logo-color]')?.addEventListener('input', (event) => {
+      logo.setAttribute('ui-color', (event.currentTarget as HTMLInputElement).value);
+    });
+    demo.querySelector<HTMLButtonElement>('[data-logo-original-color]')?.addEventListener('click', () => {
+      logo.removeAttribute('ui-color');
+    });
+    update();
   });
 }
 
