@@ -42,6 +42,24 @@ export interface ComponentDoc {
 }
 
 export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
+  'dot-morph': {
+    slug: 'dot-morph', tagName: 'ui-dot-morph', name: 'Dot Morph', category: 'Advanced',
+    summary: 'Scatter particles randomly, then gather them into arbitrary text on hover, focus, or touch.',
+    usage: `<ui-dot-morph ui-text='["CREATE","EXPLORE","INSPIRE"]' ui-duration="3000" ui-interval="1500"></ui-dot-morph>`,
+    attributes: [
+      { name: 'ui-text', type: 'JSON string[]', default: '["UI"]', description: 'Words formed in order while hovered. A single string also works.' },
+      { name: 'ui-count', type: 'number', default: 'auto', description: 'Optional particle count (20–3200). By default, density adapts to the text size.' },
+      { name: 'ui-duration', type: 'milliseconds', default: '900', description: 'Travel time into/out of the field and between words.' },
+      { name: 'ui-interval', type: 'milliseconds', default: '1800', description: 'Time each completed word stays visible before moving to the next.' },
+      { name: 'ui-active', type: 'boolean', description: 'Reflected while the text is formed.' },
+    ],
+    cssVars: [
+      { name: '--ui-dot-height', default: '280px', description: 'Minimum height of the particle field.' },
+      { name: '--ui-dot-color', default: '#fff', description: 'Particle and fallback text color.' },
+      { name: '--ui-dot-glow', default: '#ffffff8a', description: 'Particle glow color.' },
+    ],
+    a11y: 'The component exposes the text as an accessible label. Keyboard focus forms the word, touch toggles it, and reduced motion shows readable static text.',
+  },
   'orbit-gallery': {
     slug: 'orbit-gallery', tagName: 'ui-orbit-gallery', name: 'Orbit Gallery', category: 'Advanced',
     summary: 'Arrange image cards on a rotating 3D ring. Card count and positions update automatically when cards change.',

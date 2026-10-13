@@ -44,6 +44,7 @@ export default defineConfig({
           { text: 'Carousel', link: '/components/carousel' },
           { text: 'Expandable Grid', link: '/components/expandable-grid' },
           { text: 'Orbit Gallery', link: '/components/orbit-gallery' },
+          { text: 'Dot Morph', link: '/components/dot-morph' },
           { text: 'Marquee', link: '/components/marquee' },
         ],
       },

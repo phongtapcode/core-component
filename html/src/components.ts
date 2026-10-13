@@ -188,4 +188,11 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     description: 'A rotating 3D ring of image cards with captions and automatic spacing.',
     demos: ['Photo orbit', 'Reverse orbit'],
   },
+  {
+    name: 'Dot Morph',
+    tagName: 'ui-dot-morph',
+    category: 'Advanced',
+    description: 'Random particles gather into any word when you hover, focus, or tap.',
+    demos: ['Type your word', 'Neon particles'],
+  },
 ];

@@ -2,7 +2,7 @@
  * Gallery SPA entry. Hash-based routing.
  */
 
-import { uiToast, type ToastPlacement } from '@ui/components';
+import { uiToast, type ToastPlacement, type UiModal, type UiDrawer } from '@ui/components';
 import { EFFECTS } from '@ui/motion';
 import './styles.css';
 import { COMPONENTS, type ComponentEntry } from './components.js';
@@ -10,7 +10,7 @@ import { getDocForSlug } from './docs-data.js';
 
 const appRoot = document.getElementById('app')!;
 const storedTheme = localStorage.getItem('ui-theme');
-document.documentElement.dataset.theme = storedTheme === 'dark' ||
+document.documentElement.dataset['theme'] = storedTheme === 'dark' ||
   (storedTheme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
 
 /* ============================================================
@@ -73,7 +73,7 @@ function renderHome(): void {
     appRoot.querySelectorAll<HTMLElement>('.category').forEach((category) => {
       let visibleCategory = 0;
       category.querySelectorAll<HTMLElement>('.card').forEach((card) => {
-        const matches = (card.dataset.search ?? '').includes(term);
+        const matches = (card.dataset['search'] ?? '').includes(term);
         card.hidden = !matches;
         if (matches) visibleCategory++;
       });
@@ -97,8 +97,8 @@ function renderHome(): void {
     });
   });
   document.getElementById('gallery-theme')?.addEventListener('click', () => {
-    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-    document.documentElement.dataset.theme = next;
+    const next = document.documentElement.dataset['theme'] === 'dark' ? 'light' : 'dark';
+    document.documentElement.dataset['theme'] = next;
     localStorage.setItem('ui-theme', next);
     updateThemeButton();
   });
@@ -109,7 +109,7 @@ function renderHome(): void {
 function updateThemeButton(): void {
   const button = document.getElementById('gallery-theme');
   if (!button) return;
-  const dark = document.documentElement.dataset.theme === 'dark';
+  const dark = document.documentElement.dataset['theme'] === 'dark';
   button.textContent = dark ? '☀' : '☾';
   button.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} theme`);
 }
@@ -262,7 +262,7 @@ function thumbFor(tag: string): string {
     'ui-collapse': '⌄', 'ui-accordion': '☷', 'ui-tabs': '▤', 'ui-modal': '▣', 'ui-cursor': '◎',
     'ui-drawer': '◧', 'ui-popover': '▢', 'ui-tooltip': '?', 'ui-lazyload': '◐',
     'ui-image-comparison': '◒', 'ui-counter': '99', 'ui-dark-mode': '☼',
-    'ui-marquee': '→', 'ui-carousel': '◫', 'ui-expandable-grid': '▦', 'ui-orbit-gallery': '◌',
+    'ui-marquee': '→', 'ui-carousel': '◫', 'ui-expandable-grid': '▦', 'ui-orbit-gallery': '◌', 'ui-dot-morph': '✳',
   };
   return `<span class="thumb-art thumb-${tag}" aria-hidden="true"><span class="thumb-orbit"></span><span class="thumb-symbol">${symbols[tag] ?? '✦'}</span><span class="thumb-caption">${tag.replace(/^ui-/, '')}</span></span>`;
 }
@@ -446,6 +446,7 @@ function renderDocPage(rawSlug: string): void {
   wireAnimateReplay(appRoot);
   wireParallaxDemo(appRoot);
   wireToastDemo(appRoot);
+  wireDotMorphDemo(appRoot);
 }
 
 /* ============================================================
@@ -486,6 +487,7 @@ function renderDemo(tagName: string): void {
   wireAnimateReplay(appRoot);
   wireParallaxDemo(appRoot);
   wireToastDemo(appRoot);
+  wireDotMorphDemo(appRoot);
 }
 
 function renderDemoBody(tag: string, variant: string): string {
@@ -1257,6 +1259,15 @@ function renderDemoBody(tag: string, variant: string): string {
         <div class="orbit-demo__footer"><span>✦ Curated perspectives</span><span>Hover to pause · ${reverse ? 'Reverse' : 'Forward'} rotation</span></div>
       </section>`;
     }
+    case 'ui-dot-morph': {
+      const neon = variant === 'Neon particles';
+      const words = neon ? ['MOTION', 'ENERGY', 'FLOW'] : ['CREATE', 'EXPLORE', 'INSPIRE'];
+      return `<section class="dot-morph-demo${neon ? ' dot-morph-demo--neon' : ''}">
+        <div class="dot-morph-demo__intro"><span class="eyebrow">PARTICLE STUDY / ${neon ? '02' : '01'}</span><h2>Chaos becomes <em>meaning.</em></h2><p>Hover, focus, or tap the field. The particles move through three words; edit the first one below.</p></div>
+        <ui-dot-morph ui-text='${JSON.stringify(words)}' ui-duration="3000" ui-interval="1500"></ui-dot-morph>
+        <div class="dot-morph-demo__footer"><label>FIRST WORD <input data-dot-morph-input type="text" maxlength="18" value="${words[0]}" aria-label="First word to form with particles" /></label><span>MOVE INTO THE FIELD ↗</span></div>
+      </section>`;
+    }
     default:
       return `<code>&lt;${tag}&gt;</code>`;
   }
@@ -1343,7 +1354,22 @@ function wireToastDemo(root: HTMLElement): void {
     });
   });
   root.querySelectorAll<HTMLButtonElement>('[data-toast-template]').forEach((button) => {
-    button.addEventListener('click', () => uiToast.push({ name: button.dataset['toastTemplate'] }));
+    button.addEventListener('click', () => {
+      const name = button.dataset['toastTemplate'];
+      if (name) uiToast.push({ name });
+    });
+  });
+}
+
+function wireDotMorphDemo(root: HTMLElement): void {
+  root.querySelectorAll<HTMLInputElement>('[data-dot-morph-input]').forEach((input) => {
+    input.addEventListener('input', () => {
+      const morph = input.closest('.dot-morph-demo')?.querySelector('ui-dot-morph');
+      if (!morph) return;
+      const words = JSON.parse(morph.getAttribute('ui-text') || '[]') as string[];
+      words[0] = input.value.slice(0, 18) || 'UI';
+      morph.setAttribute('ui-text', JSON.stringify(words));
+    });
   });
 }
 
@@ -1354,14 +1380,14 @@ function wireButtons(): void {
       const t = e.target as HTMLElement;
       // Open modal
       if (t.id === 'open-modal') {
-        document.querySelector('ui-modal')?.openModal();
+        document.querySelector<UiModal>('ui-modal')?.openModal();
       }
       // Drawer open
       if (t.id === 'open-left') {
-        document.getElementById('drawer-left')?.openDrawer();
+        (document.getElementById('drawer-left') as UiDrawer | null)?.openDrawer();
       }
       if (t.id === 'open-right') {
-        document.getElementById('drawer-right')?.openDrawer();
+        (document.getElementById('drawer-right') as UiDrawer | null)?.openDrawer();
       }
       // Marquee toggle play/pause
       if (t.id === 'marquee-toggle') {

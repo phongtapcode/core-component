@@ -1198,3 +1198,35 @@ ui-orbit-gallery-item > .ui-orbit-gallery-face > img {
 @media (prefers-reduced-motion: reduce) {
   ui-orbit-gallery-track { animation: none; transform: rotateX(var(--ui-orbit-tilt, -12deg)); }
 }
+
+/* Dot morph: a single canvas draws particles arriving from beyond the field. */
+ui-dot-morph {
+  display: block;
+  position: relative;
+  width: 100%;
+  min-height: var(--ui-dot-height, 280px);
+  overflow: hidden;
+  isolation: isolate;
+  cursor: pointer;
+}
+ui-dot-morph:focus-visible { outline: 2px solid var(--ui-dot-color, #fff); outline-offset: 4px; }
+.ui-dot-morph-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
+.ui-dot-morph-fallback {
+  display: none;
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  color: var(--ui-dot-color, #fff);
+  font-size: clamp(2rem, 14vw, 7rem);
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+ui-dot-morph[data-ui-dot-fallback] .ui-dot-morph-fallback { display: flex; }
+@media (prefers-reduced-motion: reduce) {
+  ui-dot-morph .ui-dot-morph-canvas { display: none; }
+  ui-dot-morph .ui-dot-morph-fallback { display: flex; }
+}

@@ -494,4 +494,17 @@ All components share a predictable API — attributes are `kebab-case`, events a
   </div>
 </div>
 
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Dot Morph</h3>
+    <span class="comp-badge advanced">Advanced</span>
+  </div>
+  <p class="comp-tag">&lt;ui-dot-morph&gt;</p>
+  <p class="comp-desc">Random particles form your text on hover, focus, or touch.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/dot-morph">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5173/#/ui-dot-morph" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
 </div>

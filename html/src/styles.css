@@ -1372,3 +1372,19 @@ ui-toast[data-toast-live].gallery-toast--custom { --toast-accent:#8b64c7; }
 .orbit-demo__caption strong { font-size:.94rem; letter-spacing:-.02em; }
 .orbit-demo__footer { position:relative; display:flex; justify-content:space-between; gap:18px; padding:0 clamp(24px,5vw,60px) 32px; color:#a7c0bd; font-size:.75rem; letter-spacing:.09em; text-transform:uppercase; }
 @media (max-width:700px) { .orbit-demo ui-orbit-gallery { margin:-20px 0 -30px; } .orbit-demo__footer { flex-direction:column; align-items:center; text-align:center; } }
+
+/* Dot Morph demos */
+.dot-morph-demo { --ui-dot-color:#f7e6b3; --ui-dot-glow:#f4cb77b8; position:relative; overflow:hidden; border-radius:24px; padding:clamp(26px,4vw,56px); color:#fff; background:radial-gradient(circle at 68% 52%,#4d2e5e 0%,#251b3d 45%,#101627 100%); }
+.dot-morph-demo::before { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(90deg,#ffffff12 1px,transparent 1px),linear-gradient(#ffffff12 1px,transparent 1px); background-size:42px 42px; mask-image:linear-gradient(transparent,#000 30%,#000 80%,transparent); }
+.dot-morph-demo--neon { --ui-dot-color:#8cf4eb; --ui-dot-glow:#32d8e5b8; background:radial-gradient(circle at 58% 48%,#15566b 0%,#132b4c 45%,#0b172c 100%); }
+.dot-morph-demo__intro { position:relative; z-index:1; max-width:620px; }
+.dot-morph-demo__intro .eyebrow { color:#d9c5e9; }
+.dot-morph-demo__intro h2 { margin:.6rem 0; font-size:clamp(2.6rem,5.6vw,5.4rem); line-height:1; letter-spacing:-.065em; }
+.dot-morph-demo__intro h2 em { color:var(--ui-dot-color); font-family:Georgia,serif; font-weight:400; }
+.dot-morph-demo__intro p { max-width:410px; margin:1rem 0 0; color:#f2eefaaf; }
+.dot-morph-demo ui-dot-morph { --ui-dot-height:clamp(280px,38vw,430px); margin:1rem 0; }
+.dot-morph-demo__footer { position:relative; z-index:1; display:flex; align-items:end; justify-content:space-between; gap:1rem; border-top:1px solid #ffffff42; padding-top:1.4rem; font-size:.7rem; font-weight:700; letter-spacing:.15em; }
+.dot-morph-demo__footer label { display:flex; flex-direction:column; gap:.6rem; }
+.dot-morph-demo__footer input { width:min(300px,70vw); padding:.75rem .9rem; border:1px solid #ffffff8a; border-radius:8px; background:#ffffff12; color:#fff; font-family:inherit; font-size:1rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase; outline-offset:3px; }
+.dot-morph-demo__footer input:focus { outline:2px solid var(--ui-dot-color); }
+@media (max-width:650px) { .dot-morph-demo__footer { align-items:start; flex-direction:column; } }

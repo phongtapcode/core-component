@@ -22,6 +22,7 @@ import './toast.js';
 import './photoswipe.js';
 import './expandable-grid.js';
 import './orbit-gallery.js';
+import './dot-morph.js';
 
 export {
   UiToggle,
@@ -73,5 +74,6 @@ export { UiToast, UiToastPortal, UiToastCloseButton, uiToast, type ToastOptions,
 export { UiPhotoSwipe, parsePhotoSwipeOptions } from './photoswipe.js';
 export { UiExpandableGrid, UiExpandableGridItem } from './expandable-grid.js';
 export { UiOrbitGallery, UiOrbitGalleryTrack, UiOrbitGalleryItem } from './orbit-gallery.js';
+export { UiDotMorph } from './dot-morph.js';
 
 export { lockScroll, trapFocus, unlockScroll } from './focus-trap.js';
