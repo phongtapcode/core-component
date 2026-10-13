@@ -63,9 +63,9 @@ core-component/
 ├── packages/
 │   ├── tokens/            # CSS custom-property tokens + JS constants (z-index, easing curves, breakpoints)
 │   ├── core/              # BaseElement, lifecycle, CleanupRegistry, ObserverManager, events, attribute utils, responsive utils, types
-│   ├── motion/            # Animate, Stagger, Reveal, Parallax, Marquee — built on core
+│   ├── motion/            # Animate, Parallax, Marquee — built on core
 │   ├── components/        # Carousel, Modal, Drawer, Tabs, Collapse, Accordion, Popover, Toggle, Toast
-│   ├── media/             # Gallery, ImageZoom, ImageComparison, Lazyload, Video
+│   ├── media/             # Gallery, PhotoSwipe, ImageComparison, Lazyload, Video
 │   ├── adapters/          # shopify, react (later phases)
 │   └── test-utils/        # Shared Vitest fixtures, fixture components for cross-package testing
 ├── html/                  # Live component gallery (Vite + native TS SPA)
@@ -99,9 +99,9 @@ Each package is independently buildable, publishable, and testable.
 |---|---|---|---|
 | `tokens` | CSS file, JSON token map | — | Running JS in the consumer's page |
 | `core` | `BaseElement`, `CleanupRegistry`, `ObserverManager`, `define()`, types | `tokens` | Importing from `motion`, `components`, `media`, `adapters` |
-| `motion` | `<ui-animate>`, `<ui-stagger>`, `<ui-reveal>`, `<ui-parallax>`, `<ui-marquee>` | `core`, `tokens` | Importing from `components` / `media` / `adapters` |
+| `motion` | `<ui-animate>`, `<ui-parallax>`, `<ui-marquee>` | `core`, `tokens` | Importing from `components` / `media` / `adapters` |
 | `components` | `<ui-*>` components outside motion/media | `core`, `tokens`, `motion` (optional) | Importing from `adapters` |
-| `media` | `<ui-gallery>`, `<ui-image-zoom>`, etc. | `core`, `tokens`, `motion` (optional) | Importing from `adapters` |
+| `media` | `<ui-gallery>`, `<ui-photoswipe>`, etc. | `core`, `tokens`, `motion` (optional) | Importing from `adapters` |
 | `adapters` | Per-framework wrappers (Shopify Liquid, React) | everything | Mutating the `<ui-*>` tag behaviour from outside |
 | `test-utils` | Internal only | `core` | Being imported by any shipped package's runtime |
 
@@ -684,10 +684,10 @@ The phases defined in §26 of `README.MD` are restated here as a checklist. Each
 |---|---|---|
 | **P0** | Architecture docs approved (this file + `COMPONENT_ROADMAP.md`) | User approves |
 | **P1** | `core`: BaseElement, CleanupRegistry, ObserverManager, attribute system, events, define() | Unit ≥95%, lifecycle Playwright suite green |
-| **P2** | `motion`: Animate, Stagger, Reveal (basic effects) | Reduced-motion + visible + a11y tests green |
+| **P2** | `motion`: Animate (basic effects) | Reduced-motion + visible + a11y tests green |
 | **P3** | Basic UI: Toggle, Collapse, Accordion, Tabs, Modal, Drawer, Popover | DoD per component |
 | **P4** | Advanced UI: Carousel, Gallery, Marquee, Grid | DoD per component |
-| **P5** | Media: Lazyload, ImageZoom, ImageComparison, Video | DoD per component |
+| **P5** | Media: Lazyload, PhotoSwipe, ImageComparison, Video | DoD per component |
 | **P6** | Utilities: Countdown, Counter, Cursor, DarkMode, Scroll utilities | DoD per component |
 | **P7** | Advanced effects: Parallax, Magic Move, Grid Hover | DoD per component |
 | **P8** | Adapters: Shopify, React (only if justified) | Adapter parity tests |

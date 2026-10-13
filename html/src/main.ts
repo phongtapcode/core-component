@@ -2,7 +2,7 @@
  * Gallery SPA entry. Hash-based routing.
  */
 
-import '@ui/components';
+import { uiToast, type ToastPlacement } from '@ui/components';
 import { EFFECTS } from '@ui/motion';
 import './styles.css';
 import { COMPONENTS, type ComponentEntry } from './components.js';
@@ -258,11 +258,11 @@ function renderPhotoFeature(): string {
 
 function thumbFor(tag: string): string {
   const symbols: Record<string, string> = {
-    'ui-animate': '✦', 'ui-parallax': '▧', 'ui-reveal': '◌', 'ui-stagger': '≋', 'ui-toggle': '◉',
-    'ui-collapse': '⌄', 'ui-accordion': '☷', 'ui-tabs': '▤', 'ui-modal': '▣',
-    'ui-drawer': '◧', 'ui-popover': '▢', 'ui-lazyload': '◐', 'ui-image-zoom': '⌕',
+    'ui-animate': '✦', 'ui-parallax': '▧', 'ui-toggle': '◉',
+    'ui-collapse': '⌄', 'ui-accordion': '☷', 'ui-tabs': '▤', 'ui-modal': '▣', 'ui-cursor': '◎',
+    'ui-drawer': '◧', 'ui-popover': '▢', 'ui-tooltip': '?', 'ui-lazyload': '◐',
     'ui-image-comparison': '◒', 'ui-counter': '99', 'ui-dark-mode': '☼',
-    'ui-marquee': '→', 'ui-carousel': '◫',
+    'ui-marquee': '→', 'ui-carousel': '◫', 'ui-expandable-grid': '▦', 'ui-orbit-gallery': '◌',
   };
   return `<span class="thumb-art thumb-${tag}" aria-hidden="true"><span class="thumb-orbit"></span><span class="thumb-symbol">${symbols[tag] ?? '✦'}</span><span class="thumb-caption">${tag.replace(/^ui-/, '')}</span></span>`;
 }
@@ -445,6 +445,7 @@ function renderDocPage(rawSlug: string): void {
   wireButtons();
   wireAnimateReplay(appRoot);
   wireParallaxDemo(appRoot);
+  wireToastDemo(appRoot);
 }
 
 /* ============================================================
@@ -484,11 +485,52 @@ function renderDemo(tagName: string): void {
   wireButtons();
   wireAnimateReplay(appRoot);
   wireParallaxDemo(appRoot);
+  wireToastDemo(appRoot);
 }
 
 function renderDemoBody(tag: string, variant: string): string {
   // Every demo returns a card with the running component + sample content.
   switch (tag) {
+    case 'ui-toast': {
+      if (variant === 'Placements') return `
+        <p class="demo-text">Choose where the notification should appear. Toasts at one position stack without blocking the page.</p>
+        <div class="toast-demo-grid">${(['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right'] as const).map((position) => `
+          <button type="button" class="toast-demo-option" data-toast-placement="${position}">
+            <span class="toast-demo-dot" aria-hidden="true"></span><strong>${position}</strong><span>Show toast ↗</span>
+          </button>`).join('')}</div>`;
+      if (variant === 'Timing and motion') return `
+        <p class="demo-text">Compare a spring entrance, a quick notification, and a toast that stays until it is closed.</p>
+        <div class="toast-demo-grid">
+          <button type="button" class="toast-demo-option" data-toast-motion="spring"><strong>Spring</strong><span>600 ms entrance</span></button>
+          <button type="button" class="toast-demo-option" data-toast-motion="quick"><strong>Quick</strong><span>2 second delay</span></button>
+          <button type="button" class="toast-demo-option" data-toast-motion="persistent"><strong>Persistent</strong><span>Close manually</span></button>
+          <button type="button" class="toast-demo-option" data-toast-motion="stack"><strong>Stack three</strong><span>Multiple notifications</span></button>
+        </div>`;
+      if (variant === 'HTML template') return `
+        <p class="demo-text">The named element stays in the page as a template. Each click creates a live copy with its HTML content.</p>
+        <div class="toast-demo-grid">
+          <button type="button" class="toast-demo-option" data-toast-template="gallery-message"><strong>Message template</strong><span>Open rich notification ↗</span></button>
+          <button type="button" class="toast-demo-option" data-toast-template="gallery-progress"><strong>Progress notification</strong><span>See the remaining time ↗</span></button>
+        </div>
+        <ui-toast ui-name="gallery-message" ui-placement="top-right" ui-delay="5000" ui-class-name="gallery-toast gallery-toast--info" ui-close-button-placement="center-right">
+          <div class="gallery-toast-content"><span class="gallery-toast-icon" aria-hidden="true">✉</span><div><strong>New message received</strong><span>Your inbox has one new update.</span></div></div>
+        </ui-toast>
+        <ui-toast ui-name="gallery-progress" ui-placement="top-right" ui-delay="5000" ui-class-name="gallery-toast gallery-toast--custom" ui-close-button-placement="center-right">
+          <div class="gallery-toast-content"><span class="gallery-toast-icon" aria-hidden="true">◷</span><div><strong>Saving your work</strong><span>This notice closes after five seconds.</span></div></div>
+          <span class="gallery-toast-progress" aria-hidden="true"></span>
+        </ui-toast>`;
+      return `
+        <p class="demo-text">Choose a notification style. Each toast can be dismissed with its close button.</p>
+        <div class="toast-demo-grid">${([
+          ['success', '✓', 'Success', 'Order confirmed'],
+          ['error', '!', 'Error', 'Action could not be completed'],
+          ['warning', '⚠', 'Warning', 'Please review your input'],
+          ['info', 'i', 'Info', 'A new update is available'],
+          ['default', '✦', 'Default', 'Simple notification'],
+          ['custom', '✉', 'Rich content', 'Custom HTML layout'],
+        ] as const).map(([kind, icon, title, detail]) => `
+          <button type="button" class="toast-demo-option" data-toast-kind="${kind}"><span class="toast-demo-icon toast-demo-icon--${kind}" aria-hidden="true">${icon}</span><strong>${title}</strong><span>${detail}</span></button>`).join('')}</div>`;
+    }
     case 'ui-animate': {
       const effects = variant === 'Effect variants'
         ? EFFECTS
@@ -511,6 +553,26 @@ function renderDemoBody(tag: string, variant: string): string {
       `;
     }
     case 'ui-parallax': {
+      if (variant === 'Circular scroll') {
+        const circularImages = ['/images/coast.jpg', '/images/architecture.jpg', '/images/botanical.jpg'];
+        const circularTitles = ['Open horizons', 'A new angle', 'Quiet details', 'Into the light', 'Natural forms', 'Room to breathe', 'Look closer', 'Keep exploring'];
+        return `
+          <div class="parallax-circular-intro"><span>SCROLL EXPERIMENT / 08 FRAMES</span><h2>Kéo xuống để xoay vòng ảnh</h2><p>Tám thẻ đi theo một cung tròn lớn khi bạn cuộn trang.</p><span aria-hidden="true">↓</span></div>
+          <ui-parallax class="parallax-circular-demo">
+            <div class="parallax-circular-stage">
+              <div class="parallax-circular-guide" aria-hidden="true"></div>
+              <div class="parallax-circular-heading"><span>CURVED JOURNEY</span><p>Scroll to explore</p></div>
+              ${circularTitles.map((title, index) => `
+                <ui-parallax-scroll class="parallax-circular-item" ui-fit-content="false" style="--orbit-start:${index * 360}px" ui-keyframes="{'20%': {orbitShift: 0}, '70%': {orbitShift: -2520}}">
+                  <article class="parallax-circular-card">
+                    <img src="${circularImages[index % circularImages.length]}" alt="" />
+                    <div><span>${String(index + 1).padStart(2, '0')} / 08</span><h3>${title}</h3></div>
+                  </article>
+                </ui-parallax-scroll>`).join('')}
+            </div>
+          </ui-parallax>
+          <div class="parallax-circular-outro">Hết vòng ảnh · Cuộn lên để xem lại</div>`;
+      }
       if (variant === 'Coastal story') return `
         <p class="demo-text">A full-image scene moves at a different speed from its caption as you scroll.</p>
         <ui-parallax class="photo-story coast-story">
@@ -570,14 +632,22 @@ function renderDemoBody(tag: string, variant: string): string {
           </div>
         </ui-parallax>`;
       return `
-        <p class="demo-text">Scroll through the section. Progress runs from when the container touches the viewport bottom to when it exits the top.</p>
-        <ui-parallax class="parallax-scroll-demo">
-          <div class="parallax-sticky">
-            <ui-parallax-scroll ui-keyframes="{'0%': {y: 80, scale: .6, opacity: .4}, '33.33%': {y: 0, scale: 1, opacity: 1}, '100%': {y: -160, scale: 2.5, opacity: 0}}" ui-breakpoints="{600: {'0%': {y: 40, scale: .6, opacity: .4}, '33.33%': {y: 0, scale: 1, opacity: 1}, '100%': {y: -80, scale: 1.5, opacity: 0}}}">
-              <span class="parallax-word">SCROLL</span>
-            </ui-parallax-scroll>
+        <div class="keyframe-story-intro"><span>AN EDITORIAL JOURNEY / 02 CHAPTERS</span><h2>Every place has<br /><em>a story.</em></h2><p>Cuộn xuống để xem ảnh và chữ thay đổi cùng nhịp.</p><span class="keyframe-story-down" aria-hidden="true">↓</span></div>
+        <ui-parallax class="keyframe-story">
+          <div class="keyframe-story-stage">
+            <ui-parallax-scroll class="keyframe-story-bg keyframe-story-bg--coast" ui-fit-content="false" ui-keyframes="{'0%': {scale: 1.22, y: -65}, '25%': {scale: 1.15, y: -40}, '55%': {scale: 1.02, y: 15}, '100%': {scale: 1, y: 35}}"><img src="/images/coast.jpg" alt="" /></ui-parallax-scroll>
+            <ui-parallax-scroll class="keyframe-story-bg keyframe-story-bg--botanical" ui-fit-content="false" ui-keyframes="{'0%': {scale: 1.16, opacity: 0}, '45%': {scale: 1.16, opacity: 0}, '61%': {scale: 1.06, opacity: 1}, '100%': {scale: 1, opacity: 1}}"><img src="/images/botanical.jpg" alt="" /></ui-parallax-scroll>
+            <div class="keyframe-story-scrim"></div>
+            <div class="keyframe-story-topline"><span>FIELD NOTES — VOLUME 01</span><span>SCROLL TO DISCOVER</span></div>
+            <ui-parallax-scroll class="keyframe-story-outline" ui-keyframes="{'0%': {y: 80, opacity: 0}, '30%': {y: 0, opacity: .18}, '70%': {y: -65, opacity: .12}, '100%': {y: -120, opacity: 0}}">WONDER</ui-parallax-scroll>
+            <ui-parallax-scroll class="keyframe-story-card keyframe-story-card--one" ui-fit-content="false" ui-keyframes="{'0%': {x: 170, y: 120, rotate: 10, scale: .8, opacity: 0}, '25%': {x: 170, y: 120, rotate: 10, scale: .8, opacity: 0}, '35%': {x: 0, y: 0, rotate: -5, scale: 1, opacity: 1}, '48%': {x: -25, y: -25, rotate: -8, scale: 1.04, opacity: 1}, '58%': {x: -160, y: -135, rotate: -15, scale: .86, opacity: 0}, '100%': {x: -160, y: -135, rotate: -15, scale: .86, opacity: 0}}"><figure><img src="/images/architecture.jpg" alt="Sunlit sculptural staircase opening onto the coast" /><figcaption>01 / SPACES THAT STAY WITH US</figcaption></figure></ui-parallax-scroll>
+            <ui-parallax-scroll class="keyframe-story-copy keyframe-story-copy--one" ui-fit-content="false" ui-keyframes="{'0%': {y: 90, opacity: 0}, '25%': {y: 90, opacity: 0}, '34%': {y: 0, opacity: 1}, '48%': {y: -15, opacity: 1}, '58%': {y: -100, opacity: 0}, '100%': {y: -100, opacity: 0}}"><span class="keyframe-story-kicker">01 / THE HORIZON</span><h2>Follow the<br /><em>quiet light.</em></h2><p>Ở nơi nắng chạm mặt biển, mỗi khung hình là một lý do để chậm lại và nhìn lâu hơn.</p><span class="keyframe-story-small">A MOMENT WORTH KEEPING —</span></ui-parallax-scroll>
+            <ui-parallax-scroll class="keyframe-story-card keyframe-story-card--two" ui-fit-content="false" ui-keyframes="{'0%': {x: -170, y: 160, rotate: -10, scale: .8, opacity: 0}, '47%': {x: -170, y: 160, rotate: -10, scale: .8, opacity: 0}, '60%': {x: 0, y: 0, rotate: 6, scale: 1, opacity: 1}, '75%': {x: 25, y: -25, rotate: 9, scale: 1.04, opacity: 1}, '100%': {x: 60, y: -75, rotate: 12, scale: 1.08, opacity: 1}}"><figure><img src="/images/coast.jpg" alt="Golden cliffs beside a blue sea" /><figcaption>02 / THE ART OF NOTICING</figcaption></figure></ui-parallax-scroll>
+            <ui-parallax-scroll class="keyframe-story-copy keyframe-story-copy--two" ui-fit-content="false" ui-keyframes="{'0%': {y: 100, opacity: 0}, '50%': {y: 100, opacity: 0}, '61%': {y: 0, opacity: 1}, '78%': {y: -20, opacity: 1}, '100%': {y: -70, opacity: 1}}"><span class="keyframe-story-kicker">02 / THE DETAILS</span><h2>Beauty lives<br /><em>in detail.</em></h2><p>Một hình khối, một chiếc lá, một vệt sáng. Chúng tạo nên câu chuyện mà ta muốn nhớ.</p><span class="keyframe-story-small">LOOK A LITTLE CLOSER —</span></ui-parallax-scroll>
+            <div class="keyframe-story-footer"><span>01 / 02</span><span>MADE TO BE FELT</span></div>
           </div>
-        </ui-parallax>`;
+        </ui-parallax>
+        <div class="keyframe-story-outro"><span>THE JOURNEY CONTINUES</span><p>Điều đẹp nhất thường nằm trong những khoảnh khắc nhỏ.</p></div>`;
     }
     case 'ui-scroll-x': {
       if (variant === 'Editorial panels') return `
@@ -611,25 +681,141 @@ function renderDemoBody(tag: string, variant: string): string {
           <ui-scroll-y-item><article class="scroll-y-panel"><img src="/images/botanical.jpg" alt="White flower in lush foliage" loading="lazy" /><div class="scroll-y-panel-copy"><span>03 / THE DETAILS</span><h2>Look<br />closer.</h2><p>Scroll back to see the story reverse.</p></div></article></ui-scroll-y-item>
         </ui-scroll-y>`;
     }
-    case 'ui-reveal':
+    case 'ui-scroll-scene': {
+      if (variant === 'Image with texts') return `
+        <div class="scene-image-intro"><span>SCROLL STORY / 03 SCENES</span><h2>Kéo xuống để khám phá</h2><p>Mỗi cảnh kết hợp ảnh nền, nội dung và một ảnh chân dung.</p><span class="scene-image-intro-arrow" aria-hidden="true">↓</span></div>
+        <ui-scroll-scene class="scene-image-story" ui-mobile-disabled ui-mobile-breakpoint="992">
+          <ui-scroll-scene-inner>
+            <ui-scroll-scene-item>
+              <article class="scene-image-panel">
+                <img class="scene-image-background" src="https://images.pexels.com/photos/1054218/pexels-photo-1054218.jpeg?auto=compress&cs=tinysrgb&w=2000" alt="" />
+                <div class="scene-image-shade"></div>
+                <div class="scene-image-layout">
+                  <div class="scene-image-copy"><span>01 / DISCOVER</span><h3>Title 1</h3><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Maxime voluptatibus quia fuga ea consectetur, natus veritatis molestias sint magni reprehenderit?</p></div>
+                  <div class="scene-image-portrait"><img src="https://images.pexels.com/photos/8063550/pexels-photo-8063550.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Portrait for scene one" /></div>
+                </div>
+              </article>
+            </ui-scroll-scene-item>
+            <ui-scroll-scene-item>
+              <article class="scene-image-panel">
+                <img class="scene-image-background" src="https://images.pexels.com/photos/1435752/pexels-photo-1435752.jpeg?auto=compress&cs=tinysrgb&w=2000" alt="" />
+                <div class="scene-image-shade"></div>
+                <div class="scene-image-layout">
+                  <div class="scene-image-copy"><span>02 / EXPLORE</span><h3>Title 2</h3><p>Fugiat necessitatibus sit voluptate rerum impedit illum eaque asperiores consequuntur! Deserunt fugiat suscipit at quod! Consectetur vitae repellat nostrum?</p></div>
+                  <div class="scene-image-portrait"><img src="https://images.pexels.com/photos/8205481/pexels-photo-8205481.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Portrait for scene two" /></div>
+                </div>
+              </article>
+            </ui-scroll-scene-item>
+            <ui-scroll-scene-item>
+              <article class="scene-image-panel">
+                <img class="scene-image-background" src="https://images.pexels.com/photos/1090977/pexels-photo-1090977.jpeg?auto=compress&cs=tinysrgb&w=2000" alt="" />
+                <div class="scene-image-shade"></div>
+                <div class="scene-image-layout">
+                  <div class="scene-image-copy"><span>03 / REMEMBER</span><h3>Title 3</h3><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto, quisquam rem qui tempore repellendus vel cum illum suscipit voluptate quod?</p></div>
+                  <div class="scene-image-portrait"><img src="https://images.pexels.com/photos/19163481/pexels-photo-19163481.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="Portrait for scene three" /></div>
+                </div>
+              </article>
+            </ui-scroll-scene-item>
+            <div class="scene-image-fixed-stage" aria-hidden="true">
+              <div class="scene-image-portrait-fixed">
+                <img class="scene-image-portrait-layer" src="https://images.pexels.com/photos/8063550/pexels-photo-8063550.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="" />
+                <img class="scene-image-portrait-layer" src="https://images.pexels.com/photos/8205481/pexels-photo-8205481.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="" />
+                <img class="scene-image-portrait-layer" src="https://images.pexels.com/photos/19163481/pexels-photo-19163481.jpeg?auto=compress&cs=tinysrgb&w=1000" alt="" />
+              </div>
+            </div>
+          </ui-scroll-scene-inner>
+        </ui-scroll-scene>
+        <div class="scene-image-outro"><span>END OF STORY</span><h2>Tiếp tục khám phá</h2><p>Cuộn ngược để xem lại từng cảnh.</p></div>`;
+      if (variant === 'Editorial story') return `
+        <p class="demo-text">Cuộn đến khi section chạm đỉnh màn hình. Mỗi nửa chiều cao màn hình sẽ đổi một cảnh.</p>
+        <ui-scroll-scene class="scroll-scene-demo scroll-scene-demo--editorial" ui-threshold="0.5" ui-mobile-disabled ui-mobile-breakpoint="680">
+          <ui-scroll-scene-inner>
+            <ui-scroll-scene-item><article class="scroll-scene-panel"><img src="/images/botanical.jpg" alt="White flower among dark foliage" /><div class="scroll-scene-copy"><span>01 / DETAIL</span><h2>Look a little closer.</h2><p>Small details change the whole story.</p></div></article></ui-scroll-scene-item>
+            <ui-scroll-scene-item><article class="scroll-scene-panel"><img src="/images/architecture.jpg" alt="Sculptural staircase in warm light" /><div class="scroll-scene-copy"><span>02 / FORM</span><h2>Find the shape.</h2><p>Every angle reveals a new perspective.</p></div></article></ui-scroll-scene-item>
+            <ui-scroll-scene-item><article class="scroll-scene-panel"><img src="/images/coast.jpg" alt="Turquoise coast in sunlight" /><div class="scroll-scene-copy"><span>03 / SPACE</span><h2>Let the scene breathe.</h2><p>The page continues after the final scene.</p></div></article></ui-scroll-scene-item>
+          </ui-scroll-scene-inner>
+        </ui-scroll-scene>`;
       return `
-        <p class="demo-text">Single-shot fade. Use when you don't need a full effect.</p>
-        <div class="grid-3">
-          ${[0, 100, 200, 300, 400, 500].map((d) => `
-            <ui-reveal delay="${d}">
-              <div class="demo-card">delay ${d}ms</div>
-            </ui-reveal>`).join('')}
-        </div>
-      `;
-    case 'ui-stagger':
+        <p class="demo-text">Một câu chuyện bằng ảnh. Cuộn xuống để đổi cảnh; cuộn lên để xem lại.</p>
+        <ui-scroll-scene class="scroll-scene-demo" ui-threshold="0.65" ui-mobile-disabled ui-mobile-breakpoint="680">
+          <ui-scroll-scene-inner>
+            <ui-scroll-scene-item><article class="scroll-scene-panel"><img src="/images/coast.jpg" alt="Sunlit cliffs and blue sea" /><div class="scroll-scene-copy"><span>01 / COAST</span><h2>Follow the light.</h2><p>Scroll to discover the next place.</p></div></article></ui-scroll-scene-item>
+            <ui-scroll-scene-item><article class="scroll-scene-panel"><img src="/images/architecture.jpg" alt="Warm stone staircase" /><div class="scroll-scene-copy"><span>02 / ARCHITECTURE</span><h2>Step inside.</h2><p>A different scene, held in the same frame.</p></div></article></ui-scroll-scene-item>
+            <ui-scroll-scene-item><article class="scroll-scene-panel"><img src="/images/botanical.jpg" alt="Flower against deep green leaves" /><div class="scroll-scene-copy"><span>03 / NATURE</span><h2>Stay curious.</h2><p>Keep scrolling to continue the page.</p></div></article></ui-scroll-scene-item>
+          </ui-scroll-scene-inner>
+        </ui-scroll-scene>`;
+    }
+    case 'ui-typing': {
+      if (variant === 'Slide headline') return `
+        <div class="typing-stage typing-stage--slide">
+          <span class="typing-stage-kicker">BUILT FOR WHAT'S NEXT</span>
+          <h2>Our <ui-typing ui-effect="slide" ui-content='["Mission", "Vision", "Future"]' ui-duration="450" ui-delay="2200"></ui-typing><br />starts here.</h2>
+          <p>Short phrases slide through the same space without shifting the headline layout.</p>
+        </div>`;
+      if (variant === 'Goo morph') return `
+        <div class="typing-stage typing-stage--goo">
+          <span class="typing-stage-kicker">THE SHAPE OF IDEAS</span>
+          <h2><ui-typing ui-effect="goo" ui-content='["Creative", "Curious", "Brave"]' ui-duration="900" ui-delay="1900"></ui-typing><br />by design.</h2>
+          <p>An SVG goo filter blends one word into the next.</p>
+        </div>`;
       return `
-        <p class="demo-text">Children reveal in sequence when the wrapper enters the viewport.</p>
-        <ui-stagger>
-          ${[1, 2, 3, 4, 5, 6].map((i) => `
-            <div style="background:var(--gallery-panel);padding:0.75rem;border:1px solid var(--ui-color-border);border-radius:6px;margin:0.25rem 0">Item ${i}</div>
-          `).join('')}
-        </ui-stagger>
-      `;
+        <div class="typing-stage typing-stage--type">
+          <span class="typing-stage-kicker">DIGITAL STUDIO</span>
+          <h2>Chúng tôi tạo<br /><ui-typing ui-effect="typing" ui-content='["website đẹp", "trải nghiệm tuyệt vời", "sản phẩm số"]' ui-duration="80" ui-delay="2000" ui-cursor-char="|"></ui-typing></h2>
+          <p>One headline, many ideas. The cursor types each phrase and erases it before the next.</p>
+        </div>`;
+    }
+    case 'ui-cursor': {
+      if (variant === 'Text image reveal') {
+        const stories = [
+          { name: 'Quiet landscapes', number: '01', image: '/images/coast.jpg' },
+          { name: 'Spaces in motion', number: '02', image: '/images/architecture.jpg' },
+          { name: 'Details worth seeing', number: '03', image: '/images/botanical.jpg' },
+        ];
+        return `<section class="cursor-editorial-stage">
+          <div class="cursor-editorial-heading"><span class="eyebrow">HOVER TO DISCOVER</span><p>Move over the words to reveal a photograph.</p></div>
+          <div class="cursor-editorial-list">${stories.map((story) => `
+            <div class="cursor-editorial-row">
+              <span class="cursor-editorial-number">${story.number}</span>
+              <ui-cursor ui-name="story-${story.number}" ui-lerp-ease="0.16" class="cursor-editorial-title">
+                <span>${story.name}</span>
+                <ui-cursor-item ui-name="story-${story.number}" class="cursor-editorial-image"><img src="${story.image}" alt=""></ui-cursor-item>
+              </ui-cursor>
+              <img class="cursor-editorial-mobile" src="${story.image}" alt="">
+              <span class="cursor-editorial-arrow" aria-hidden="true">↗</span>
+            </div>`).join('')}</div>
+        </section>`;
+      }
+      if (variant === 'Split cursor') return `
+        <p class="demo-text">Move from the left half to the right half. This example also uses the <code>div is="ui-cursor"</code> syntax.</p>
+        <div is="ui-cursor" ui-name="['cursor-prev','cursor-next']" class="cursor-demo-stage cursor-demo-split">
+          <span>← Previous</span><span>Next →</span>
+          <ui-cursor-item ui-name="cursor-prev">← Prev</ui-cursor-item>
+          <ui-cursor-item ui-name="cursor-next">Next →</ui-cursor-item>
+        </div>`;
+      if (variant === 'Distortion gallery') return `
+        <p class="demo-text">Move across each card to compare the four distortion presets.</p>
+        <div class="cursor-distortion-grid">${[2, 3, 4, 5].map((index) => `
+          <ui-cursor class="cursor-distortion-card" ui-name="cursor-distortion-${index}" ui-distortion="distortion-${index}" ui-lerp-ease="0.16">
+            <span>Distortion ${index}</span>
+            <strong>Move here</strong>
+            <ui-cursor-item class="cursor-image-item" ui-name="cursor-distortion-${index}"><img src="https://images.pexels.com/photos/${[432059, 842963, 157886, 6207714, 6214365][index - 1]}/pexels-photo-${[432059, 842963, 157886, 6207714, 6214365][index - 1]}.jpeg?auto=compress&cs=tinysrgb&w=400" alt=""></ui-cursor-item>
+          </ui-cursor>`).join('')}</div>`;
+      if (variant === 'Magnetic button') return `
+        <p class="demo-text">The button reacts to the same pointer coordinates that drive the cursor item.</p>
+        <ui-cursor ui-name="cursor-magnet" class="cursor-demo-stage cursor-demo-magnet" ui-lerp-ease="0.18">
+          <button class="cursor-magnetic-button">Explore more ↗</button>
+          <ui-cursor-item ui-name="cursor-magnet" class="cursor-magnetic-item">Explore</ui-cursor-item>
+        </ui-cursor>`;
+      return `
+        <p class="demo-text">Hover the link or button to change the cursor item. The red area disables it.</p>
+        <ui-cursor ui-name="cursor-basic" class="cursor-demo-stage cursor-demo-basic" ui-absolute ui-lerp-ease="0.12">
+          <h2>Follow the pointer</h2>
+          <div class="cursor-demo-actions"><a href="#/ui-cursor">Hover a link</a><button class="btn primary">Hover a button</button></div>
+          <div ui-cursor-disabled class="cursor-disabled-zone">Native cursor here</div>
+          <ui-cursor-item ui-name="cursor-basic">Move</ui-cursor-item>
+        </ui-cursor>`;
+    }
     case 'ui-toggle': {
       return `
         <p class="demo-text">Enterprise disclosure component (<code style="color:var(--ui-color-accent)">&lt;ui-toggle&gt;</code> / <code style="color:var(--ui-color-accent)">&lt;ui-toggle-trigger&gt;</code>). Supports outside-click dismissal, autofocus first input, floating portal positioning, and keyboard Escape.</p>
@@ -797,23 +983,25 @@ function renderDemoBody(tag: string, variant: string): string {
           <div role="tabpanel" id="p3" aria-labelledby="t3"><p>Reviews content with user feedback.</p></div>
         </ui-tabs>
       `;
-    case 'ui-modal':
-      return `
-        <p class="demo-text">Click the button to open. Escape or click the overlay to dismiss.</p>
-        <button id="open-modal" class="btn primary">Open modal</button>
-        <ui-modal>
-          <div data-modal-overlay></div>
-          <div data-modal-dialog>
-            <h3>Subscribe</h3>
-            <p>Get notified when new components ship. We don't spam.</p>
-            <form style="display:flex;gap:0.5rem;margin-top:1rem">
-              <input type="email" placeholder="you@example.com" style="flex:1;padding:0.5rem;border:1px solid #ddd;border-radius:6px">
-              <button type="button" data-modal-close class="btn primary">Subscribe</button>
-            </form>
-            <button data-modal-close style="margin-top:0.5rem;background:none;border:none;color:#666">No thanks</button>
-          </div>
-        </ui-modal>
-      `;
+    case 'ui-modal': {
+      const card = (name: string, title: string, attributes = '') => `
+        <div class="modal-showcase-card">
+          <span class="eyebrow">${title}</span>
+          <ui-modal-trigger ui-name="${name}"><button class="btn primary">Open ${title}</button></ui-modal-trigger>
+          <ui-modal ui-name="${name}" ${attributes}>
+            <div class="modal-showcase-content">
+              <ui-modal-trigger><button class="modal-showcase-close" aria-label="Close modal">×</button></ui-modal-trigger>
+              <p class="eyebrow">UI MODAL</p><h2>${title}</h2>
+              <p>Try Escape, the backdrop, and keyboard Tab. Focus returns to the trigger on close.</p>
+              <ui-modal-pan class="modal-showcase-pan">↕ Swipe this area to close on touch</ui-modal-pan>
+            </div>
+          </ui-modal>
+        </div>`;
+      if (variant === 'Placements') return `<p class="demo-text">Position a dialog at any corner or edge.</p><div class="modal-showcase-grid">${['center', 'top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right'].map((position) => card(`modal-${position}`, position, `ui-placement="${position}" ui-animate="${position.startsWith('top') ? 'slide-down' : position.startsWith('bottom') ? 'slide-up' : 'zoom'}"`)).join('')}</div>`;
+      if (variant === 'Responsive and pan') return `<p class="demo-text">Resize below 700px: the dialog becomes a bottom sheet. Swipe the handle down to close.</p><div class="modal-showcase-grid">${card('modal-responsive', 'Responsive sheet', `ui-animate="fade-up" ui-breakpoints="{700:{placement:'bottom-center',animate:'slide-up',duration:400}}"`)}${card('modal-backdrop', 'Custom backdrop', `ui-backdrop-color="rgba(56, 36, 95, .7)" ui-backdrop-blur="10"`)}${card('modal-locked', 'Explicit close', `ui-esc-close-disabled ui-backdrop-close-disabled`)}</div>`;
+      if (variant === 'Lightbox and API') return `<p class="demo-text">The smart zoom begins at the thumbnail. Use <code>uiModal.open('modal-photo')</code> from JavaScript.</p><div class="modal-showcase-grid"><ui-modal-trigger ui-name="modal-photo" class="modal-showcase-photo"><img src="https://images.pexels.com/photos/949670/pexels-photo-949670.jpeg?auto=compress&cs=tinysrgb&w=500" alt="Open mountain photograph"></ui-modal-trigger><ui-modal ui-name="modal-photo" ui-animate="smart-zoom" ui-easing="spring" ui-duration="600" style="--ui-modal-padding:0;--ui-modal-width:80vw"><ui-modal-pan><img style="display:block;max-width:100%;max-height:80dvh" src="https://images.pexels.com/photos/949670/pexels-photo-949670.jpeg?auto=compress&cs=tinysrgb&w=1500" alt="Mountain photograph"></ui-modal-pan></ui-modal>${card('modal-api', 'JavaScript API', 'ui-animate="smart-fade-zoom"')}</div>`;
+      return `<p class="demo-text">Each effect has its own entrance and exit motion.</p><div class="modal-showcase-grid">${['smart-fade-zoom', 'smart-zoom', 'zoom', 'fade', 'fade-up', 'fade-down', 'fade-left', 'fade-right', 'slide-up', 'slide-down', 'slide-left', 'slide-right', 'none'].map((effect) => card(`modal-${effect}`, effect, `ui-animate="${effect}"`)).join('')}</div>`;
+    }
     case 'ui-drawer':
       return `
         <p class="demo-text">Slide-in side panel. Useful for navigation or settings.</p>
@@ -846,6 +1034,21 @@ function renderDemoBody(tag: string, variant: string): string {
           </div>
         </ui-popover>
       `;
+    case 'ui-tooltip':
+      return `
+        <p class="demo-text">Hover, focus with Tab, or tap the triggers. Press Escape to dismiss.</p>
+        <div class="row" style="gap: 1.25rem; align-items: center; flex-wrap: wrap; padding: 2rem 1rem;">
+          <ui-tooltip ui-title="Thêm vào giỏ hàng" ui-placement="top-center">
+            <button class="btn primary">Giỏ hàng</button>
+          </ui-tooltip>
+          <ui-tooltip ui-title="Thông tin thêm" ui-placement="bottom-start" ui-animate="fade-up" ui-duration="300" ui-offset="12">
+            <button class="btn ghost" aria-label="Thông tin thêm">?</button>
+          </ui-tooltip>
+          <ui-tooltip ui-title="Tooltip bên trái" ui-placement="left-center" ui-animate="scale">
+            <button class="btn ghost">Bên trái</button>
+          </ui-tooltip>
+        </div>
+      `;
     case 'ui-lazyload':
       return `
         <p class="demo-text">Real images load when scrolled into view. Each image is 1200×800.</p>
@@ -860,36 +1063,57 @@ function renderDemoBody(tag: string, variant: string): string {
           `).join('')}
         </div>
       `;
-    case 'ui-image-zoom':
-      return `
-        <p class="demo-text">Click any image to zoom.</p>
-        <div class="grid-3">
-          ${[1, 2, 3, 4, 5, 6].map((i) => `
-            <ui-image-zoom>
-              <img src="https://picsum.photos/seed/z${i}/600/400"
-                   style="width:100%;border-radius:8px;cursor:zoom-in"
-                   loading="lazy">
-            </ui-image-zoom>
-          `).join('')}
-        </div>
-      `;
+    case 'ui-photoswipe': {
+      const images = [
+        { src: '/images/coast.jpg', title: 'The quiet coast', number: '01', alt: 'Sunlit coast and blue sea' },
+        { src: '/images/architecture.jpg', title: 'Lines and light', number: '02', alt: 'Architectural building in warm light' },
+        { src: '/images/botanical.jpg', title: 'Botanical study', number: '03', alt: 'Close view of plants and leaves' },
+      ];
+      const custom = variant === 'Custom options';
+      const single = variant === 'Single image';
+      return `<p class="demo-text">${single
+        ? 'A single photo opens in the same full-screen zoom viewer. Click the image to try it.'
+        : custom
+        ? 'This gallery uses a dark backdrop, a fade transition, and wheel zoom. Click a photo, then swipe or use the arrow keys.'
+        : 'Click a photo for the full-screen lightbox. Pinch or double-click to zoom; swipe or use the arrow keys to move between images.'}</p>
+        <ui-photoswipe class="photoswipe-demo-grid"${custom ? ` ui-options='{"bgOpacity":0.92,"loop":false,"wheelToZoom":true,"showHideAnimationType":"fade","showAnimationDuration":450}'` : ''}>
+          ${(single ? images.slice(0, 1) : images).map((image) => `<a href="${image.src}" data-pswp-width="1672" data-pswp-height="941" aria-label="Open ${image.title} in the photo gallery">
+            <img src="${image.src}" alt="${image.alt}" loading="lazy" />
+            <span class="photoswipe-demo-caption"><span>${image.number} / ${image.title}</span><span aria-hidden="true">↗</span></span>
+          </a>`).join('')}
+        </ui-photoswipe>`;
+    }
     case 'ui-image-comparison':
+      if (variant === 'Keyboard navigation') return `
+        <p class="demo-text">Focus the comparison, then use ← / → by 5%, Shift + arrow by 10%, or Home / End.</p>
+        <ui-image-comparison class="comparison-demo comparison-demo--architecture" ui-default-percent="65" aria-label="Compare original and restored architecture photo">
+          <ui-image-comparison-before>
+            <img src="/images/architecture.jpg" alt="Architecture photo before color restoration" loading="lazy" />
+            <ui-image-comparison-label>Before</ui-image-comparison-label>
+          </ui-image-comparison-before>
+          <ui-image-comparison-after>
+            <img src="/images/architecture.jpg" alt="Architecture photo after color restoration" loading="lazy" />
+            <ui-image-comparison-label>After</ui-image-comparison-label>
+          </ui-image-comparison-after>
+          <ui-image-comparison-handle></ui-image-comparison-handle>
+        </ui-image-comparison>`;
       return `
-        <p class="demo-text">Drag to compare. Use ←/→ to move by 5%.</p>
-        <div class="grid-2">
-          ${[
-            { a: 'before-1', b: 'after-1' },
-            { a: 'before-2', b: 'after-2' },
-          ].map((p, i) => `
-            <div>
-              <ui-image-comparison value="50" style="width:100%;height:240px">
-                <img src="https://picsum.photos/seed/${p.a}/600/300" loading="lazy" style="position:absolute;width:100%;height:100%;object-fit:cover">
-                <img src="https://picsum.photos/seed/${p.b}/600/300?grayscale" loading="lazy" style="position:absolute;width:100%;height:100%;object-fit:cover;clip-path:inset(0 0 0 50%)">
-              </ui-image-comparison>
-            </div>
-          `).join('')}
-        </div>
-      `;
+        <p class="demo-text">Drag the handle, swipe across the image, or click a position to compare the color grade.</p>
+        <ui-image-comparison class="comparison-demo comparison-demo--coast" ui-default-percent="50" ui-animate aria-label="Compare monochrome and color coast photo">
+          <ui-image-comparison-before>
+            <img src="/images/coast.jpg" alt="Coast photograph in monochrome" loading="lazy" />
+            <ui-image-comparison-label>Before</ui-image-comparison-label>
+          </ui-image-comparison-before>
+          <ui-image-comparison-after>
+            <img src="/images/coast.jpg" alt="Coast photograph in color" loading="lazy" />
+            <ui-image-comparison-label>After</ui-image-comparison-label>
+          </ui-image-comparison-after>
+          <ui-image-comparison-handle>
+            <ui-image-comparison-handle-icon aria-hidden="true">
+              <svg width="36" height="36" viewBox="0 0 48 48" fill="none"><path d="m17 17-7 7 7 7M31 17l7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </ui-image-comparison-handle-icon>
+          </ui-image-comparison-handle>
+        </ui-image-comparison>`;
     case 'ui-counter':
       return `
         <p class="demo-text">The count starts when the component loads. Reload this demo to replay it.</p>
@@ -985,6 +1209,54 @@ function renderDemoBody(tag: string, variant: string): string {
           ${controls}
         </ui-carousel>`;
     }
+    case 'ui-expandable-grid': {
+      const compact = variant === 'Compact grid';
+      const photos = [
+        { image: 'coast', name: 'The quiet coast', category: 'Landscape', note: 'A little room to breathe, where the sea meets a lighter horizon.' },
+        { image: 'architecture', name: 'Lines & light', category: 'Architecture', note: 'Geometry, warm stone, and the moments between shadows.' },
+        { image: 'botanical', name: 'Botanical study', category: 'Nature', note: 'A closer look at the quiet details of the natural world.' },
+        { image: 'architecture', name: 'Still spaces', category: 'Architecture', note: 'The kind of place that changes with every hour of daylight.' },
+        { image: 'coast', name: 'Blue hour', category: 'Landscape', note: 'An open view, the last colour in the sky, and nowhere else to be.' },
+        { image: 'botanical', name: 'New growth', category: 'Nature', note: 'Fresh forms and textures gathered into a simple visual story.' },
+      ];
+      return `<p class="demo-text">Select a card to expand it in the grid. The other cards move into place. Press Escape to close.</p>
+        <ui-expandable-grid class="expandable-grid-demo${compact ? ' expandable-grid-demo--compact' : ''}" ui-duration="650">
+          ${photos.map((photo, index) => `<ui-expandable-grid-item>
+            <img src="/images/${photo.image}.jpg" alt="${photo.name}" loading="lazy" />
+            <div class="expandable-grid-demo__shade"></div>
+            <div class="expandable-grid-demo__top"><span>NO. ${String(index + 1).padStart(2, '0')}</span><span>${photo.category}</span></div>
+            <div class="expandable-grid-demo__content">
+              <h3>${photo.name}</h3>
+              <ui-expandable-grid-detail><p>${photo.note}</p></ui-expandable-grid-detail>
+              <button type="button" ui-expandable-grid-trigger aria-label="Toggle ${photo.name}"><span class="expandable-grid-demo__closed">Explore story ↗</span><span class="expandable-grid-demo__open">Close story ×</span></button>
+            </div>
+          </ui-expandable-grid-item>`).join('')}
+        </ui-expandable-grid>`;
+    }
+    case 'ui-orbit-gallery': {
+      const reverse = variant === 'Reverse orbit';
+      const photos = [
+        { image: 'coast', name: 'Blue hour', position: 'center' },
+        { image: 'architecture', name: 'Warm lines', position: '20% center' },
+        { image: 'botanical', name: 'Still life', position: 'center' },
+        { image: 'coast', name: 'Open water', position: '80% center' },
+        { image: 'architecture', name: 'Soft geometry', position: '75% center' },
+        { image: 'botanical', name: 'New growth', position: '70% center' },
+        { image: 'coast', name: 'The horizon', position: '30% center' },
+        { image: 'architecture', name: 'Afternoon light', position: 'center' },
+        { image: 'botanical', name: 'Quiet garden', position: '20% center' },
+        { image: 'coast', name: 'Last light', position: '60% center' },
+      ];
+      return `<section class="orbit-demo">
+        <div class="orbit-demo__heading"><span class="eyebrow">A study in motion / 001</span><h2>Places in <em>orbit.</em></h2><p>Ten moments, one continuous journey. Hover over the gallery to pause and take a closer look.</p></div>
+        <ui-orbit-gallery ui-duration="${reverse ? 30000 : 24000}"${reverse ? ' ui-direction="reverse"' : ''} aria-label="Rotating photo gallery">
+          <ui-orbit-gallery-track>
+            ${photos.map((photo, index) => `<ui-orbit-gallery-item><img src="/images/${photo.image}.jpg" alt="${photo.name}" style="object-position:${photo.position}" /><span class="orbit-demo__caption"><small>${String(index + 1).padStart(2, '0')} / 10</small><strong>${photo.name}</strong></span></ui-orbit-gallery-item>`).join('')}
+          </ui-orbit-gallery-track>
+        </ui-orbit-gallery>
+        <div class="orbit-demo__footer"><span>✦ Curated perspectives</span><span>Hover to pause · ${reverse ? 'Reverse' : 'Forward'} rotation</span></div>
+      </section>`;
+    }
     default:
       return `<code>&lt;${tag}&gt;</code>`;
   }
@@ -1015,6 +1287,63 @@ function wireParallaxDemo(root: HTMLElement): void {
       const value = createValue('opacityCustom');
       if (value !== EMPTY) target.style.opacity = String(value);
     });
+  });
+  root.querySelectorAll<HTMLElement>('.parallax-circular-item').forEach((element) => {
+    const scroll = element as HTMLElement & { customEffects(callback: (params: { element: HTMLElement; createValue: (key: string) => string | number; EMPTY: string }) => void): void };
+    scroll.customEffects(({ element: target, createValue, EMPTY }) => {
+      const value = createValue('orbitShift');
+      if (value !== EMPTY) target.style.setProperty('--orbit-shift', `${Number(value)}px`);
+    });
+  });
+}
+
+function wireToastDemo(root: HTMLElement): void {
+  root.querySelectorAll<HTMLButtonElement>('[data-toast-kind]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const kind = button.dataset['toastKind'] ?? 'default';
+      const labels: Record<string, [string, string, string]> = {
+        success: ['✓', 'Order confirmed', 'Your order was placed successfully.'],
+        error: ['!', 'Something went wrong', 'Please try that action again.'],
+        warning: ['⚠', 'Check your details', 'One field still needs your attention.'],
+        info: ['i', 'New update', 'A fresh version is ready to explore.'],
+        default: ['✦', 'All set', 'Your changes have been saved.'],
+        custom: ['✉', 'New message', 'You have a note waiting in your inbox.'],
+      };
+      const [icon, title, message] = labels[kind] ?? labels['default']!;
+      uiToast.push({
+        content: `<div class="gallery-toast-content"><span class="gallery-toast-icon" aria-hidden="true">${icon}</span><div><strong>${title}</strong><span>${message}</span></div></div>`,
+        className: `gallery-toast gallery-toast--${kind}`,
+        placement: kind === 'default' ? 'bottom-center' : 'top-right',
+        closeButtonPlacement: 'center-right',
+        delay: 3200,
+      });
+    });
+  });
+  root.querySelectorAll<HTMLButtonElement>('[data-toast-placement]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const position = button.dataset['toastPlacement'] as ToastPlacement;
+      uiToast.push({ content: `<strong>${position}</strong><br>Notification at this position.`, placement: position, className: 'gallery-toast gallery-toast--info', delay: 3000 });
+    });
+  });
+  root.querySelectorAll<HTMLButtonElement>('[data-toast-motion]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const motion = button.dataset['toastMotion'];
+      if (motion === 'stack') {
+        for (let index = 1; index <= 3; index++) uiToast.push({ content: `<strong>Notification ${index} of 3</strong><br>Toasts stack neatly in one portal.`, placement: 'top-right', className: 'gallery-toast gallery-toast--info', delay: 4000 });
+        return;
+      }
+      uiToast.push({
+        content: `<strong>${motion === 'persistent' ? 'Stays until closed' : motion === 'spring' ? 'Spring motion' : 'Quick notice'}</strong><br>${motion === 'persistent' ? 'Use the close button to dismiss this toast.' : 'This notification will disappear automatically.'}`,
+        placement: 'top-center',
+        className: 'gallery-toast gallery-toast--success',
+        easing: motion === 'spring' ? 'spring' : 'decay',
+        duration: motion === 'spring' ? 600 : 200,
+        delay: motion === 'persistent' ? Infinity : 2000,
+      });
+    });
+  });
+  root.querySelectorAll<HTMLButtonElement>('[data-toast-template]').forEach((button) => {
+    button.addEventListener('click', () => uiToast.push({ name: button.dataset['toastTemplate'] }));
   });
 }
 

@@ -10,13 +10,18 @@ import './tabs.js';
 import './modal.js';
 import './drawer.js';
 import './popover.js';
+import './tooltip.js';
 import './lazyload.js';
-import './image-zoom.js';
 import './image-comparison.js';
 import './counter.js';
 import './dark-mode.js';
 import './marquee.js';
 import './carousel.js';
+import './cursor.js';
+import './toast.js';
+import './photoswipe.js';
+import './expandable-grid.js';
+import './orbit-gallery.js';
 
 export {
   UiToggle,
@@ -48,15 +53,25 @@ export {
 } from './collapse.js';
 export { UiAccordion, accordion } from './accordion.js';
 export { UiTabs, tabs } from './tabs.js';
-export { UiModal, modal } from './modal.js';
+export { UiModal, UiModalTrigger, UiModalBackdrop, UiModalPan, uiModal, modal } from './modal.js';
 export { UiDrawer, drawer } from './drawer.js';
 export { UiPopover, popover } from './popover.js';
+export { UiTooltip, UiTooltipContent, tooltip } from './tooltip.js';
 export { UiLazyload, lazyload } from './lazyload.js';
-export { UiImageZoom, imageZoom } from './image-zoom.js';
-export { UiImageComparison, imageComparison } from './image-comparison.js';
+export {
+  UiImageComparison, UiImageComparisonBefore, UiImageComparisonAfter,
+  UiImageComparisonHandle, UiImageComparisonHandleIcon, UiImageComparisonLabel,
+  imageComparison, imageComparisonBefore, imageComparisonAfter,
+  imageComparisonHandle, imageComparisonHandleIcon, imageComparisonLabel,
+} from './image-comparison.js';
 export { UiCounter, counter } from './counter.js';
 export { UiDarkMode, darkMode, type ThemeMode } from './dark-mode.js';
 export { UiMarquee, marquee } from './marquee.js';
 export { UiCarousel, UiCarouselThumbnail, carousel } from './carousel.js';
+export { UiCursor, UiCursorItem, cursor, cursorItem } from './cursor.js';
+export { UiToast, UiToastPortal, UiToastCloseButton, uiToast, type ToastOptions, type ToastPlacement } from './toast.js';
+export { UiPhotoSwipe, parsePhotoSwipeOptions } from './photoswipe.js';
+export { UiExpandableGrid, UiExpandableGridItem } from './expandable-grid.js';
+export { UiOrbitGallery, UiOrbitGalleryTrack, UiOrbitGalleryItem } from './orbit-gallery.js';
 
 export { lockScroll, trapFocus, unlockScroll } from './focus-trap.js';

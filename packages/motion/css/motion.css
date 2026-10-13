@@ -9,14 +9,8 @@
  * these via [data-effect='...'] selectors.
  */
 
-ui-animate,
-ui-reveal,
-ui-stagger {
+ui-animate {
   display: block;
-}
-
-ui-animate,
-ui-reveal {
   transform-origin: center center;
   transition:
     opacity var(--ui-animate-duration, var(--ui-duration-base))
@@ -32,8 +26,7 @@ ui-reveal {
 
 /* ---------- Initial (hidden) state for every effect ---------- */
 
-ui-animate:not([data-revealed]),
-ui-reveal:not([data-revealed]) {
+ui-animate:not([data-revealed]) {
   opacity: var(--ui-animate-from-opacity, 0);
   transform: translate3d(
     var(--ui-animate-from-x, 0),
@@ -46,8 +39,7 @@ ui-reveal:not([data-revealed]) {
 
 /* ---------- Revealed state ---------- */
 
-ui-animate[data-revealed],
-ui-reveal[data-revealed] {
+ui-animate[data-revealed] {
   opacity: var(--ui-animate-to-opacity, 1);
   transform: translate3d(
     var(--ui-animate-to-x, 0),
@@ -59,109 +51,94 @@ ui-reveal[data-revealed] {
 
 /* ---------- Effect presets ---------- */
 
-ui-animate[data-effect='fade'],
-ui-reveal[data-effect='fade'] {
+ui-animate[data-effect='fade'] {
   --ui-animate-from-opacity: 0;
   --ui-animate-to-opacity: 1;
 }
 
-ui-animate[data-effect='fade-up'],
-ui-reveal[data-effect='fade-up'] {
+ui-animate[data-effect='fade-up'] {
   --ui-animate-from-opacity: 0;
   --ui-animate-to-opacity: 1;
   --ui-animate-from-y: var(--ui-animate-distance, 32px);
   --ui-animate-to-y: 0;
 }
 
-ui-animate[data-effect='fade-down'],
-ui-reveal[data-effect='fade-down'] {
+ui-animate[data-effect='fade-down'] {
   --ui-animate-from-opacity: 0;
   --ui-animate-to-opacity: 1;
   --ui-animate-from-y: calc(-1 * var(--ui-animate-distance, 32px));
   --ui-animate-to-y: 0;
 }
 
-ui-animate[data-effect='fade-left'],
-ui-reveal[data-effect='fade-left'] {
+ui-animate[data-effect='fade-left'] {
   --ui-animate-from-opacity: 0;
   --ui-animate-to-opacity: 1;
   --ui-animate-from-x: var(--ui-animate-distance, 32px);
   --ui-animate-to-x: 0;
 }
 
-ui-animate[data-effect='fade-right'],
-ui-reveal[data-effect='fade-right'] {
+ui-animate[data-effect='fade-right'] {
   --ui-animate-from-opacity: 0;
   --ui-animate-to-opacity: 1;
   --ui-animate-from-x: calc(-1 * var(--ui-animate-distance, 32px));
   --ui-animate-to-x: 0;
 }
 
-ui-animate[data-effect='slide-up'],
-ui-reveal[data-effect='slide-up'] {
+ui-animate[data-effect='slide-up'] {
   --ui-animate-from-opacity: .75;
   --ui-animate-from-y: 100%;
   --ui-animate-to-y: 0;
 }
 
-ui-animate[data-effect='slide-down'],
-ui-reveal[data-effect='slide-down'] {
+ui-animate[data-effect='slide-down'] {
   --ui-animate-from-opacity: .75;
   --ui-animate-from-y: -100%;
   --ui-animate-to-y: 0;
 }
 
-ui-animate[data-effect='slide-left'],
-ui-reveal[data-effect='slide-left'] {
+ui-animate[data-effect='slide-left'] {
   --ui-animate-from-opacity: .75;
   --ui-animate-from-x: 100%;
   --ui-animate-to-x: 0;
 }
 
-ui-animate[data-effect='slide-right'],
-ui-reveal[data-effect='slide-right'] {
+ui-animate[data-effect='slide-right'] {
   --ui-animate-from-opacity: .75;
   --ui-animate-from-x: -100%;
   --ui-animate-to-x: 0;
 }
 
-ui-animate[data-effect='zoom-in'],
-ui-reveal[data-effect='zoom-in'] {
+ui-animate[data-effect='zoom-in'] {
   --ui-animate-from-opacity: .55;
   --ui-animate-from-scale: 0.68;
   --ui-animate-to-scale: 1;
 }
 
-ui-animate[data-effect='zoom-out'],
-ui-reveal[data-effect='zoom-out'] {
+ui-animate[data-effect='zoom-out'] {
   --ui-animate-from-opacity: .55;
   --ui-animate-from-scale: 1.32;
   --ui-animate-to-scale: 1;
 }
 
-ui-animate[data-effect='scale-up'],
-ui-reveal[data-effect='scale-up'] {
+ui-animate[data-effect='scale-up'] {
   --ui-animate-from-opacity: .8;
   --ui-animate-from-scale: 0.8;
   --ui-animate-to-scale: 1;
 }
 
-ui-animate[data-effect='scale-down'],
-ui-reveal[data-effect='scale-down'] {
+ui-animate[data-effect='scale-down'] {
   --ui-animate-from-opacity: .8;
   --ui-animate-from-scale: 1.2;
   --ui-animate-to-scale: 1;
 }
 
-ui-animate[data-effect='blur'],
-ui-reveal[data-effect='blur'] {
+ui-animate[data-effect='blur'] {
   --ui-animate-from-opacity: .55;
   --ui-animate-from-blur: 12px;
   --ui-animate-to-blur: 0;
 }
 
-ui-animate[data-effect='rotate'],
-ui-reveal[data-effect='rotate'] {
+ui-animate[data-effect='rotate'] {
   --ui-animate-from-opacity: .65;
   --ui-animate-from-rotate: -12deg;
   --ui-animate-to-rotate: 0deg;
@@ -170,32 +147,10 @@ ui-reveal[data-effect='rotate'] {
 /* ---------- Reduced motion: jump to end state instantly ---------- */
 
 @media (prefers-reduced-motion: reduce) {
-  ui-animate,
-  ui-reveal,
-  ui-stagger > :not(ui-animate):not(ui-reveal) {
+  ui-animate {
     transition-duration: 0.001ms !important;
     transition-delay: 0ms !important;
   }
-}
-
-/* ---------- Stagger: cascade child reveals ---------- */
-
-ui-stagger > * {
-  --ui-animate-delay: calc(
-    var(--ui-stagger-step, 80ms) * var(--ui-stagger-index, 0)
-  );
-}
-
-ui-stagger > :not(ui-animate):not(ui-reveal) {
-  opacity: 0;
-  transform: translateY(var(--ui-distance-base, 1rem));
-  transition: opacity var(--ui-duration-base, 300ms) ease var(--ui-animate-delay),
-    transform var(--ui-duration-base, 300ms) ease var(--ui-animate-delay);
-}
-
-ui-stagger > :not(ui-animate):not(ui-reveal)[data-revealed] {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 ui-parallax { display: block; position: relative; }
@@ -231,10 +186,26 @@ ui-scroll-y {
 ui-scroll-y-item { display: block; box-sizing: border-box; }
 ui-scroll-y > ui-scroll-y-item > *, ui-scroll-y > ui-scroll-xy-item > * { display: block; box-sizing: border-box; width: 100%; height: 100%; }
 
+ui-scroll-scene { display: block; position: relative; height: var(--ui-scroll-scene-height, 100vh); }
+ui-scroll-scene-inner { display: block; position: sticky; top: 0; height: 100vh; height: 100dvh; overflow: hidden; isolation: isolate; }
+ui-scroll-scene-item { display: block; position: absolute; inset: 0; width: 100%; height: 100%; visibility: hidden; opacity: 0; pointer-events: none; }
+ui-scroll-scene-item[ui-active] { visibility: visible; opacity: 1; pointer-events: auto; z-index: 1; }
+ui-scroll-scene-item-focus { position: absolute; z-index: 10; top: 1rem; left: 1rem; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+ui-scroll-scene-item-focus:focus-visible { width: auto; height: auto; padding: .55rem .8rem; overflow: visible; clip-path: none; color: #fff; background: #161b25; outline: 2px solid #fff; border-radius: .4rem; }
+ui-scroll-scene-item-focus:focus-visible::after { content: 'Use arrow keys to change scene'; }
+ui-scroll-scene[data-ui-scroll-scene-disabled] { height: auto; }
+ui-scroll-scene[data-ui-scroll-scene-disabled] > ui-scroll-scene-inner { position: relative; height: auto; overflow: visible; }
+ui-scroll-scene[data-ui-scroll-scene-disabled] ui-scroll-scene-item { position: relative; inset: auto; height: auto; min-height: 100vh; min-height: 100dvh; visibility: visible; opacity: 1; pointer-events: auto; }
+
+ui-typing { display: inline-block; vertical-align: baseline; }
+
 @media (prefers-reduced-motion: reduce) {
   ui-scroll-x { height: auto; }
   ui-scroll-x-item, ui-scroll-xy-item { width: 100% !important; }
   ui-scroll-y { height: auto; }
+  ui-scroll-scene { height: auto; }
+  ui-scroll-scene > ui-scroll-scene-inner { position: relative; height: auto; overflow: visible; }
+  ui-scroll-scene ui-scroll-scene-item { position: relative; inset: auto; height: auto; min-height: 100vh; min-height: 100dvh; visibility: visible; opacity: 1; pointer-events: auto; }
 }
 
 @media (prefers-reduced-motion: reduce) {

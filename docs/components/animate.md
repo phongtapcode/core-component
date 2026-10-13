@@ -15,6 +15,20 @@ import '@ui/motion/css';
 <ui-animate effect="fade-up">Hello</ui-animate>
 ```
 
+For a one-time opacity reveal, use the `fade` effect:
+
+```html
+<ui-animate effect="fade" duration="500" delay="200">Hello</ui-animate>
+```
+
+For a sequence of reveals, set increasing delays on the items:
+
+```html
+<ui-animate effect="fade-up" delay="0">First</ui-animate>
+<ui-animate effect="fade-up" delay="80">Second</ui-animate>
+<ui-animate effect="fade-up" delay="160">Third</ui-animate>
+```
+
 ## Attributes
 
 | Name | Type | Default | Description |

@@ -42,6 +42,195 @@ export interface ComponentDoc {
 }
 
 export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
+  'orbit-gallery': {
+    slug: 'orbit-gallery', tagName: 'ui-orbit-gallery', name: 'Orbit Gallery', category: 'Advanced',
+    summary: 'Arrange image cards on a rotating 3D ring. Card count and positions update automatically when cards change.',
+    usage: `<ui-orbit-gallery ui-duration="24000" aria-label="Photo gallery">
+  <ui-orbit-gallery-track>
+    <ui-orbit-gallery-item><img src="coast.jpg" alt="Coast" /></ui-orbit-gallery-item>
+    <ui-orbit-gallery-item><img src="garden.jpg" alt="Garden" /></ui-orbit-gallery-item>
+    <ui-orbit-gallery-item><img src="city.jpg" alt="City" /></ui-orbit-gallery-item>
+  </ui-orbit-gallery-track>
+</ui-orbit-gallery>`,
+    attributes: [
+      { name: 'ui-duration', type: 'milliseconds', default: '24000', description: 'Time for one full rotation.' },
+      { name: 'ui-direction', type: 'normal | reverse', default: 'normal', description: 'Rotation direction.' },
+    ],
+    cssVars: [
+      { name: '--ui-orbit-radius', default: '310px', description: 'Distance from the center to each card.' },
+      { name: '--ui-orbit-card-width', default: '170px', description: 'Card width.' },
+      { name: '--ui-orbit-card-height', default: '240px', description: 'Card height.' },
+      { name: '--ui-orbit-tilt', default: '-12deg', description: 'Angle of the ring.' },
+      { name: '--ui-orbit-height', default: '560px', description: 'Height of the gallery viewport.' },
+    ],
+    a11y: 'Give each image useful alt text and the gallery an accessible label. Animation pauses on hover or focus and stops when reduced motion is enabled.',
+  },
+  'expandable-grid': {
+    slug: 'expandable-grid', tagName: 'ui-expandable-grid', name: 'Expandable Grid', category: 'Advanced',
+    summary: 'Expand a card inside a responsive grid while the other cards animate to their new positions.',
+    usage: `<ui-expandable-grid ui-duration="500">
+  <ui-expandable-grid-item>
+    <img src="photo.jpg" alt="Coastal landscape" />
+    <button ui-expandable-grid-trigger type="button">Explore</button>
+    <ui-expandable-grid-detail>More about this place</ui-expandable-grid-detail>
+  </ui-expandable-grid-item>
+</ui-expandable-grid>`,
+    attributes: [
+      { name: 'ui-duration', type: 'milliseconds', default: '500', description: 'Time for tile movement.' },
+      { name: 'ui-easing', type: 'CSS easing', default: 'cubic-bezier(.22,1,.36,1)', description: 'Tile movement easing.' },
+      { name: 'ui-active', type: 'boolean', description: 'Reflected on the expanded item.' },
+    ],
+    methods: [
+      { name: 'open(index)', description: 'Expand an item by zero-based index.' },
+      { name: 'close()', description: 'Close the active item.' },
+      { name: 'toggle(index)', description: 'Toggle an item by zero-based index.' },
+    ],
+    events: [{ name: 'ui-expandable-grid-change', detail: '{ activeIndex, previousIndex, item }', description: 'Fired when the expanded item changes.' }],
+    cssVars: [
+      { name: '--ui-expandable-grid-columns', default: '3', description: 'Desktop column count.' },
+      { name: '--ui-expandable-grid-gap', default: '16px', description: 'Gap between cards.' },
+      { name: '--ui-expandable-grid-open-height', default: '480px', description: 'Minimum height of the expanded card.' },
+    ],
+    a11y: 'Use a real button with ui-expandable-grid-trigger in every card. Enter or Space opens it; Escape closes it and restores focus. Reduced motion skips tile animations.',
+  },
+  photoswipe: {
+    slug: 'photoswipe',
+    tagName: 'ui-photoswipe',
+    name: 'PhotoSwipe',
+    category: 'Media',
+    summary: 'Open image links in a full-screen PhotoSwipe 5 gallery with zoom, swipe, and keyboard navigation. Assets load from a pinned CDN on first click.',
+    usage: `<ui-photoswipe ui-options='{"bgOpacity":0.9,"loop":false}'>
+  <a href="/images/coast.jpg" data-pswp-width="1672" data-pswp-height="941">
+    <img src="/images/coast.jpg" alt="Coastal landscape" />
+  </a>
+  <a href="/images/botanical.jpg" data-pswp-width="1672" data-pswp-height="941">
+    <img src="/images/botanical.jpg" alt="Botanical photograph" />
+  </a>
+</ui-photoswipe>`,
+    attributes: [
+      { name: 'ui-options', type: 'JSON object', default: '{}', description: 'PhotoSwipe options such as bgOpacity, loop, or wheelToZoom. Gallery and loader options are managed by the component.' },
+      { name: 'data-pswp-width', type: 'positive number', description: 'Full-size image width on each link; required by PhotoSwipe.' },
+      { name: 'data-pswp-height', type: 'positive number', description: 'Full-size image height on each link; required by PhotoSwipe.' },
+    ],
+    a11y: 'Image links remain ordinary links if PhotoSwipe cannot load. Use descriptive alt text on thumbnails. The lightbox supports keyboard navigation and honors reduced motion.',
+  },
+  toast: {
+    slug: 'toast',
+    tagName: 'ui-toast',
+    name: 'Toast',
+    category: 'Basic UI',
+    summary: 'Show temporary notifications from JavaScript or a named HTML template, with placement and dismissal controls.',
+    usage: `<!-- Simple text -->
+uiToast('Đã thêm vào giỏ hàng!');
+
+<!-- Rich HTML content (trusted strings only) -->
+uiToast.push({
+  content: '<strong>Thành công!</strong> Đơn hàng đã được đặt.',
+  placement: 'top-right',
+  delay: 3000,
+  duration: 300,
+  className: 'toast-success'
+});
+
+<!-- Named HTML template -->
+<ui-toast ui-name="cart-toast" ui-placement="top-right" ui-delay="3000">
+  <strong>Đã thêm vào giỏ hàng</strong>
+</ui-toast>
+<button onclick="uiToast.push({ name: 'cart-toast' })">Show toast</button>`,
+    attributes: [
+      { name: 'ui-name', type: 'string', description: 'Name of a reusable HTML toast template.' },
+      { name: 'ui-placement', type: 'top-left | top-center | top-right | bottom-left | bottom-center | bottom-right', default: 'bottom-center', description: 'Screen edge or corner for the toast portal.' },
+      { name: 'ui-duration', type: 'milliseconds', default: '200', description: 'Enter and exit animation duration.' },
+      { name: 'ui-delay', type: 'milliseconds | Infinity', default: '2000', description: 'Time before automatic dismissal. Infinity requires manual closing.' },
+      { name: 'ui-easing', type: 'decay | spring | CSS easing', default: 'decay', description: 'Animation timing function.' },
+      { name: 'ui-class-name', type: 'string', default: '', description: 'Additional CSS classes on the visible toast.' },
+      { name: 'ui-close-button-disabled', type: 'boolean', default: 'false', description: 'Hide the automatic close button.' },
+      { name: 'ui-close-button-class-name', type: 'string', default: '', description: 'Additional classes on ui-toast-close-button.' },
+      { name: 'ui-close-button-placement', type: 'top-right | top-left | center-right | center-left', default: 'top-right', description: 'Position of the close button inside the toast.' },
+    ],
+    methods: [
+      { name: 'uiToast(text)', description: 'Show a plain-text notification.' },
+      { name: 'uiToast.push(options)', description: 'Show a notification; returns the live ui-toast element.' },
+      { name: 'uiToast.remove(name?)', description: 'Close notifications by name, or all visible notifications.' },
+      { name: 'toast.closeToast()', description: 'Close a specific live toast.' },
+    ],
+    a11y: 'Live notifications use role="status" and polite announcements by default. The close button is keyboard accessible. Reduced motion removes enter and exit animation.',
+  },
+  typing: {
+    slug: 'typing',
+    tagName: 'ui-typing',
+    name: 'Typing',
+    category: 'Motion',
+    summary: 'Rotate short headline phrases with typewriter, vertical slide, or SVG goo morph effects.',
+    usage: `<h1>
+  Chúng tôi tạo
+  <ui-typing
+    ui-effect="typing"
+    ui-content='["website đẹp", "trải nghiệm tuyệt vời", "sản phẩm số"]'
+    ui-duration="80"
+    ui-delay="2000"
+    ui-cursor-char="|"
+  ></ui-typing>
+</h1>`,
+    attributes: [
+      { name: 'ui-content', type: 'JSON string[]', default: '[]', description: 'Words or short phrases to rotate. Invalid JSON renders no text.' },
+      { name: 'ui-effect', type: 'typing | slide | goo', default: 'typing', description: 'Typewriter with cursor, vertical sliding, or SVG-filtered goo morph.' },
+      { name: 'ui-duration', type: 'milliseconds', default: '100 / 300 / 1000', description: 'Time per character for typing, or transition time for slide / goo.' },
+      { name: 'ui-delay', type: 'milliseconds', default: '2000', description: 'Pause between completed phrases.' },
+      { name: 'ui-cursor-char', type: 'string', default: '|', description: 'Cursor character shown by the typing effect only.' },
+    ],
+    a11y: 'The current complete phrase is exposed as an accessible label. Reduced motion shows the first phrase as static text without a cursor or timers.',
+  },
+  cursor: {
+    slug: 'cursor',
+    tagName: 'ui-cursor',
+    name: 'Cursor',
+    category: 'Motion',
+    summary: 'Make an item follow the pointer inside a region, with smoothing, hover states, split names and distortion presets.',
+    usage: `<ui-cursor ui-name="gallery" ui-lerp-ease="0.12" ui-distortion="distortion-2">
+  <a href="#">Explore</a>
+  <div ui-cursor-disabled>Native cursor here</div>
+  <ui-cursor-item ui-name="gallery">View</ui-cursor-item>
+</ui-cursor>
+
+<!-- Equivalent div syntax -->
+<div is="ui-cursor" ui-name="['prev','next']">
+  <ui-cursor-item ui-name="prev">←</ui-cursor-item>
+  <ui-cursor-item ui-name="next">→</ui-cursor-item>
+</div>`,
+    attributes: [
+      { name: 'ui-name', type: 'string | [string,string]', description: 'Name of the item; two names choose left or right half of the region.' },
+      { name: 'ui-absolute', type: 'boolean', default: 'false', description: 'Position a child item relative to the region instead of the viewport.' },
+      { name: 'ui-lerp-ease', type: 'number', default: '0.1', description: 'Pointer-following speed from 0.01 to 1.' },
+      { name: 'ui-distortion', type: 'none | distortion-2…5', default: 'none', description: 'Shape response to pointer velocity; skipped on Safari 19 and older.' },
+      { name: 'ui-mobile-disabled', type: 'boolean', default: 'false', description: 'Disable the custom cursor on narrow or coarse-pointer devices.' },
+    ],
+    a11y: 'Decorative cursor items ignore pointer events. The native cursor remains on touch devices and in disabled zones; reduced motion disables the custom effect.',
+  },
+  'scroll-scene': {
+    slug: 'scroll-scene',
+    tagName: 'ui-scroll-scene',
+    name: 'Scroll Scene',
+    category: 'Motion',
+    summary: 'Switch full-screen sticky scenes as the page scrolls, with configurable viewport-height steps and accessible keyboard navigation.',
+    usage: `<ui-scroll-scene ui-threshold="0.5" ui-mobile-disabled ui-mobile-breakpoint="768">
+  <ui-scroll-scene-inner>
+    <ui-scroll-scene-item><div class="scene">Scene 1</div></ui-scroll-scene-item>
+    <ui-scroll-scene-item><div class="scene">Scene 2</div></ui-scroll-scene-item>
+    <ui-scroll-scene-item><div class="scene">Scene 3</div></ui-scroll-scene-item>
+  </ui-scroll-scene-inner>
+</ui-scroll-scene>`,
+    attributes: [
+      { name: 'ui-threshold', type: 'positive number', default: '0.5', description: 'Viewport-height fraction scrolled before activating the next scene.' },
+      { name: 'ui-mobile-disabled', type: 'boolean', default: 'false', description: 'Show scenes as a normal vertical stack on mobile.' },
+      { name: 'ui-mobile-breakpoint', type: 'number', default: '0', description: 'Viewport width in px for mobile mode. At 0, a coarse pointer determines mobile mode.' },
+      { name: 'ui-active / ui-prev / ui-next', type: 'reactive', description: 'Marks the active scene and its immediate neighbours.' },
+      { name: 'ui-direction / ui-ready', type: 'reactive', description: 'Scroll direction on the root, and true after initialization.' },
+    ],
+    methods: [{ name: 'refresh()', description: 'Recount scenes and recalculate the scroll distance.' }],
+    events: [{ name: 'ui:scroll-scene:change', detail: '{ activeIndex, previousIndex, direction }', description: 'Fires when scrolling activates another scene.' }],
+    a11y: 'Inactive scenes are inert. Each scene gets a keyboard focus target; use arrow keys or Home/End to navigate. Reduced motion and disabled mobile mode show a readable vertical stack.',
+  },
   'scroll-y': {
     slug: 'scroll-y',
     tagName: 'ui-scroll-y',
@@ -182,41 +371,50 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     tagName: 'ui-modal',
     name: 'Modal',
     category: 'Basic UI',
-    summary: 'Accessible dialog overlay with backdrop blur, smooth scale-in and fade animations, body scroll lock, focus trap, and Escape key dismissal.',
-    usage: `<button id="btn-open">Open Modal</button>
-
-<ui-modal dismissable>
-  <div data-modal-overlay></div>
-  <div data-modal-dialog>
-    <h2>Welcome to UI Core</h2>
-    <p>This dialog features smooth entry/exit animations.</p>
-    <button data-modal-close>Got it</button>
+    summary: 'Named modal, drawer, or lightbox with shadow DOM backdrop, responsive options, touch dismissal, focus management and animation variants.',
+    usage: `<ui-modal-trigger ui-name="contact"><button>Open modal</button></ui-modal-trigger>
+<ui-modal ui-name="contact" ui-animate="fade-up" ui-placement="center">
+  <div>
+    <ui-modal-trigger><button aria-label="Close">×</button></ui-modal-trigger>
+    <h2>Contact</h2>
+    <ui-modal-pan>Swipe down to close</ui-modal-pan>
   </div>
-</ui-modal>
-
-<script type="module">
-  document.getElementById('btn-open').addEventListener('click', () => {
-    document.querySelector('ui-modal').openModal();
-  });
-</script>`,
+</ui-modal>`,
     attributes: [
       { name: 'open', type: 'boolean', default: 'false', description: 'Controls open state. Reflects to attribute.' },
       { name: 'dismissable', type: 'boolean', default: 'true', description: 'Allows closing by clicking the overlay or pressing Escape.' },
+      { name: 'ui-name', type: 'string', description: 'Connects an external ui-modal-trigger to this modal.' },
+      { name: 'ui-animate', type: 'zoom | smart-zoom | fade | smart-fade-zoom | fade-* | slide-* | none', default: 'smart-fade-zoom', description: 'Entry and exit animation.' },
+      { name: 'ui-placement', type: 'center | top-* | bottom-*', default: 'center', description: 'Dialog alignment. Corner and edge placements support drawers.' },
+      { name: 'ui-duration', type: 'number (ms)', default: '300', description: 'Time for opening and closing transitions.' },
+      { name: 'ui-easing', type: 'string', default: 'decay', description: 'Named easing curve, including spring.' },
+      { name: 'ui-backdrop-color', type: 'CSS color', default: 'rgba(12,18,32,.48)', description: 'Backdrop color.' },
+      { name: 'ui-backdrop-blur', type: 'number (px)', default: '10', description: 'Blur radius behind the modal.' },
+      { name: 'ui-backdrop-disabled', type: 'boolean', default: 'false', description: 'Hides the backdrop.' },
+      { name: 'ui-portal', type: 'boolean', default: 'true', description: 'Uses the Popover API top layer when available.' },
+      { name: 'ui-disabled', type: 'boolean', default: 'false', description: 'Shows content inline and disables modal behavior.' },
+      { name: 'ui-scroll-disabled', type: 'boolean', default: 'true', description: 'Locks page scroll while open.' },
+      { name: 'ui-autofocus', type: 'boolean', default: 'false', description: 'Focuses the first form field after opening.' },
+      { name: 'ui-video-autoplay', type: 'boolean', default: 'false', description: 'Plays contained videos when open and pauses on close.' },
+      { name: 'ui-breakpoints', type: 'object string', default: '{}', description: 'Max-width overrides for placement, animation, duration, easing, disabled and backdrop settings.' },
+      { name: 'ui-esc-close-disabled', type: 'boolean', default: 'false', description: 'Disables Escape dismissal.' },
+      { name: 'ui-backdrop-close-disabled', type: 'boolean', default: 'false', description: 'Disables backdrop click dismissal.' },
     ],
     methods: [
-      { name: 'openModal()', description: 'Opens the modal with scale-in + backdrop fade animation.' },
-      { name: 'closeModal()', description: 'Closes the modal with scale-out + backdrop fade animation.' },
+      { name: 'openModal(trigger?)', description: 'Opens the modal, optionally animating from a trigger element.' },
+      { name: 'closeModal()', description: 'Closes the modal.' },
       { name: 'toggle()', description: 'Toggles between open and closed states.' },
+      { name: 'refresh()', description: 'Recomputes responsive options.' },
     ],
     events: [
       { name: 'ui-modal-open', detail: 'void', description: 'Fired when the modal opens.' },
       { name: 'ui-modal-close', detail: 'void', description: 'Fired when the modal closes.' },
     ],
     cssVars: [
-      { name: '--ui-modal-duration', default: '220ms', description: 'Animation duration for entry and exit transitions.' },
-      { name: '--ui-modal-width', default: '480px', description: 'Maximum dialog box width.' },
+      { name: '--ui-modal-width', default: '90vw', description: 'Maximum dialog box width.' },
+      { name: '--ui-modal-padding', default: '24px', description: 'Dialog inner padding.' },
     ],
-    a11y: 'role="dialog" and aria-modal="true" set automatically. Focus trap keeps keyboard focus trapped inside. Locks body scroll when open and restores focus to previous element on close.',
+    a11y: 'role="dialog" and aria-modal="true" set automatically. Focus trap keeps keyboard focus inside. Page scrolling is locked without shifting the background, and focus returns to the previous element on close.',
   },
 
   drawer: {
@@ -278,41 +476,6 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     events: [
       { name: 'ui-animate-reveal', detail: '{ entry }', description: 'Fired when entering viewport.' },
       { name: 'ui-animate-reset', detail: 'void', description: 'Fired when reset.' },
-    ],
-  },
-
-  reveal: {
-    slug: 'reveal',
-    tagName: 'ui-reveal',
-    name: 'Reveal',
-    category: 'Motion',
-    summary: 'Lightweight single-shot fade reveal. Cheaper alternative to ui-animate when you only need a clean opacity reveal.',
-    usage: `<ui-reveal delay="200" duration="500">
-  <h1>Smooth single-shot fade</h1>
-</ui-reveal>`,
-    attributes: [
-      { name: 'duration', type: 'number', default: '400', description: 'Fade duration in ms.' },
-      { name: 'delay', type: 'number', default: '0', description: 'Delay in ms before fade.' },
-      { name: 'threshold', type: 'number', default: '0.2', description: 'Viewport intersection threshold.' },
-      { name: 'once', type: 'boolean', default: 'true', description: 'Trigger only once.' },
-    ],
-  },
-
-  stagger: {
-    slug: 'stagger',
-    tagName: 'ui-stagger',
-    name: 'Stagger',
-    category: 'Motion',
-    summary: 'Cascades child reveals sequentially using CSS custom property indices (--ui-stagger-index). High performance, zero JS loops.',
-    usage: `<ui-stagger step="80">
-  <div>Item 1 (delay 0ms)</div>
-  <div>Item 2 (delay 80ms)</div>
-  <div>Item 3 (delay 160ms)</div>
-</ui-stagger>`,
-    attributes: [
-      { name: 'step', type: 'number', default: '80', description: 'Delay increment (ms) between consecutive children.' },
-      { name: 'threshold', type: 'number', default: '0.1', description: 'Intersection threshold to trigger sequence.' },
-      { name: 'once', type: 'boolean', default: 'true', description: 'Only cascade once.' },
     ],
   },
 
@@ -467,6 +630,30 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
   },
 
+  tooltip: {
+    slug: 'tooltip',
+    tagName: 'ui-tooltip',
+    name: 'Tooltip',
+    category: 'Basic UI',
+    summary: 'Short text hint on hover, keyboard focus, or tap. The floating content follows its trigger and stays inside the viewport.',
+    usage: `<ui-tooltip ui-title="Thêm vào giỏ hàng" ui-placement="top-center">
+  <button>Giỏ hàng</button>
+</ui-tooltip>
+
+<ui-tooltip ui-title="Thông tin thêm" ui-placement="bottom-start" ui-animate="fade-up" ui-duration="300">
+  <button aria-label="Thông tin thêm">?</button>
+</ui-tooltip>`,
+    attributes: [
+      { name: 'ui-title', type: 'string', description: 'Plain text shown in the tooltip. Required.' },
+      { name: 'ui-placement', type: 'top | bottom | left | right, with start | center | end', default: 'top-center', description: 'Preferred placement. Flips when the opposite side has more space and clamps within the viewport.' },
+      { name: 'ui-animate', type: 'fade | fade-up | fade-down | fade-left | fade-right | scale | none', default: 'fade', description: 'Entrance and exit animation.' },
+      { name: 'ui-duration', type: 'milliseconds', default: '180', description: 'Animation duration; zero disables it.' },
+      { name: 'ui-offset', type: 'pixels', default: '8', description: 'Gap between trigger and tooltip.' },
+      { name: 'ui-mobile-disabled', type: 'boolean', default: 'false', description: 'Disables tap-to-show on touch devices.' },
+    ],
+    a11y: 'The trigger receives aria-describedby while the tooltip is visible. Focus opens it; blur or Escape closes it. Reduced motion disables transitions.',
+  },
+
   lazyload: {
     slug: 'lazyload',
     tagName: 'ui-lazyload',
@@ -481,31 +668,35 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
   },
 
-  'image-zoom': {
-    slug: 'image-zoom',
-    tagName: 'ui-image-zoom',
-    name: 'Image Zoom',
-    category: 'Media',
-    summary: 'Click-to-zoom interactive lightbox with smooth expansion and click/Escape to close.',
-    usage: `<ui-image-zoom>
-  <img src="photo.jpg" alt="Click to zoom in" />
-</ui-image-zoom>`,
-    attributes: [],
-  },
-
   'image-comparison': {
     slug: 'image-comparison',
     tagName: 'ui-image-comparison',
     name: 'Image Comparison',
     category: 'Media',
-    summary: 'Interactive before/after image slider with mouse dragging, touch gestures, and keyboard arrow controls.',
-    usage: `<ui-image-comparison value="50">
-  <img src="before.jpg" alt="Before" />
-  <img src="after.jpg" alt="After" />
+    summary: 'Compare aligned before/after images by dragging, touching, clicking, or using the keyboard. Optional spring animation starts on viewport entry.',
+    usage: `<ui-image-comparison ui-default-percent="50" ui-animate>
+  <ui-image-comparison-before>
+    <img src="before.jpg" alt="Before" />
+    <ui-image-comparison-label>Before</ui-image-comparison-label>
+  </ui-image-comparison-before>
+  <ui-image-comparison-after>
+    <img src="after.jpg" alt="After" />
+    <ui-image-comparison-label>After</ui-image-comparison-label>
+  </ui-image-comparison-after>
+  <ui-image-comparison-handle></ui-image-comparison-handle>
 </ui-image-comparison>`,
     attributes: [
-      { name: 'value', type: 'number', default: '50', description: 'Split divider position percentage (0 to 100).' },
+      { name: 'ui-default-percent', type: 'number', default: '50', description: 'Initial split percentage, clamped to 0–100.' },
+      { name: 'ui-value', type: 'number', default: 'initial percentage', description: 'Current split percentage. Updates with pointer and keyboard interaction; also sets --ui-value.' },
+      { name: 'ui-animate', type: 'boolean', default: 'false', description: 'Spring the divider from 0 to the initial value when the component enters the viewport.' },
+      { name: 'ui-observed', type: 'string', default: '—', description: 'Changing this value resets the divider to ui-default-percent and reinitializes the entry animation.' },
     ],
+    events: [{ name: 'ui-image-comparison-change', detail: '{ value: number }', description: 'Emitted when pointer or keyboard interaction changes the split.' }],
+    cssVars: [
+      { name: '--ui-value', default: '50', description: 'Numeric 0–100 current divider position.' },
+      { name: '--ui-image-comparison-position', default: '50%', description: 'Percentage used to clip the after image and place the handle.' },
+    ],
+    a11y: 'Focusable slider with Arrow Left/Right, Shift + arrow, Home, and End. Respects reduced motion by skipping the entry animation.',
   },
 
   counter: {

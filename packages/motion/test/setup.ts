@@ -1,6 +1,6 @@
 /**
  * Vitest setup for @ui/motion. Wires a mock IntersectionObserver into the
- * observer manager so Animate/Reveal can be unit-tested in happy-dom.
+ * observer manager so Animate can be unit-tested in happy-dom.
  *
  * Exports `instances` so test files can read the live mock list — happy-dom
  * swaps the global object between modules, so storing on `globalThis` is

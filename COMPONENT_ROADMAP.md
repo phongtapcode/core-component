@@ -93,8 +93,7 @@
 | Component | Reference name | Priority | Status | Notes |
 |---|---|---|---|---|
 | Lazyload | Lazyload | **P1** | To build | `<img loading="lazy">` + native `IntersectionObserver` for richer behaviour (placeholder, blur-up, srcset). |
-| Gallery | Gallery | P2 | To build | Composable thumbnail/lightbox layout. Pair with `<ui-image-zoom>` and `<ui-modal>`. |
-| ImageZoom | ImageZoom | P2 | To build | Click/tap/hover-to-zoom. Native pointer events, no third-party engine. |
+| Gallery | Gallery | P2 | To build | Composable thumbnail/lightbox layout. Pair with `<ui-photoswipe>` and `<ui-modal>`. |
 | ImageComparison | ImageComparison | P2 | To build | Before/after slider. Pointer + keyboard. |
 | Video | Video (proposed) | P2 | To build | Custom-element wrapper around `<video>` with poster, lazy preload, captions, IntersectionObserver-driven autoplay. |
 | IntersectionVideo | IntersectionVideo | P3 | REVIEW_REQUIRED | Likely a subset of `<ui-video>` (autoplay-when-visible). Decide after `<ui-video>` exists. |

@@ -38,6 +38,69 @@ Container cần có chiều cao để tạo quãng cuộn. `overflow: hidden` c�
 
 Đổi đường dẫn ảnh theo dự án của bạn. Gallery đi kèm có thêm ví dụ ảnh mở rộng theo scroll, ảnh nhiều lớp và ảnh kết hợp hover.
 
+## Scroll keyframes: ảnh và chữ theo từng cảnh
+
+Demo **Scroll keyframes** trong gallery là một section sticky cao `300vh` với hai nhịp nội dung. Ảnh nền bờ biển zoom chậm, ảnh hoa hiện dần ở nhịp sau; thẻ ảnh và tiêu đề di chuyển độc lập bằng `x`, `y`, `rotate`, `scale`, `opacity`. Các mốc chính nằm trong khoảng 25%–75% vì đây là phần quãng cuộn mà stage `100vh` đang sticky. Ảnh sử dụng các asset có sẵn trong gallery.
+
+```html
+<ui-parallax class="story" style="height: 300vh">
+  <div class="story-stage">
+    <ui-parallax-scroll ui-fit-content="false"
+      ui-keyframes="{'25%': {scale: 1.15, y: -40}, '75%': {scale: 1, y: 35}}">
+      <img src="/images/coast.jpg" alt="" />
+    </ui-parallax-scroll>
+    <ui-parallax-scroll
+      ui-keyframes="{'25%': {y: 90, opacity: 0}, '34%': {y: 0, opacity: 1}, '48%': {y: -15, opacity: 1}, '58%': {y: -100, opacity: 0}}">
+      <h2>Follow the quiet light.</h2>
+    </ui-parallax-scroll>
+  </div>
+</ui-parallax>
+```
+
+```css
+.story-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+.story-stage img { width: 100%; height: 100%; object-fit: cover; }
+```
+
+Demo đầy đủ có hai lớp ảnh nền, hai thẻ ảnh, hai khối chữ và bố cục tĩnh hiển thị đủ nội dung khi người dùng bật reduced motion.
+
+## Circular scroll
+
+Demo **Circular scroll** trong gallery đặt tám `ui-parallax-scroll` trên một `offset-path` hình tròn. Container cao `480vh`; stage cao `100vh` và sticky. Mỗi thẻ cách nhau `360px` trên cung tròn. Một keyframe tùy chỉnh thay đổi quãng đường đi từ `0` đến `-2520px` (bảy khoảng cách giữa tám thẻ).
+
+```html
+<ui-parallax class="circular-scroll">
+  <div class="circular-scroll-stage">
+    <ui-parallax-scroll
+      class="circular-scroll-item"
+      ui-fit-content="false"
+      style="--orbit-start: 0px"
+      ui-keyframes="{'20%': {orbitShift: 0}, '70%': {orbitShift: -2520}}"
+    >Ảnh 1</ui-parallax-scroll>
+    <!-- Các item tiếp theo dùng --orbit-start: 360px, 720px, ... -->
+  </div>
+</ui-parallax>
+```
+
+```css
+.circular-scroll { height: 480vh; }
+.circular-scroll-stage { position: sticky; top: 0; height: 100vh; overflow: hidden; --radius: clamp(850px, 78vw, 1200px); --path: circle(var(--radius) at 50% calc(100% + var(--radius) - 50vh)); }
+.circular-scroll-item { position: absolute; offset-path: var(--path); offset-distance: calc(-25% + var(--orbit-shift, 0px) + var(--orbit-start)); offset-rotate: auto; }
+```
+
+```js
+document.querySelectorAll('.circular-scroll-item').forEach((item) => {
+  item.customEffects(({ element, createValue, EMPTY }) => {
+    const distance = createValue('orbitShift');
+    if (distance !== EMPTY) element.style.setProperty('--orbit-shift', `${Number(distance)}px`);
+  });
+});
+```
+
+`ui-keyframes` là dữ liệu, không tính biểu thức JavaScript trong chuỗi. Vì vậy viết `-2520` thay cho `'360 * 7 * -1'`. Mỗi thẻ cần `--orbit-start` riêng. Demo có bố cục lưới thay thế khi trình duyệt không hỗ trợ `offset-path` hoặc người dùng bật reduced motion.
+
+`offset-rotate: auto` cho thẻ xoay theo tiếp tuyến của đường tròn. Bán kính được giới hạn theo viewport để các thẻ bên cạnh nghiêng rõ hơn trong khi thẻ ở đỉnh cung vẫn gần như thẳng.
+
 ## Tiến trình scroll và keyframes
 
 ```html

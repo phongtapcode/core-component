@@ -308,25 +308,6 @@ describe('<ui-lazyload>', () => {
   });
 });
 
-describe('<ui-image-zoom>', () => {
-  it('opens overlay on image click', () => {
-    const el = document.createElement('ui-image-zoom');
-    el.innerHTML = '<img src="a.jpg">';
-    document.body.appendChild(el);
-    (el.querySelector('img') as HTMLElement).click();
-    expect(document.querySelector('[data-ui-image-zoom-overlay]')).toBeTruthy();
-  });
-
-  it('closes on overlay click', () => {
-    const el = document.createElement('ui-image-zoom');
-    el.innerHTML = '<img src="a.jpg">';
-    document.body.appendChild(el);
-    (el.querySelector('img') as HTMLElement).click();
-    (document.querySelector('[data-ui-image-zoom-overlay]') as HTMLElement).click();
-    expect(document.querySelector('[data-ui-image-zoom-overlay]')).toBeFalsy();
-  });
-});
-
 describe('<ui-image-comparison>', () => {
   it('has ARIA slider role', () => {
     const el = document.createElement('ui-image-comparison');

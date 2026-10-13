@@ -139,6 +139,32 @@ All components share a predictable API — attributes are `kebab-case`, events a
 
 <div class="comp-card">
   <div class="comp-card-header">
+    <h3>Cursor</h3>
+    <span class="comp-badge motion">Motion</span>
+  </div>
+  <p class="comp-tag">&lt;ui-cursor&gt;</p>
+  <p class="comp-desc">Pointer-following item with smoothing, split regions and distortion presets.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/cursor">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5175/#/ui-cursor" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Typing</h3>
+    <span class="comp-badge motion">Motion</span>
+  </div>
+  <p class="comp-tag">&lt;ui-typing&gt;</p>
+  <p class="comp-desc">Rotate short hero phrases with typewriter, slide, or SVG goo effects.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/typing">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5175/#/ui-typing" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
     <h3>Scroll Y</h3>
     <span class="comp-badge motion">Motion</span>
   </div>
@@ -147,6 +173,19 @@ All components share a predictable API — attributes are `kebab-case`, events a
   <div class="comp-actions">
     <a class="comp-btn docs" href="/components/scroll-y">📄 Docs</a>
     <a class="comp-btn demo" href="http://localhost:5175/#/ui-scroll-y" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Scroll Scene</h3>
+    <span class="comp-badge motion">Motion</span>
+  </div>
+  <p class="comp-tag">&lt;ui-scroll-scene&gt;</p>
+  <p class="comp-desc">Switch sticky storytelling scenes at configurable scroll thresholds.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/scroll-scene">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5175/#/ui-scroll-scene" target="_blank">▶ Demo</a>
   </div>
 </div>
 
@@ -186,32 +225,6 @@ All components share a predictable API — attributes are `kebab-case`, events a
   <div class="comp-actions">
     <a class="comp-btn docs" href="/components/animate">📄 Docs</a>
     <a class="comp-btn demo" href="http://localhost:5175/#/ui-animate" target="_blank">▶ Demo</a>
-  </div>
-</div>
-
-<div class="comp-card">
-  <div class="comp-card-header">
-    <h3>Reveal</h3>
-    <span class="comp-badge motion">Motion</span>
-  </div>
-  <p class="comp-tag">&lt;ui-reveal&gt;</p>
-  <p class="comp-desc">Lightweight single-shot fade. Simpler than ui-animate when you only need a basic reveal.</p>
-  <div class="comp-actions">
-    <a class="comp-btn docs" href="/components/animate#reveal">📄 Docs</a>
-    <a class="comp-btn demo" href="http://localhost:5175/#/ui-reveal" target="_blank">▶ Demo</a>
-  </div>
-</div>
-
-<div class="comp-card">
-  <div class="comp-card-header">
-    <h3>Stagger</h3>
-    <span class="comp-badge motion">Motion</span>
-  </div>
-  <p class="comp-tag">&lt;ui-stagger&gt;</p>
-  <p class="comp-desc">Cascade child reveals in sequence. CSS-driven delays via <code>--ui-stagger-index</code>.</p>
-  <div class="comp-actions">
-    <a class="comp-btn docs" href="/components/animate#stagger">📄 Docs</a>
-    <a class="comp-btn demo" href="http://localhost:5175/#/ui-stagger" target="_blank">▶ Demo</a>
   </div>
 </div>
 
@@ -281,10 +294,23 @@ All components share a predictable API — attributes are `kebab-case`, events a
     <span class="comp-badge basic">Basic UI</span>
   </div>
   <p class="comp-tag">&lt;ui-modal&gt;</p>
-  <p class="comp-desc">Dialog with focus trap, scroll lock, backdrop fade + scale-in animation.</p>
+  <p class="comp-desc">Dialog, drawer or lightbox with named triggers, responsive placement, touch pan and multiple animations.</p>
   <div class="comp-actions">
     <a class="comp-btn docs" href="/components/modal">📄 Docs</a>
     <a class="comp-btn demo" href="http://localhost:5175/#/ui-modal" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Toast</h3>
+    <span class="comp-badge basic">Basic UI</span>
+  </div>
+  <p class="comp-tag">&lt;ui-toast&gt;</p>
+  <p class="comp-desc">Temporary notifications with HTML templates, six placements, and automatic or manual dismissal.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/toast">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5175/#/ui-toast" target="_blank">▶ Demo</a>
   </div>
 </div>
 
@@ -314,6 +340,19 @@ All components share a predictable API — attributes are `kebab-case`, events a
   </div>
 </div>
 
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Tooltip</h3>
+    <span class="comp-badge basic">Basic UI</span>
+  </div>
+  <p class="comp-tag">&lt;ui-tooltip&gt;</p>
+  <p class="comp-desc">Short hint on hover, focus, or tap, with viewport-aware placement.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/tooltip">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5175/#/ui-tooltip" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
 </div>
 
 ## Media
@@ -337,14 +376,14 @@ All components share a predictable API — attributes are `kebab-case`, events a
 
 <div class="comp-card">
   <div class="comp-card-header">
-    <h3>Image Zoom</h3>
+    <h3>PhotoSwipe</h3>
     <span class="comp-badge media">Media</span>
   </div>
-  <p class="comp-tag">&lt;ui-image-zoom&gt;</p>
-  <p class="comp-desc">Click to zoom any image into a full-screen lightbox overlay.</p>
+  <p class="comp-tag">&lt;ui-photoswipe&gt;</p>
+  <p class="comp-desc">Full-screen image gallery with zoom and swipe. PhotoSwipe assets load from CDN on first use.</p>
   <div class="comp-actions">
-    <a class="comp-btn docs" href="/components/image-zoom">📄 Docs</a>
-    <a class="comp-btn demo" href="http://localhost:5175/#/ui-image-zoom" target="_blank">▶ Demo</a>
+    <a class="comp-btn docs" href="/components/photoswipe">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5175/#/ui-photoswipe" target="_blank">▶ Demo</a>
   </div>
 </div>
 
@@ -426,6 +465,32 @@ All components share a predictable API — attributes are `kebab-case`, events a
   <div class="comp-actions">
     <a class="comp-btn docs" href="/components/carousel">📄 Docs</a>
     <a class="comp-btn demo" href="http://localhost:5173/#/ui-carousel" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Expandable Grid</h3>
+    <span class="comp-badge advanced">Advanced</span>
+  </div>
+  <p class="comp-tag">&lt;ui-expandable-grid&gt;</p>
+  <p class="comp-desc">Expand an image card in place while the surrounding grid moves smoothly.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/expandable-grid">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5173/#/ui-expandable-grid" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Orbit Gallery</h3>
+    <span class="comp-badge advanced">Advanced</span>
+  </div>
+  <p class="comp-tag">&lt;ui-orbit-gallery&gt;</p>
+  <p class="comp-desc">Rotate a ring of image cards in 3D, with captions and automatic spacing.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/orbit-gallery">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5173/#/ui-orbit-gallery" target="_blank">▶ Demo</a>
   </div>
 </div>
 

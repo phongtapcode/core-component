@@ -102,7 +102,6 @@ Example:
 /html/carousel
 /html/modal
 /html/tabs
-/html/image-zoom
 
 The homepage should display component cards similar conceptually to:
 
@@ -265,8 +264,6 @@ project/
 │ │
 │ ├── motion/
 │ │ ├── animate/
-│ │ ├── stagger/
-│ │ ├── reveal/
 │ │ ├── parallax/
 │ │ └── marquee/
 │ │
@@ -281,7 +278,6 @@ project/
 │ │
 │ ├── media/
 │ │ ├── gallery/
-│ │ ├── image-zoom/
 │ │ ├── image-comparison/
 │ │ ├── lazyload/
 │ │ └── video/
@@ -499,7 +495,6 @@ Animate
 Counter
 Lazyload
 Video
-Reveal
 etc.
 
 Do NOT blindly create a new IntersectionObserver for every component.
@@ -641,7 +636,6 @@ Fade Left
 Fade Right
 Delay
 Duration
-Stagger
 Repeat
 Once
 Custom easing
@@ -794,7 +788,6 @@ Gallery
 GridHoverExpand
 Group
 ImageComparison
-ImageZoom
 IntersectionVideo
 Lazyload
 LineChart
@@ -1035,8 +1028,6 @@ Responsive utilities
 PHASE 2 — Motion
 
 Animate
-Stagger
-Reveal
 basic effects
 
 PHASE 3 — Basic UI
@@ -1059,7 +1050,6 @@ Grid-related behavior
 PHASE 5 — Media
 
 Lazyload
-ImageZoom
 ImageComparison
 Video
 

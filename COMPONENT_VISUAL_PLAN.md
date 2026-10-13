@@ -14,10 +14,8 @@ The gallery shell has a shared visual language. Review the live demos one compon
 | 6 | Drawer | Refine panel layout and left/right examples. |
 | 7 | Popover | Refine trigger, floating panel, and placement examples. |
 | 8 | Animate | Make effect variants easy to compare. |
-| 9 | Reveal | Show delay variants without identical-looking samples. |
-| 10 | Stagger | Replace plain list items with a clear sequence example. |
 | 11 | Lazyload | Replace remote random images with local sample assets and show loading states. |
-| 12 | ImageZoom | Use a stable image and improve the overlay example. |
+| 12 | PhotoSwipe | Show a single-image lightbox and a gallery with stable local images. |
 | 13 | ImageComparison | Use a real before/after pair and check handle visibility. |
 | 14 | Counter | Refine number typography and example layout; the animation error was fixed in the shared pass. |
 | 15 | DarkMode | Show light, dark, and auto states with a clear current-state label. |

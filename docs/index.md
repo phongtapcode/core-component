@@ -43,11 +43,11 @@ unit suite pass on the master branch.
 
 ### Shipped components
 
-Motion: Animate, Reveal, Stagger, Marquee.
+Motion: Animate, Marquee.
 
 Basic UI: Toggle, Collapse, Accordion, Tabs, Modal, Drawer, Popover.
 
-Media: Lazyload, ImageZoom, ImageComparison.
+Media: Lazyload, PhotoSwipe, ImageComparison.
 
 Utility: Counter, DarkMode.
 

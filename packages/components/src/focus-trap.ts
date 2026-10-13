@@ -2,7 +2,7 @@
  * Shared utilities for components: focus trap, scroll lock.
  *
  * `withFocusTrap`: wraps a class to add Tab/Shift+Tab containment.
- * `lockScroll` / `unlockScroll`: prevent body scroll while an overlay is open.
+ * `lockScroll` / `unlockScroll`: prevent page scroll while an overlay is open.
  *
  * Both go through the host element's CleanupRegistry.
  */
@@ -20,36 +20,44 @@ const FOCUSABLE_SELECTOR = [
 ].join(',');
 
 /**
- * Lock body scroll while an overlay is open. Idempotent — multiple locks
- * stack and unlock() decrements the counter.
+ * Lock root scrolling without changing body positioning. The scrollbar gutter
+ * stays reserved, so opening a dialog does not move the page underneath it.
+ * Multiple overlays share the same lock.
  */
 let scrollLockCount = 0;
-let scrollLockY = 0;
+let previousScrollStyles: { overflow: string; scrollbarGutter: string; paddingRight: string } | null = null;
 
 export function lockScroll(): void {
   if (scrollLockCount === 0) {
-    scrollLockY = globalThis.scrollY ?? 0;
-    const body = document.body;
-    body.style.position = 'fixed';
-    body.style.top = `-${scrollLockY}px`;
-    body.style.left = '0';
-    body.style.right = '0';
-    body.style.overflow = 'hidden';
+    const root = document.documentElement;
+    previousScrollStyles = {
+      overflow: root.style.overflow,
+      scrollbarGutter: root.style.scrollbarGutter,
+      paddingRight: root.style.paddingRight,
+    };
+    const gutter = root.clientWidth > 0 ? Math.max(0, window.innerWidth - root.clientWidth) : 0;
+    if (gutter > 0) {
+      if (typeof CSS !== 'undefined' && CSS.supports?.('scrollbar-gutter', 'stable')) {
+        root.style.scrollbarGutter = 'stable';
+      } else {
+        const padding = parseFloat(getComputedStyle(root).paddingRight) || 0;
+        root.style.paddingRight = `${padding + gutter}px`;
+      }
+    }
+    root.style.overflow = 'hidden';
   }
   scrollLockCount++;
 }
 
 export function unlockScroll(): void {
-  scrollLockCount = Math.max(0, scrollLockCount - 1);
-  if (scrollLockCount === 0) {
-    const body = document.body;
-    body.style.position = '';
-    body.style.top = '';
-    body.style.left = '';
-    body.style.right = '';
-    body.style.overflow = '';
-    globalThis.scrollTo?.(0, scrollLockY);
-  }
+  if (scrollLockCount === 0) return;
+  scrollLockCount--;
+  if (scrollLockCount !== 0 || !previousScrollStyles) return;
+  const root = document.documentElement;
+  root.style.overflow = previousScrollStyles.overflow;
+  root.style.scrollbarGutter = previousScrollStyles.scrollbarGutter;
+  root.style.paddingRight = previousScrollStyles.paddingRight;
+  previousScrollStyles = null;
 }
 
 /**

@@ -224,112 +224,25 @@ ui-tabs [role='tabpanel'] {
 }
 
 /* ============================================================
-   <ui-modal>  — backdrop fade + dialog scale
+   <ui-modal> — visual layer lives in shadow DOM
    ============================================================ */
 
-/* Keyframes */
-@keyframes ui-modal-backdrop-in {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+ui-modal[data-portal-active]::backdrop {
+  background: var(--ui-modal-backdrop-color, rgba(12, 18, 32, .48));
+  -webkit-backdrop-filter: blur(var(--ui-modal-backdrop-blur, 10px));
+  backdrop-filter: blur(var(--ui-modal-backdrop-blur, 10px));
+  opacity: 0;
+  transition: opacity var(--ui-modal-duration, 300ms) ease;
 }
-@keyframes ui-modal-backdrop-out {
-  from { opacity: 1; }
-  to   { opacity: 0; }
-}
-@keyframes ui-modal-dialog-in {
-  from {
-    opacity: 0;
-    transform: scale(0.94) translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-@keyframes ui-modal-dialog-out {
-  from {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-  to {
-    opacity: 0;
-    transform: scale(0.94) translateY(8px);
-  }
+ui-modal[data-portal-active][data-state='open']::backdrop { opacity: 1; }
+ui-modal[data-portal-active][data-backdrop-disabled]::backdrop { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  ui-modal[data-portal-active]::backdrop { transition: none; }
 }
 
-ui-modal {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: var(--ui-z-modal);
-  pointer-events: none;
-  visibility: hidden;
-}
-
-/* Hidden → animated entry */
-ui-modal[data-state='entering'],
-ui-modal[data-state='open'] {
-  pointer-events: auto;
-  visibility: visible;
-}
-
-ui-modal[data-state='leaving'] {
-  pointer-events: none;
-  visibility: visible;
-}
-
-/* Backdrop (overlay element) */
-ui-modal > [data-modal-overlay] {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
-}
-
-ui-modal[data-state='entering'] > [data-modal-overlay] {
-  animation: ui-modal-backdrop-in var(--ui-modal-duration, 220ms) var(--ui-easing-decelerate) both;
-}
-
-ui-modal[data-state='leaving'] > [data-modal-overlay] {
-  animation: ui-modal-backdrop-out var(--ui-modal-duration, 180ms) var(--ui-easing-accelerate) both;
-}
-
-ui-modal[data-state='open'] > [data-modal-overlay] {
-  opacity: 1;
-}
-
-/* Dialog */
-ui-modal > [data-modal-dialog] {
-  position: relative;
-  background: var(--ui-color-surface);
-  border-radius: var(--ui-radius-lg);
-  box-shadow:
-    0 4px 6px -1px rgba(0, 0, 0, 0.1),
-    0 20px 60px -10px rgba(0, 0, 0, 0.25);
-  padding: var(--ui-distance-long);
-  max-width: var(--ui-modal-width, 480px);
-  width: calc(100% - 2rem);
-  max-height: var(--ui-modal-max-height, 90vh);
-  overflow: auto;
-  z-index: 1;
-  transform-origin: center center;
-}
-
-ui-modal[data-state='entering'] > [data-modal-dialog] {
-  animation: ui-modal-dialog-in var(--ui-modal-duration, 240ms) var(--ui-easing-decelerate) both;
-}
-
-ui-modal[data-state='leaving'] > [data-modal-dialog] {
-  animation: ui-modal-dialog-out var(--ui-modal-duration, 180ms) var(--ui-easing-accelerate) both;
-}
-
-ui-modal[data-state='open'] > [data-modal-dialog] {
-  opacity: 1;
-  transform: scale(1) translateY(0);
-}
+ui-modal-trigger { display: inline-flex; cursor: pointer; }
+ui-modal-pan { display: block; touch-action: none; }
+ui-modal > [data-modal-overlay] { display: none; }
 
 /* ============================================================
    <ui-drawer> — slide-in side panel with backdrop
@@ -510,6 +423,169 @@ ui-popover[placement='left'] > [data-popover-content] {
 }
 
 /* ============================================================
+   <ui-tooltip>
+   ============================================================ */
+
+ui-tooltip { display: inline-flex; vertical-align: middle; }
+
+ui-tooltip-content {
+  position: fixed;
+  z-index: var(--ui-z-tooltip, 1300);
+  box-sizing: border-box;
+  max-width: min(280px, calc(100vw - 16px));
+  padding: 7px 10px;
+  border-radius: 6px;
+  background: var(--ui-tooltip-background, #20242d);
+  color: var(--ui-tooltip-color, #fff);
+  box-shadow: 0 5px 16px rgba(0, 0, 0, 0.18);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+  overflow-wrap: anywhere;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(0, 0, 0);
+  transition: opacity var(--ui-tooltip-duration, 180ms) ease,
+              transform var(--ui-tooltip-duration, 180ms) ease;
+}
+
+ui-tooltip-content[data-animate='fade-up']:not([data-state='open']) { transform: translateY(6px); }
+ui-tooltip-content[data-animate='fade-down']:not([data-state='open']) { transform: translateY(-6px); }
+ui-tooltip-content[data-animate='fade-left']:not([data-state='open']) { transform: translateX(6px); }
+ui-tooltip-content[data-animate='fade-right']:not([data-state='open']) { transform: translateX(-6px); }
+ui-tooltip-content[data-animate='scale']:not([data-state='open']) { transform: scale(0.94); }
+ui-tooltip-content[data-state='open'] { opacity: 1; }
+ui-tooltip-content[data-animate='none'] { transition: none; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  ui-tooltip-content { transition: none; transform: none !important; }
+}
+
+/* ============================================================
+   <ui-photoswipe>
+   ============================================================ */
+ui-photoswipe { display: block; }
+
+/* ============================================================
+   <ui-toast> notifications
+   ============================================================ */
+
+ui-toast:not([data-toast-live]) { display: none; }
+ui-toast-portal {
+  position: fixed;
+  z-index: var(--ui-z-toast, 1200);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+  width: min(420px, calc(100vw - 32px));
+  pointer-events: none;
+}
+ui-toast-portal[ui-placement^='top'] { top: max(16px, env(safe-area-inset-top)); --ui-toast-offset: -14px; }
+ui-toast-portal[ui-placement^='bottom'] { bottom: max(16px, env(safe-area-inset-bottom)); flex-direction: column-reverse; --ui-toast-offset: 14px; }
+ui-toast-portal[ui-placement$='left'] { left: max(16px, env(safe-area-inset-left)); }
+ui-toast-portal[ui-placement$='right'] { right: max(16px, env(safe-area-inset-right)); }
+ui-toast-portal[ui-placement$='center'] { left: 50%; transform: translateX(-50%); align-items: center; }
+ui-toast[data-toast-live] {
+  position: relative;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  min-height: 54px;
+  padding: 14px 48px 14px 18px;
+  border: 1px solid var(--ui-color-border, #e1e5ec);
+  border-radius: 12px;
+  background: var(--ui-color-surface-raised, #fff);
+  color: var(--ui-color-text, #17233d);
+  box-shadow: 0 14px 36px rgba(18, 30, 52, .18);
+  line-height: 1.45;
+  pointer-events: auto;
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  transition: opacity var(--ui-toast-duration, 200ms) var(--ui-toast-easing, ease), transform var(--ui-toast-duration, 200ms) var(--ui-toast-easing, ease);
+}
+ui-toast[data-state='opening'], ui-toast[data-state='closing'] {
+  opacity: 0;
+  transform: translateY(var(--ui-toast-offset, 14px)) scale(.97);
+  pointer-events: none;
+}
+ui-toast[data-close-left] { padding-right: 18px; padding-left: 48px; }
+ui-toast-close-button { position: absolute; top: 10px; right: 10px; display: block; }
+ui-toast-close-button[ui-placement='top-left'] { right: auto; left: 10px; }
+ui-toast-close-button[ui-placement='center-right'] { top: 50%; transform: translateY(-50%); }
+ui-toast-close-button[ui-placement='center-left'] { top: 50%; right: auto; left: 10px; transform: translateY(-50%); }
+ui-toast-close-button button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 7px;
+  background: rgba(127, 139, 160, .14);
+  color: inherit;
+  font: inherit;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+ui-toast-close-button button:hover { background: rgba(127, 139, 160, .25); }
+ui-toast-close-button button:focus-visible { outline: 2px solid var(--ui-color-focus, #3c5de7); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  ui-toast[data-toast-live] { transition: none; transform: none; }
+}
+
+/* ============================================================
+   <ui-cursor> and <ui-cursor-item>
+   ============================================================ */
+
+ui-cursor, [is='ui-cursor'] { display: block; }
+ui-cursor[ui-absolute], [is='ui-cursor'][ui-absolute] { position: relative; }
+ui-cursor[data-cursor-active], [is='ui-cursor'][data-cursor-active] { cursor: none; }
+ui-cursor[data-cursor-active] :is(a, button, [role='button']),
+[is='ui-cursor'][data-cursor-active] :is(a, button, [role='button']) { cursor: none; }
+
+ui-cursor-item {
+  position: fixed;
+  top: var(--ui-cursor-y, 0px);
+  left: var(--ui-cursor-x, 0px);
+  z-index: var(--ui-z-cursor, 1400);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  max-width: min(320px, 80vw);
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: var(--ui-cursor-background, #182638);
+  color: var(--ui-cursor-color, #fff);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, -50%);
+  transition: opacity 160ms ease, visibility 160ms ease, background-color 160ms ease;
+  will-change: left, top, transform;
+}
+ui-cursor-item[data-cursor-absolute] { position: absolute; }
+ui-cursor-item[ui-active] { opacity: 1; visibility: visible; }
+ui-cursor-item[ui-is-hovering-button] { background: var(--ui-cursor-button-background, #176e91); }
+ui-cursor-item img { display: block; max-width: 100%; }
+ui-cursor-item[data-distortion='distortion-2'] { transform: translate(-50%, -50%) skew(var(--ui-cursor-skew-x, 0deg), var(--ui-cursor-skew-y, 0deg)); }
+ui-cursor-item[data-distortion='distortion-3'] { transform: translate(-50%, -50%) rotate(var(--ui-cursor-rotate, 0deg)) scale(var(--ui-cursor-stretch, 1)); }
+ui-cursor-item[data-distortion='distortion-4'] { transform: translate(-50%, -50%) scale(var(--ui-cursor-stretch, 1), var(--ui-cursor-squash, 1)); filter: blur(var(--ui-cursor-blur, 0px)); }
+ui-cursor-item[data-distortion='distortion-5'] { border-radius: var(--ui-cursor-radius, 50%); transform: translate(-50%, -50%) rotate(var(--ui-cursor-rotate, 0deg)); overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  ui-cursor-item { transition: none; }
+  ui-cursor[data-cursor-active], [is='ui-cursor'][data-cursor-active] { cursor: auto; }
+}
+
+/* ============================================================
    <ui-lazyload>
    ============================================================ */
 
@@ -526,31 +602,112 @@ ui-lazyload img[data-loading] {
 }
 
 /* ============================================================
-   <ui-image-zoom>
-   ============================================================ */
-
-ui-image-zoom {
-  display: inline-block;
-}
-
-/* ============================================================
    <ui-image-comparison>
    ============================================================ */
 
 ui-image-comparison {
   position: relative;
-  display: inline-block;
+  display: block;
+  isolation: isolate;
   overflow: hidden;
   width: var(--ui-image-comparison-width, 100%);
-  height: var(--ui-image-comparison-height, 300px);
+  height: var(--ui-image-comparison-height, auto);
+  aspect-ratio: var(--ui-image-comparison-aspect-ratio, 16 / 9);
+  cursor: ew-resize;
+  touch-action: pan-y;
+  user-select: none;
 }
 
-ui-image-comparison > img {
+ui-image-comparison:focus-visible { outline: 3px solid var(--ui-color-accent, #4f7cff); outline-offset: 3px; }
+
+ui-image-comparison-before,
+ui-image-comparison-after {
+  display: block;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+ui-image-comparison-before { z-index: 0; }
+ui-image-comparison-after {
+  z-index: 1;
+  clip-path: inset(0 0 0 var(--ui-image-comparison-position, 50%));
+}
+
+ui-image-comparison-before > img,
+ui-image-comparison-after > img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none;
 }
+
+ui-image-comparison-handle {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  top: 0;
+  bottom: 0;
+  left: var(--ui-image-comparison-position, 50%);
+  width: 0;
+  pointer-events: none;
+}
+
+ui-image-comparison-handle::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -1px;
+  width: 2px;
+  background: #fff;
+  box-shadow: 0 0 8px #0007;
+}
+
+ui-image-comparison-handle:not(:has(ui-image-comparison-handle-icon))::after,
+ui-image-comparison-handle-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  box-sizing: border-box;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #17202bb3;
+  color: #fff;
+  box-shadow: 0 4px 18px #0006;
+}
+
+ui-image-comparison-handle:not(:has(ui-image-comparison-handle-icon))::after {
+  content: '↔';
+  font-size: 24px;
+  line-height: 1;
+}
+
+ui-image-comparison-handle-icon > svg { display: block; max-width: 100%; max-height: 100%; }
+
+ui-image-comparison-label {
+  position: absolute;
+  top: 1rem;
+  display: block;
+  padding: .35rem .65rem;
+  border-radius: 4px;
+  color: #fff;
+  background: #111b28b3;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+ui-image-comparison-before > ui-image-comparison-label { left: 1rem; }
+ui-image-comparison-after > ui-image-comparison-label { right: 1rem; }
 
 /* ============================================================
    <ui-counter>
@@ -950,4 +1107,94 @@ core-carousel-trigger[active] {
     animation-duration: 0.001ms !important;
     animation-delay: 0ms !important;
   }
+}
+/* Expandable grid: FLIP moves the tiles while layout switches instantly. */
+ui-expandable-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--ui-expandable-grid-columns, 3), minmax(0, 1fr));
+  gap: var(--ui-expandable-grid-gap, 16px);
+  align-items: stretch;
+}
+ui-expandable-grid-item {
+  display: block;
+  min-width: 0;
+  min-height: var(--ui-expandable-grid-item-height, 250px);
+  overflow: hidden;
+  position: relative;
+  transform-origin: top left;
+}
+ui-expandable-grid-item[ui-active] {
+  grid-column: 1 / -1;
+  min-height: var(--ui-expandable-grid-open-height, 480px);
+}
+ui-expandable-grid-item [ui-expandable-grid-trigger] { cursor: pointer; }
+ui-expandable-grid-item [ui-expandable-grid-trigger]:focus-visible {
+  outline: 3px solid var(--ui-color-accent, #6366f1);
+  outline-offset: -3px;
+}
+ui-expandable-grid-detail { display: block; }
+ui-expandable-grid-item:not([ui-active]) ui-expandable-grid-detail { display: none; }
+
+@media (max-width: 760px) {
+  ui-expandable-grid { grid-template-columns: repeat(var(--ui-expandable-grid-mobile-columns, 1), minmax(0, 1fr)); }
+}
+
+/* Orbit gallery: the track spins, while each card keeps its own place on the ring. */
+ui-orbit-gallery {
+  display: grid;
+  place-items: center;
+  position: relative;
+  min-height: var(--ui-orbit-height, 560px);
+  overflow: hidden;
+  perspective: var(--ui-orbit-perspective, 1100px);
+  isolation: isolate;
+}
+ui-orbit-gallery-track {
+  display: block;
+  position: relative;
+  width: var(--ui-orbit-card-width, 170px);
+  height: var(--ui-orbit-card-height, 240px);
+  transform-style: preserve-3d;
+  animation: ui-orbit-spin var(--ui-orbit-duration, 24000ms) linear infinite;
+}
+ui-orbit-gallery:hover ui-orbit-gallery-track,
+ui-orbit-gallery:focus-within ui-orbit-gallery-track { animation-play-state: paused; }
+ui-orbit-gallery-item {
+  display: block;
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateY(calc(360deg / var(--ui-orbit-count, 1) * var(--ui-orbit-index, 0))) translateZ(var(--ui-orbit-radius, 310px));
+}
+ui-orbit-gallery-item > .ui-orbit-gallery-face {
+  display: block;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: var(--ui-orbit-card-radius, 16px);
+  background: var(--ui-orbit-card-background, #273645);
+  box-shadow: 0 20px 55px #07131b55;
+  backface-visibility: hidden;
+}
+ui-orbit-gallery-item > .ui-orbit-gallery-face--back { transform: rotateY(180deg); pointer-events: none; }
+ui-orbit-gallery-item > .ui-orbit-gallery-face > img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+@keyframes ui-orbit-spin {
+  from { transform: rotateX(var(--ui-orbit-tilt, -12deg)) rotateY(0deg); }
+  to { transform: rotateX(var(--ui-orbit-tilt, -12deg)) rotateY(360deg); }
+}
+@media (max-width: 700px) {
+  ui-orbit-gallery {
+    --ui-orbit-height: 440px;
+    --ui-orbit-card-width: 122px;
+    --ui-orbit-card-height: 176px;
+    --ui-orbit-radius: 215px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ui-orbit-gallery-track { animation: none; transform: rotateX(var(--ui-orbit-tilt, -12deg)); }
 }
