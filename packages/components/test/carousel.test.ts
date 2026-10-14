@@ -425,6 +425,42 @@ describe('<ui-carousel> / <core-carousel> Spec Test Suite', () => {
       expect(thumbs[5]?.hasAttribute('active')).toBe(true);
     });
 
+    it('reveals the next thumbnail before it becomes active and supports dragging the rail', () => {
+      const el = document.createElement('ui-carousel') as UiCarousel;
+      const slides = Array.from({ length: 6 }, (_, i) => `<ui-carousel-slide>${i + 1}</ui-carousel-slide>`).join('');
+      el.innerHTML = `<ui-carousel-inner><ui-carousel-list>${slides}</ui-carousel-list>
+        <ui-carousel-next><button>Next</button></ui-carousel-next><ui-carousel-pagination></ui-carousel-pagination>
+        </ui-carousel-inner><ui-carousel-thumbnail ui-per-view="3">
+        <ui-carousel-inner><ui-carousel-list>${slides}</ui-carousel-list></ui-carousel-inner>
+        </ui-carousel-thumbnail>`;
+      const viewport = el.querySelector<HTMLElement>('ui-carousel-thumbnail ui-carousel-inner')!;
+      Object.defineProperty(viewport, 'clientWidth', { configurable: true, value: 300 });
+      container.appendChild(el);
+
+      const step = (300 - 2 * 8) / 3 + 8;
+      const next = el.querySelector<HTMLButtonElement>('ui-carousel-next button')!;
+      next.click(); next.click();
+      expect(el.activeIndex).toBe(2);
+      expect(viewport.scrollLeft).toBeCloseTo(step);
+      next.click();
+      expect(el.activeIndex).toBe(3);
+      expect(viewport.scrollLeft).toBeCloseTo(2 * step);
+
+      el.querySelectorAll<HTMLElement>('ui-carousel-bullet')[5]!.click();
+      expect(viewport.scrollLeft).toBeCloseTo(3 * step);
+      viewport.dispatchEvent(new PointerEvent('pointerdown', { clientX: 100, button: 0, pointerId: 7, bubbles: true }));
+      window.dispatchEvent(new PointerEvent('pointermove', { clientX: 180, pointerId: 7, bubbles: true }));
+      window.dispatchEvent(new PointerEvent('pointerup', { clientX: 180, pointerId: 7, bubbles: true }));
+      expect(viewport.scrollLeft).toBeCloseTo(3 * step - 80);
+      el.querySelectorAll<HTMLElement>('ui-carousel-thumbnail ui-carousel-slide')[1]!.click();
+      expect(el.activeIndex).toBe(5);
+      el.querySelectorAll<HTMLElement>('ui-carousel-thumbnail ui-carousel-slide')[1]!.click();
+      expect(el.activeIndex).toBe(1);
+      expect(viewport.scrollLeft).toBe(0);
+      el.goTo(0);
+      expect(viewport.scrollLeft).toBe(0);
+    });
+
     it('adds inert end clones for UI infinite looping', () => {
       const el = document.createElement('ui-carousel') as UiCarousel;
       el.setAttribute('ui-loop', '');

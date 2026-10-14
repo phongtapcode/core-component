@@ -90,7 +90,8 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
   </ui-image-stack-item>
 </ui-image-stack>`,
     attributes: [
-      { name:'ui-style', type:'fan | fall | sheet | coverflow', default:'layered', description:'Choose a paper fan, falling frames, contact sheet, or perspective rail; omit for the original rightward stack.' },
+      { name:'ui-style', type:'fan | fall | sheet | coverflow | palette | corner', default:'layered', description:'Choose a paper fan, falling frames, contact sheet, perspective rail, four-photo palette, or three-photo corner reveal. Palette and corner use the layered layout when the item count differs.' },
+      { name:'ui-badge', type:'string', description:'Optional center badge text for the palette style; defaults to a star.' },
       { name:'ui-label', type:'string', description:'Optional label on each ui-image-stack-item; falls back to the image alt text.' },
       { name:'data-stack-caption', type:'attribute', description:'Place on a child element to show a caption on the small photo.' },
     ],
@@ -114,6 +115,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       { name:'--ui-image-stack-hover-spread', default:'2.3', description:'Horizontal spread multiplier on hover or keyboard focus.' },
       { name:'--ui-image-stack-fan-spread', default:'72px', description:'Horizontal spacing for the open fan style.' },
       { name:'--ui-image-stack-rail-spread', default:'125px', description:'Horizontal spacing for the coverflow rail.' },
+      { name:'--ui-image-stack-palette-1 … 4', default:'olive, yellow, orange, red', description:'The four wedge colors used by the palette style.' },
     ],
     a11y: 'Each layer is focusable and opens with Enter or Space. The viewer traps focus, supports Escape and arrow keys, and restores focus to the selected layer.',
   },
@@ -453,6 +455,36 @@ uiToast.push({
       { name: 'ui-mobile-disabled', type: 'boolean', default: 'false', description: 'Disable the custom cursor on narrow or coarse-pointer devices.' },
     ],
     a11y: 'Decorative cursor items ignore pointer events. The native cursor remains on touch devices and in disabled zones; reduced motion disables the custom effect.',
+  },
+  'fake-cursor': {
+    slug: 'fake-cursor',
+    tagName: 'ui-fake-cursor',
+    name: 'Fake Cursor',
+    category: 'Motion',
+    summary: 'Animate a decorative pointer toward a chosen element and show a click pulse. Optionally activate the real element.',
+    usage: `<ui-fake-cursor ui-target="[data-cursor-target]" ui-label="Alex" ui-duration="3600">
+  <button data-cursor-target type="button">Create project</button>
+</ui-fake-cursor>`,
+    attributes: [
+      { name: 'ui-target', type: 'CSS selector', default: '[data-cursor-target]', description: 'Target element inside the fake cursor host.' },
+      { name: 'ui-label', type: 'string', default: 'Guide', description: 'Label shown beside the pointer.' },
+      { name: 'ui-duration', type: 'milliseconds', default: '3200', description: 'Length of one movement and click cycle.' },
+      { name: 'ui-activate', type: 'boolean', default: 'false', description: 'Also call click() on the target at the click moment.' },
+      { name: 'ui-once', type: 'boolean', default: 'false', description: 'Run a single cycle instead of looping.' },
+    ],
+    methods: [
+      { name: 'play()', description: 'Start or resume the scripted cursor.' },
+      { name: 'pause()', description: 'Stop the current cycle.' },
+      { name: 'replay()', description: 'Restart from the opening position.' },
+      { name: 'refresh()', description: 'Find and measure the target again.' },
+    ],
+    events: [
+      { name: 'ui-fake-cursor:click', detail: '{ target }', description: 'Cancelable simulated click event. Preventing default blocks ui-activate.' },
+    ],
+    cssVars: [
+      { name: '--ui-fake-cursor-color', default: '#2563eb', description: 'Pointer fill and label color.' },
+    ],
+    a11y: 'The animated cursor is decorative and does not block pointer or keyboard access to the real target. Reduced motion disables the animation and automatic activation.',
   },
   'scroll-scene': {
     slug: 'scroll-scene',
@@ -946,6 +978,60 @@ uiToast.push({
     a11y: 'Focusable slider with Arrow Left/Right, Shift + arrow, Home, and End. Respects reduced motion by skipping the entry animation.',
   },
 
+  'image-trace': {
+    slug: 'image-trace', tagName: 'ui-image-trace', name: 'Image Trace', category: 'Media',
+    summary: 'Samples an image, draws its detected luminance contours as animated SVG paths, then reveals the original photo.',
+    usage: `<ui-image-trace ui-duration="3600" ui-detail="320" ui-contrast="36">
+  <img src="photo.jpg" alt="A meaningful description" />
+</ui-image-trace>`,
+    attributes: [
+      { name: 'ui-duration', type: 'number (ms)', default: '3600', description: 'Total drawing and reveal time, clamped to 400–15000 ms.' },
+      { name: 'ui-detail', type: 'number (px)', default: '320', description: 'Longest side of the pixel sample used to find contours, clamped to 48–512.' },
+      { name: 'ui-contrast', type: 'number', default: '36', description: 'Minimum edge strength. Raise it to ignore faint textures; lower it to draw subtle details.' },
+    ],
+    methods: [
+      { name: 'replay()', description: 'Trace the current image again.' },
+      { name: 'refresh()', description: 'Re-read the child image after changing its src.' },
+    ],
+    events: [
+      { name: 'ui-image-trace:ready', detail: '{ count: number }', description: 'Contour paths are ready and the drawing starts.' },
+      { name: 'ui-image-trace:complete', description: 'The original image is fully visible.' },
+    ],
+    cssVars: [
+      { name: '--ui-image-trace-background', default: '#f2eee8', description: 'Backdrop behind the drawing.' },
+      { name: '--ui-image-trace-stroke', default: '#334d60', description: 'Color of the traced lines.' },
+      { name: '--ui-image-trace-stroke-width', default: '1px', description: 'Line width on screen; it stays constant as the SVG scales.' },
+    ],
+    a11y: 'The source image keeps its alt text; the generated SVG is hidden from assistive technology. Reduced motion immediately shows the image. Cross-origin images need CORS permission to read pixels; if unavailable, the original image is shown.',
+  },
+
+  'image-flashlight': {
+    slug: 'image-flashlight', tagName: 'ui-image-flashlight', name: 'Image Flashlight', category: 'Media',
+    summary: 'A dim grayscale photo is briefly explored by a soft circular spotlight before the light expands to reveal the entire original image.',
+    usage: `<ui-image-flashlight ui-duration="6000" ui-radius="0.26" ui-loop>
+  <img src="photo.jpg" alt="A meaningful description" />
+</ui-image-flashlight>`,
+    attributes: [
+      { name: 'ui-duration', type: 'number (ms)', default: '6000', description: 'Total time for the spotlight and full reveal, clamped to 800–15000 ms.' },
+      { name: 'ui-radius', type: 'number', default: '0.26', description: 'Spotlight radius as a fraction of the shorter image side, clamped to 0.1–0.55.' },
+      { name: 'ui-loop', type: 'boolean', default: 'false', description: 'Replay after the full image has remained visible for a short pause.' },
+      { name: 'ui-loop-delay', type: 'number (ms)', default: '1800', description: 'Pause after the full reveal before ui-loop runs again, clamped to 0–10000 ms.' },
+      { name: 'ui-start-target', type: 'CSS selector', default: 'nearest section', description: 'Ancestor that must be fully visible before the effect starts. For a section taller than the viewport, the effect starts when its bottom enters view.' },
+    ],
+    methods: [
+      { name: 'replay()', description: 'Darken the photo and play the spotlight sequence again.' },
+      { name: 'refresh()', description: 'Re-read the child image after changing its src.' },
+    ],
+    events: [
+      { name: 'ui-image-flashlight:start', description: 'The spotlight begins moving.' },
+      { name: 'ui-image-flashlight:complete', description: 'The full original image is visible.' },
+    ],
+    cssVars: [
+      { name: '--ui-image-flashlight-darkness', default: '.24', description: 'Brightness of the dim grayscale image before the final reveal.' },
+    ],
+    a11y: 'The authored image retains its alt text. The temporary color layer is hidden from assistive technology. Reduced motion shows the original image immediately.',
+  },
+
   counter: {
     slug: 'counter',
     tagName: 'ui-counter',
@@ -978,10 +1064,8 @@ uiToast.push({
     name: 'Marquee',
     category: 'Advanced',
     summary: 'Hardware-accelerated continuous scrolling banner with infinite looping, bi-directional and vertical orientation, scroll parallax speed multiplier, and pause on hover.',
-    usage: `<ui-marquee speed="6" pause-on-hover="true">
-  <figure><img src="/images/coast.jpg" alt="Coast" /><figcaption>The quiet coast</figcaption></figure>
-  <figure><img src="/images/architecture.jpg" alt="Architecture" /><figcaption>Lines and light</figcaption></figure>
-  <figure><img src="/images/botanical.jpg" alt="Botanical garden" /><figcaption>A greener hour</figcaption></figure>
+    usage: `<ui-marquee speed="6" pause-on-hover scroll-enabled scroll-speed="1.5">
+  <span>Breaking News • New Components • Web Components Native • Zero Runtime •</span>
 </ui-marquee>`,
     attributes: [
       { name: 'speed', type: 'number', default: '6', description: 'Auto-scroll speed (higher = faster).' },

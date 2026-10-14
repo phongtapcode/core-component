@@ -63,6 +63,13 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     demos: ['Follow and states', 'Text image reveal', 'Split cursor', 'Distortion gallery', 'Magnetic button'],
   },
   {
+    name: 'Fake Cursor',
+    tagName: 'ui-fake-cursor',
+    category: 'Motion',
+    description: 'Guide the eye with a scripted pointer that moves to a target and simulates a click.',
+    demos: ['Visual guide', 'Auto click'],
+  },
+  {
     name: 'Toggle',
     tagName: 'ui-toggle',
     category: 'Basic UI',
@@ -147,6 +154,20 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     demos: ['Basic', 'Keyboard navigation'],
   },
   {
+    name: 'Image Trace',
+    tagName: 'ui-image-trace',
+    category: 'Media',
+    description: 'Draws contours detected in a photo, then gently reveals the original image.',
+    demos: ['Architecture', 'Botanical'],
+  },
+  {
+    name: 'Image Flashlight',
+    tagName: 'ui-image-flashlight',
+    category: 'Media',
+    description: 'A soft spotlight searches a dim photo, then expands to reveal the full image.',
+    demos: ['Coastal dawn', 'Botanical night'],
+  },
+  {
     name: 'Counter',
     tagName: 'ui-counter',
     category: 'Utility',
@@ -165,7 +186,7 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     tagName: 'ui-marquee',
     category: 'Advanced',
     description: 'Infinite horizontal scroller. Pauses on hover.',
-    demos: ['Photo gallery', 'Pause on hover'],
+    demos: ['Basic', 'Pause on hover'],
   },
   {
     name: 'Carousel',
@@ -235,7 +256,7 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     tagName: 'ui-image-stack',
     category: 'Advanced',
     description: 'A layered 3D photo stack that fans out on hover and opens a navigable image preview on click.',
-    demos: ['Editorial stack', 'Compact stack', 'Fanned prints', 'Falling frames', 'Contact sheet', 'Coverflow rail'],
+    demos: ['Editorial stack', 'Compact stack', 'Fanned prints', 'Falling frames', 'Contact sheet', 'Coverflow rail', 'Palette reveal', 'Corner reveal'],
   },
   {
     name: 'Flip Book',

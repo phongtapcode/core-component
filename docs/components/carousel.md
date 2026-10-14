@@ -74,7 +74,7 @@ ui-carousel-inner > ui-carousel-pagination { left: 50%; transform: translateX(-5
 </ui-carousel>
 ```
 
-Clicking or keyboard activating a thumbnail selects that slide. When `ui-per-view` shows multiple slides, the track moves as far as possible to bring the selection into view. `ui-loop` is disabled while a thumbnail rail exists.
+Clicking or keyboard activating a thumbnail selects that slide. The thumbnail rail scrolls ahead as the active slide approaches its visible edge, and it can be dragged horizontally to browse more thumbnails. When `ui-per-view` shows multiple slides, the main track moves as far as possible to bring the selection into view. `ui-loop` is disabled while a thumbnail rail exists.
 
 ## Attributes
 

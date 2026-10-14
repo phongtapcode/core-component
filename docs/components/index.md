@@ -152,6 +152,19 @@ All components share a predictable API — attributes are `kebab-case`, events a
 
 <div class="comp-card">
   <div class="comp-card-header">
+    <h3>Fake Cursor</h3>
+    <span class="comp-badge motion">Motion</span>
+  </div>
+  <p class="comp-tag">&lt;ui-fake-cursor&gt;</p>
+  <p class="comp-desc">A scripted pointer that travels to a chosen target and demonstrates a click.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/fake-cursor">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5175/#/ui-fake-cursor" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
     <h3>Typing</h3>
     <span class="comp-badge motion">Motion</span>
   </div>
@@ -397,6 +410,32 @@ All components share a predictable API — attributes are `kebab-case`, events a
   <div class="comp-actions">
     <a class="comp-btn docs" href="/components/image-comparison">📄 Docs</a>
     <a class="comp-btn demo" href="http://localhost:5175/#/ui-image-comparison" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Image Trace</h3>
+    <span class="comp-badge media">Media</span>
+  </div>
+  <p class="comp-tag">&lt;ui-image-trace&gt;</p>
+  <p class="comp-desc">Draw photo contours first, then reveal the original image.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/image-trace">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5175/#/ui-image-trace" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Image Flashlight</h3>
+    <span class="comp-badge media">Media</span>
+  </div>
+  <p class="comp-tag">&lt;ui-image-flashlight&gt;</p>
+  <p class="comp-desc">A moving beam reveals the real photo, then brightens the full image.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/image-flashlight">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5175/#/ui-image-flashlight" target="_blank">▶ Demo</a>
   </div>
 </div>
 

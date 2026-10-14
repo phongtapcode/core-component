@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { UiImageStack } from '../src/image-stack.js';
 import type { UiModal } from '../src/modal.js';
 import '../src/image-stack.js';
@@ -75,5 +75,66 @@ describe('ui-image-stack', () => {
     expect(modal.querySelector('.ui-image-stack__counter')?.textContent).toBe('03 / 03');
     stack.remove();
     expect(document.querySelector('.ui-image-stack__modal')).toBeNull();
+  });
+
+  it('locks a palette photo until the pointer leaves the frame', () => {
+    const stack = mount();
+    stack.setAttribute('ui-style', 'palette');
+    stack.append(document.createElement('ui-image-stack-item'));
+    vi.spyOn(stack, 'getBoundingClientRect').mockReturnValue({ left: 0, top: 0, width: 300, height: 300 } as DOMRect);
+
+    stack.dispatchEvent(new MouseEvent('pointermove', { bubbles: true, clientX: 280, clientY: 150 }));
+    expect(stack.getAttribute('data-palette-active')).toBe('1');
+    stack.dispatchEvent(new MouseEvent('pointermove', { bubbles: true, clientX: 150, clientY: 280 }));
+    expect(stack.getAttribute('data-palette-active')).toBe('1');
+    stack.dispatchEvent(new Event('pointerleave'));
+    expect(stack.hasAttribute('data-palette-active')).toBe(false);
+    stack.dispatchEvent(new MouseEvent('pointermove', { bubbles: true, clientX: 150, clientY: 280 }));
+    expect(stack.getAttribute('data-palette-active')).toBe('2');
+
+    stack.items[1]!.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1, clientX: 150, clientY: 280 }));
+    expect(document.querySelector('.ui-image-stack__counter')?.textContent).toBe('02 / 04');
+  });
+
+  it('keeps every photo accessible when palette has a different number of items', () => {
+    const stack = mount();
+    stack.setAttribute('ui-style', 'palette');
+    vi.spyOn(stack, 'getBoundingClientRect').mockReturnValue({ left: 0, top: 0, width: 300, height: 300 } as DOMRect);
+    stack.dispatchEvent(new MouseEvent('pointermove', { bubbles: true, clientX: 280, clientY: 150 }));
+    expect(stack.hasAttribute('data-palette-active')).toBe(false);
+
+    stack.append(document.createElement('ui-image-stack-item'), document.createElement('ui-image-stack-item'));
+    stack.dispatchEvent(new MouseEvent('pointermove', { bubbles: true, clientX: 280, clientY: 150 }));
+    expect(stack.hasAttribute('data-palette-active')).toBe(false);
+    stack.items[4]!.click();
+    expect(document.querySelector('.ui-image-stack__counter')?.textContent).toBe('05 / 05');
+  });
+
+  it('switches corner photos through the exposed center and corner regions', () => {
+    const stack = mount();
+    stack.setAttribute('ui-style', 'corner');
+    vi.spyOn(stack, 'getBoundingClientRect').mockReturnValue({ left: 0, top: 0, width: 300, height: 300 } as DOMRect);
+    expect(stack.hasAttribute('data-corner-ready')).toBe(true);
+
+    stack.dispatchEvent(new MouseEvent('pointermove', { bubbles: true, clientX: 30, clientY: 30 }));
+    expect(stack.getAttribute('data-corner-active')).toBe('1');
+    stack.dispatchEvent(new MouseEvent('pointermove', { bubbles: true, clientX: 150, clientY: 150 }));
+    expect(stack.getAttribute('data-corner-active')).toBe('1');
+    stack.dispatchEvent(new MouseEvent('pointermove', { bubbles: true, clientX: 270, clientY: 270 }));
+    expect(stack.getAttribute('data-corner-active')).toBe('2');
+    stack.dispatchEvent(new MouseEvent('pointermove', { bubbles: true, clientX: 290, clientY: 290 }));
+    expect(stack.getAttribute('data-corner-active')).toBe('3');
+    stack.items[2]!.dispatchEvent(new MouseEvent('click', { bubbles: true, detail: 1, clientX: 290, clientY: 290 }));
+    expect(document.querySelector('.ui-image-stack__counter')?.textContent).toBe('03 / 03');
+
+    stack.dispatchEvent(new Event('pointerleave'));
+    expect(stack.hasAttribute('data-corner-active')).toBe(false);
+
+    stack.append(document.createElement('ui-image-stack-item'));
+    stack.refresh();
+    expect(stack.hasAttribute('data-corner-ready')).toBe(false);
+    expect(stack.hasAttribute('data-corner-active')).toBe(false);
+    stack.items[3]!.click();
+    expect(document.querySelector('.ui-image-stack__counter')?.textContent).toBe('04 / 04');
   });
 });

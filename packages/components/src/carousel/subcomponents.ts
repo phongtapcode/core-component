@@ -327,6 +327,59 @@ export class UiCarouselThumbnail extends BaseElement {
   protected override onConnect(): void {
     this.setAttribute('role', 'group');
     this.setAttribute('aria-label', this.getAttribute('aria-label') || 'Carousel thumbnails');
+    const viewport = this.querySelector<HTMLElement>('ui-carousel-inner, core-carousel-inner');
+    if (viewport) {
+      let pointerId: number | null = null;
+      let startX = 0;
+      let startScroll = 0;
+      let dragged = false;
+      let suppressClick = false;
+      let clearClickTimer: ReturnType<typeof setTimeout> | undefined;
+
+      this.$on(viewport, 'pointerdown', ((event: PointerEvent) => {
+        if (event.button !== 0) return;
+        pointerId = event.pointerId;
+        startX = event.clientX;
+        startScroll = viewport.scrollLeft;
+        dragged = false;
+      }) as EventListener);
+      this.$on(window, 'pointermove', ((event: PointerEvent) => {
+        if (event.pointerId !== pointerId) return;
+        const delta = event.clientX - startX;
+        if (!dragged && Math.abs(delta) < 6) return;
+        if (!dragged) {
+          dragged = true;
+          viewport.style.scrollBehavior = 'auto';
+          viewport.setAttribute('data-dragging', '');
+        }
+        viewport.scrollLeft = startScroll - delta;
+        event.preventDefault();
+      }) as EventListener);
+      const finishDrag = (event: PointerEvent): void => {
+        if (event.pointerId !== pointerId) return;
+        pointerId = null;
+        viewport.style.removeProperty('scroll-behavior');
+        viewport.removeAttribute('data-dragging');
+        if (dragged) {
+          suppressClick = true;
+          clearClickTimer = setTimeout(() => { suppressClick = false; }, 0);
+        }
+      };
+      this.$on(window, 'pointerup', finishDrag as EventListener);
+      this.$on(window, 'pointercancel', finishDrag as EventListener);
+      this.$on(this, 'click', ((event: MouseEvent) => {
+        if (!suppressClick) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        suppressClick = false;
+      }) as EventListener, { capture: true });
+      this.$on(viewport, 'dragstart', ((event: DragEvent) => event.preventDefault()) as EventListener);
+      this.$cleanup.add(() => {
+        if (clearClickTimer !== undefined) clearTimeout(clearClickTimer);
+        viewport.style.removeProperty('scroll-behavior');
+        viewport.removeAttribute('data-dragging');
+      });
+    }
     this.$on(this, 'click', ((event: MouseEvent) => this.#activate(event.target)) as EventListener);
     this.$on(this, 'keydown', ((event: KeyboardEvent) => {
       if (event.key !== 'Enter' && event.key !== ' ') return;
@@ -339,8 +392,9 @@ export class UiCarouselThumbnail extends BaseElement {
 
   setActiveIndex(index: number, total: number): void {
     const slides = this.#slides();
-    const perView = Math.max(1, Number(this.getAttribute('ui-per-view') ?? this.getAttribute('per-view') ?? 7) || 7);
+    const perView = Math.max(1, Math.floor(Number(this.getAttribute('ui-per-view') ?? this.getAttribute('per-view') ?? 7) || 7));
     const gap = Math.max(0, Number(this.getAttribute('ui-gap') ?? this.getAttribute('gap') ?? 8) || 0);
+    const viewport = this.querySelector<HTMLElement>('ui-carousel-inner, core-carousel-inner');
     const list = this.querySelector<HTMLElement>('ui-carousel-list, core-carousel-list');
     if (list) list.style.gap = `${gap}px`;
     slides.forEach((slide, slideIndex) => {
@@ -351,6 +405,15 @@ export class UiCarouselThumbnail extends BaseElement {
       slide.tabIndex = 0;
       slide.toggleAttribute('active', slideIndex === index);
     });
+
+    if (viewport && slides.length > perView && viewport.clientWidth > 0) {
+      const step = (viewport.clientWidth - (perView - 1) * gap) / perView + gap;
+      if (step > 0) {
+        // Keep one thumbnail ahead visible, so selecting the third of three reveals the fourth.
+        const nextFirst = Math.max(0, index - perView + 2);
+        viewport.scrollLeft = Math.max(0, Math.min(slides.length - perView, nextFirst)) * step;
+      }
+    }
   }
 
   #slides(): HTMLElement[] {

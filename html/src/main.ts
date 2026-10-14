@@ -259,9 +259,9 @@ function renderPhotoFeature(): string {
 function thumbFor(tag: string): string {
   const symbols: Record<string, string> = {
     'ui-animate': '✦', 'ui-parallax': '▧', 'ui-toggle': '◉',
-    'ui-collapse': '⌄', 'ui-accordion': '☷', 'ui-tabs': '▤', 'ui-modal': '▣', 'ui-cursor': '◎',
+    'ui-collapse': '⌄', 'ui-accordion': '☷', 'ui-tabs': '▤', 'ui-modal': '▣', 'ui-cursor': '◎', 'ui-fake-cursor': '➤',
     'ui-drawer': '◧', 'ui-popover': '▢', 'ui-tooltip': '?', 'ui-lazyload': '◐',
-    'ui-image-comparison': '◒', 'ui-counter': '99', 'ui-dark-mode': '☼',
+    'ui-image-comparison': '◒', 'ui-image-trace': '✎', 'ui-image-flashlight': '◉', 'ui-counter': '99', 'ui-dark-mode': '☼',
     'ui-marquee': '→', 'ui-carousel': '◫', 'ui-expandable-grid': '▦', 'ui-grid-hover-expand': '▥', 'ui-swipeable-card-stack': '▤', 'ui-orbit-gallery': '◌', 'ui-dot-morph': '✳', 'ui-logo-assembly': '✦', 'ui-sand-physics': '▨', 'ui-image-solid': '⬡', 'ui-image-stack': '▰', 'ui-flip-book': '▣',
   };
   return `<span class="thumb-art thumb-${tag}" aria-hidden="true"><span class="thumb-orbit"></span><span class="thumb-symbol">${symbols[tag] ?? '✦'}</span><span class="thumb-caption">${tag.replace(/^ui-/, '')}</span></span>`;
@@ -452,6 +452,9 @@ function renderDocPage(rawSlug: string): void {
   wireSandPhysicsDemo(appRoot);
   wireImageSolidDemo(appRoot);
   wireFlipBookDemo(appRoot);
+  wireFakeCursorDemo(appRoot);
+  wireImageTraceDemo(appRoot);
+  wireImageFlashlightDemo(appRoot);
 }
 
 /* ============================================================
@@ -498,6 +501,9 @@ function renderDemo(tagName: string): void {
   wireSandPhysicsDemo(appRoot);
   wireImageSolidDemo(appRoot);
   wireFlipBookDemo(appRoot);
+  wireFakeCursorDemo(appRoot);
+  wireImageTraceDemo(appRoot);
+  wireImageFlashlightDemo(appRoot);
 }
 
 function renderFlyingWord(word: string, firstIndex: number): string {
@@ -515,6 +521,32 @@ function renderFlyingWord(word: string, firstIndex: number): string {
 function renderDemoBody(tag: string, variant: string): string {
   // Every demo returns a card with the running component + sample content.
   switch (tag) {
+    case 'ui-image-flashlight': {
+      const botanical = variant === 'Botanical night';
+      return `<section class="image-flashlight-demo">
+        <div class="image-flashlight-demo__intro"><span>LIGHT STUDY / 0${botanical ? '2' : '1'}</span><h2>From shadow<br>to <em>light.</em></h2><p>A moving beam reveals the real photo for a moment, then opens wide until every detail is visible.</p></div>
+        <div class="image-flashlight-demo__frame">
+          <ui-image-flashlight ui-duration="7200" ui-radius="${botanical ? '.22' : '.27'}" ui-loop style="--ui-image-flashlight-darkness:${botanical ? '.25' : '.21'}">
+            <img src="/images/${botanical ? 'botanical' : 'coast'}.jpg" width="1672" height="941" alt="${botanical ? 'Botanical leaves' : 'Coastal landscape'}" />
+          </ui-image-flashlight>
+          <span class="image-flashlight-demo__caption">${botanical ? 'NIGHT GARDEN' : 'COASTAL DAWN'}</span>
+        </div>
+        <div class="image-flashlight-demo__footer"><span data-flashlight-status>LIGHT SCAN ACTIVE</span><div class="image-flashlight-demo__actions"><label>↑ Try your image<input type="file" accept="image/*" data-flashlight-upload /></label><button type="button" data-flashlight-replay>↻ Shine again</button></div></div>
+      </section>`;
+    }
+    case 'ui-image-trace': {
+      const botanical = variant === 'Botanical';
+      return `<section class="image-trace-demo">
+        <div class="image-trace-demo__intro"><span>IMAGE / TO / INK</span><h2>First the lines.<br><em>Then the light.</em></h2><p>The component reads a photo, traces its contours, and reveals the real image when the drawing finishes.</p></div>
+        <div class="image-trace-demo__frame">
+          <ui-image-trace ui-duration="3800" ui-detail="360" ui-contrast="40" style="--ui-image-trace-stroke:${botanical ? '#4e6843' : '#314e70'};--ui-image-trace-background:${botanical ? '#e9eee1' : '#e5eaf0'}">
+            <img src="/images/${botanical ? 'botanical' : 'architecture'}.jpg" width="1672" height="941" alt="${botanical ? 'Botanical leaves' : 'Architectural building'}" />
+          </ui-image-trace>
+          <span class="image-trace-demo__caption">${botanical ? '02 / BOTANICAL STUDY' : '01 / ARCHITECTURE STUDY'}</span>
+        </div>
+        <div class="image-trace-demo__footer"><span>CONTOUR STUDY · FROM PIXELS</span><div class="image-trace-demo__actions"><label>↑ Try your image<input type="file" accept="image/*" data-trace-upload /></label><button type="button" data-trace-replay>↻ Draw again</button></div></div>
+      </section>`;
+    }
     case 'ui-toast': {
       if (variant === 'Placements') return `
         <p class="demo-text">Choose where the notification should appear. Toasts at one position stack without blocking the page.</p>
@@ -869,6 +901,22 @@ function renderDemoBody(tag: string, variant: string): string {
           <ui-cursor-item ui-name="cursor-basic">Move</ui-cursor-item>
         </ui-cursor>`;
     }
+    case 'ui-fake-cursor': {
+      const activates = variant === 'Auto click';
+      const scene = activates
+        ? `<div class="fake-cursor-demo__window fake-cursor-demo__window--publish">
+            <div class="fake-cursor-demo__toolbar"><span class="fake-cursor-demo__dots"><i></i><i></i><i></i></span><span>campaign / overview</span><button type="button" data-cursor-target>Publish project ↗</button></div>
+            <div class="fake-cursor-demo__publish-layout"><aside><span>WORKSPACE</span><strong>Overview</strong><strong>Pages</strong><strong>Assets</strong><strong>Settings</strong></aside><article><span>READY TO GO LIVE</span><h3>Your next chapter<br><em>starts here.</em></h3><p>A finished project, one action away from the world.</p><div class="fake-cursor-demo__publish-preview"><span>PROJECT PREVIEW</span><strong>Make something<br>remarkable.</strong></div><small data-fake-cursor-status>Waiting for the guided click…</small></article></div>
+          </div>`
+        : `<div class="fake-cursor-demo__window"><div class="fake-cursor-demo__toolbar"><span class="fake-cursor-demo__dots"><i></i><i></i><i></i></span><span>project-board.fig</span><span>● LIVE PREVIEW</span></div>
+            <div class="fake-cursor-demo__canvas"><div class="fake-cursor-demo__frame"><span>YOUR WORKSPACE / 01</span><h3>Start with an idea.<br><em>Make it real.</em></h3><p>Invite your team into a space made for the next big thing.</p><button type="button" data-cursor-target> Create project <span>↗</span></button><small data-fake-cursor-status>Visual demonstration · button is still yours to click</small></div></div>
+          </div>`;
+      return `<section class="fake-cursor-demo">
+        <div class="fake-cursor-demo__heading"><span class="eyebrow">GUIDED INTERACTION / ${activates ? '02' : '01'}</span><h2>${activates ? 'From ready <em>to published.</em>' : 'A little pointer. <em>A clear next step.</em>'}</h2><p>${activates ? 'The cursor travels to the Publish button in the upper right and clicks it.' : 'Watch the pointer demonstrate a click while the button remains under your control.'}</p></div>
+        <ui-fake-cursor class="fake-cursor-demo__stage${activates ? ' fake-cursor-demo__stage--publish' : ''}" ui-target="[data-cursor-target]" ui-duration="3600" ui-label="Alex" ${activates ? 'ui-activate' : ''}>${scene}</ui-fake-cursor>
+        <p class="fake-cursor-demo__note">${activates ? 'This example enables ui-activate, so the guided click triggers the button.' : 'Default mode shows the motion and click pulse without pressing the real button.'}</p>
+      </section>`;
+    }
     case 'ui-toggle': {
       return `
         <p class="demo-text">Enterprise disclosure component (<code style="color:var(--ui-color-accent)">&lt;ui-toggle&gt;</code> / <code style="color:var(--ui-color-accent)">&lt;ui-toggle-trigger&gt;</code>). Supports outside-click dismissal, autofocus first input, floating portal positioning, and keyboard Escape.</p>
@@ -1181,35 +1229,71 @@ function renderDemoBody(tag: string, variant: string): string {
         <p class="demo-text">Click the button to cycle light / dark / auto. Set <code>data-theme</code> on <code>:root</code>.</p>
         <ui-dark-mode mode="auto" id="theme-toggle" class="btn ghost">Click to cycle theme</ui-dark-mode>
       `;
-    case 'ui-marquee': {
-      const pauseOnHover = variant === 'Pause on hover';
-      const photos = [
-        { src: 'coast', title: 'The quiet coast', label: '01 / PLACES', position: 'center 54%' },
-        { src: 'architecture', title: 'Lines & light', label: '02 / SPACES', position: 'center 48%' },
-        { src: 'botanical', title: 'A greener hour', label: '03 / NATURE', position: 'center 54%' },
-        { src: 'coast', title: 'Last light', label: '04 / JOURNEYS', position: '74% center' },
-      ];
-      const card = (photo: typeof photos[number], style = '') => `<figure class="marquee-showcase__card${style ? ` marquee-showcase__card--${style}` : ''}"><img src="/images/${photo.src}.jpg" alt="${photo.title}" style="object-position:${photo.position}" draggable="false"><figcaption><small>${photo.label}</small><strong>${photo.title}</strong></figcaption></figure>`;
-      return `<section class="marquee-showcase">
-        <div class="marquee-showcase__intro"><span class="eyebrow">AN EVER-MOVING GALLERY / 01</span><h2>Stories in <em>motion.</em></h2><p>Photography moving in two directions. ${pauseOnHover ? 'Move your pointer over a rail to pause and look closer.' : 'Try the speed controls, then explore the vertical and scroll-driven views.'}</p></div>
-        <div class="marquee-showcase__stage">
-          <div class="marquee-showcase__stage-header"><div><span>01 — DIRECTION / RIGHT TO LEFT</span><strong>Places & perspectives</strong></div><div class="marquee-showcase__controls"><button type="button" data-marquee-toggle aria-pressed="false">Pause</button><button type="button" class="marquee-speed" data-speed="3" aria-pressed="false">Slow</button><button type="button" class="marquee-speed" data-speed="6" aria-pressed="true">Normal</button><button type="button" class="marquee-speed" data-speed="14" aria-pressed="false">Fast</button></div></div>
-          <ui-marquee class="marquee-showcase__rail marquee-showcase__rail--main" speed="6" pause-on-hover="${pauseOnHover}" aria-label="Moving photography gallery">${photos.map((photo) => card(photo)).join('')}</ui-marquee>
-          <div class="marquee-showcase__direction"><span>02 — LEFT TO RIGHT</span><span>THE JOURNEY CONTINUES</span></div>
-          <ui-marquee class="marquee-showcase__rail marquee-showcase__rail--reverse" direction="ltr" speed="5" pause-on-hover="${pauseOnHover}" aria-label="Photography gallery moving in the opposite direction">${[...photos].reverse().map((photo) => card(photo, 'compact')).join('')}</ui-marquee>
+    case 'ui-marquee':
+      return `
+        <p class="demo-text">Enterprise infinite looping marquee component (<code style="color:var(--ui-color-accent)">&lt;ui-marquee&gt;</code>). Dynamic gapless clones, pause-on-hover, bi-directional horizontal & vertical orientations, and scroll parallax scrubbing.</p>
+
+        <!-- 1. Interactive Horizontal Marquee with Controls -->
+        <div style="background:var(--gallery-panel-strong);padding:1.5rem;border-radius:12px;margin-bottom:1.5rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.75rem;flex-wrap:wrap;gap:0.5rem">
+            <h3 style="margin:0;font-size:1.1rem;font-weight:600">Horizontal Marquee (RTL & LTR)</h3>
+            <div style="display:flex;gap:0.5rem;align-items:center">
+              <button class="btn btn-sm" id="marquee-toggle" style="border-radius:4px;padding:3px 10px;font-size:0.8rem">Pause</button>
+              <button class="btn btn-sm marquee-speed" data-speed="3" style="border-radius:4px;padding:3px 8px;font-size:0.8rem">Slow (3)</button>
+              <button class="btn btn-sm marquee-speed" data-speed="6" style="border-radius:4px;padding:3px 8px;font-size:0.8rem;background:#3b82f6;color:white">Normal (6)</button>
+              <button class="btn btn-sm marquee-speed" data-speed="14" style="border-radius:4px;padding:3px 8px;font-size:0.8rem">Fast (14)</button>
+            </div>
+          </div>
+          <ui-marquee id="demo-marquee-horiz" speed="6" pause-on-hover="true" style="padding:0.75rem 0;background:var(--gallery-panel);border-radius:8px">
+            <span class="marquee-cell" style="padding:0.25rem 1rem;font-weight:600;color:var(--ui-color-accent)">⚡ Real-time Speed Adjustment</span>
+            <span class="marquee-cell" style="padding:0.25rem 1rem;font-weight:600;color:#34d399">🚀 Dynamic Gapless Clones</span>
+            <span class="marquee-cell" style="padding:0.25rem 1rem;font-weight:600;color:#f472b6">💎 Hover to Pause</span>
+            <span class="marquee-cell" style="padding:0.25rem 1rem;font-weight:600;color:#fbbf24">✨ Zero Dependencies</span>
+          </ui-marquee>
+
+          <!-- Opposite Direction LTR -->
+          <ui-marquee direction="ltr" speed="5" pause-on-hover="true" style="margin-top:0.75rem;padding:0.75rem 0;background:var(--gallery-panel);border-radius:8px">
+            <span class="marquee-cell" style="padding:0.25rem 1rem;color:var(--ui-color-text-muted)">← Reverse Direction (LTR)</span>
+            <span class="marquee-cell" style="padding:0.25rem 1rem;color:var(--ui-color-text-muted)">Accessible ARIA Role Region</span>
+            <span class="marquee-cell" style="padding:0.25rem 1rem;color:var(--ui-color-text-muted)">Custom Elements V1</span>
+            <span class="marquee-cell" style="padding:0.25rem 1rem;color:var(--ui-color-text-muted)">120 FPS GPU Accelerated</span>
+          </ui-marquee>
         </div>
-        <div class="marquee-showcase__examples">
-          <div class="marquee-showcase__example marquee-showcase__example--vertical"><div class="marquee-showcase__example-heading"><span>03 / VERTICAL</span><h3>Upward <em>glance.</em></h3><p>Images rise through a narrow window. Hover to pause.</p></div><ui-marquee class="marquee-showcase__vertical" vertical direction="btt" speed="4" pause-on-hover="true" aria-label="Vertical photography marquee">${photos.slice(0, 3).map((photo) => card(photo, 'vertical')).join('')}</ui-marquee></div>
-          <div class="marquee-showcase__example marquee-showcase__example--scroll"><div class="marquee-showcase__example-heading"><span>04 / SCROLL REACTIVE</span><h3>Follow the <em>flow.</em></h3><p>Scroll the page to change the pace of this photo strip.</p></div><ui-marquee class="marquee-showcase__scroll" scroll-enabled="true" scroll-speed="2.5" speed="5" aria-label="Scroll reactive photography marquee">${photos.map((photo) => card(photo, 'scroll')).join('')}</ui-marquee><div class="marquee-showcase__scroll-note">SCROLL TO INTERACT <span>↓</span></div></div>
+
+        <!-- 2. Vertical Marquee & Scroll Parallax -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:1.5rem">
+          <!-- Vertical Ticker -->
+          <div style="background:var(--gallery-panel-strong);padding:1.5rem;border-radius:12px">
+            <h3 style="margin:0 0 0.75rem 0;font-size:1.1rem;font-weight:600">Vertical Marquee (vertical)</h3>
+            <ui-marquee vertical="true" direction="btt" speed="5" pause-on-hover="true" style="height:150px;background:var(--gallery-panel);border-radius:8px;padding:0.5rem 1rem">
+              <div style="padding:0.4rem 0;border-bottom:1px solid var(--ui-color-border);color:var(--ui-color-text);font-size:0.9rem">📢 Notice: System update scheduled</div>
+              <div style="padding:0.4rem 0;border-bottom:1px solid var(--ui-color-border);color:var(--ui-color-text);font-size:0.9rem">📈 Traffic increased by 42%</div>
+              <div style="padding:0.4rem 0;border-bottom:1px solid var(--ui-color-border);color:var(--ui-color-text);font-size:0.9rem">🛡️ Security audit: 100% passed</div>
+              <div style="padding:0.4rem 0;border-bottom:1px solid var(--ui-color-border);color:var(--ui-color-text);font-size:0.9rem">⚡ Web Component loaded in 1.2ms</div>
+            </ui-marquee>
+          </div>
+
+          <!-- Scroll Parallax Scrubbing -->
+          <div style="background:var(--gallery-panel-strong);padding:1.5rem;border-radius:12px">
+            <h3 style="margin:0 0 0.75rem 0;font-size:1.1rem;font-weight:600">Scroll Parallax (scroll-enabled)</h3>
+            <p style="font-size:0.8rem;color:var(--ui-color-text-muted);margin-top:0;margin-bottom:0.75rem">Scroll the page up/down to observe parallax acceleration!</p>
+            <ui-marquee scroll-enabled="true" scroll-speed="2.5" speed="8" style="background:var(--gallery-panel);border-radius:8px;padding:0.75rem 0">
+              <span style="font-size:1.1rem;font-weight:800;letter-spacing:1px;color:#a855f7;padding:0 1rem">✦ SCROLL ACCELERATION</span>
+              <span style="font-size:1.1rem;font-weight:800;letter-spacing:1px;color:#06b6d4;padding:0 1rem">✦ PARALLAX SCRUBBING</span>
+              <span style="font-size:1.1rem;font-weight:800;letter-spacing:1px;color:#ec4899;padding:0 1rem">✦ 120 FPS FLUID</span>
+            </ui-marquee>
+          </div>
         </div>
-      </section>`;
-    }
+      `;
     case 'ui-carousel': {
       const withThumbnails = variant === 'With thumbnails';
       const photos = [
         { image: 'coast', title: 'Where the sea slows time', category: 'COASTAL JOURNAL', number: '01', position: 'center 52%' },
         { image: 'architecture', title: 'The beauty of quiet lines', category: 'SPACES & FORM', number: '02', position: 'center 48%' },
         { image: 'botanical', title: 'A little closer to nature', category: 'BOTANICAL STUDY', number: '03', position: 'center 55%' },
+        { image: 'coast', title: 'The light beyond the shore', category: 'OPEN HORIZONS', number: '04', position: '78% center' },
+        { image: 'architecture', title: 'A different point of view', category: 'ARCHITECTURAL NOTES', number: '05', position: '24% center' },
+        { image: 'botanical', title: 'The shapes of growing things', category: 'NATURAL FORMS', number: '06', position: '72% center' },
       ];
       const slides = photos.map((photo) =>
         `<ui-carousel-slide><article class="carousel-photo"><img src="/images/${photo.image}.jpg" alt="${photo.title}" draggable="false" style="object-position:${photo.position}"><div class="carousel-photo__content"><span>${photo.category} / ${photo.number}</span><h3>${photo.title}</h3><p>Explore the collection →</p></div></article></ui-carousel-slide>`,
@@ -1396,17 +1480,19 @@ function renderDemoBody(tag: string, variant: string): string {
       const fall = variant === 'Falling frames';
       const sheet = variant === 'Contact sheet';
       const coverflow = variant === 'Coverflow rail';
-      const photos = compact ? ['botanical','coast','architecture'] : fan ? ['coast','botanical','architecture','coast','botanical'] : fall ? ['botanical','architecture','coast','botanical','architecture'] : sheet ? ['architecture','coast','botanical','coast','architecture','botanical'] : ['architecture','coast','botanical','architecture','coast'];
-      const titles = compact ? ['Quiet growth','Coastal light','Structures'] : fan ? ['Salt air','Morning garden','Concrete poetry','Blue distance','Slow afternoon'] : fall ? ['Chapter one','A softer line','The open sea','Green interlude','After the rain'] : sheet ? ['First light','Open water','Greenhouse','Blue afternoon','Geometry','Soft leaves'] : coverflow ? ['Modern lines','Salt and sky','Wild growth','Still forms','A blue ending'] : ['The architecture of light','Where the sky meets water','A study in green','Lines of the city','The last blue hour'];
-      const heading = compact ? 'Small stack. Big story.' : fan ? 'A handful of moments.' : fall ? 'Let the frames fall.' : sheet ? 'From pile to contact sheet.' : coverflow ? 'A gallery in perspective.' : 'A story in every layer.';
-      const kicker = compact ? 'STUDY / 02' : fan ? 'PAPER STUDY / 03' : fall ? 'MOTION STUDY / 04' : sheet ? 'CONTACT SHEET / 05' : coverflow ? 'PERSPECTIVE / 06' : 'THE COLLECTION / 01';
-      const style = fan ? 'fan' : fall ? 'fall' : sheet ? 'sheet' : coverflow ? 'coverflow' : '';
-      const description = fan ? 'Five photographs open like prints in your hand. Hover to fan them wide, then choose any card to see it in full.' : fall ? 'Each frame drops into its own position, revealing a small gallery underneath. Choose a frame to explore it.' : sheet ? 'A pile of prints assembles into a six-photo contact sheet. Each thumbnail opens its own full-size view.' : coverflow ? 'Five frames glide into a wide perspective rail. Follow the row and select any photo to open the viewer.' : 'Move over the stack to separate the photographs. Select any exposed edge to open that image; use the arrows to browse the collection.';
+      const palette = variant === 'Palette reveal';
+      const corner = variant === 'Corner reveal';
+      const photos = compact ? ['botanical','coast','architecture'] : fan ? ['coast','botanical','architecture','coast','botanical'] : fall ? ['botanical','architecture','coast','botanical','architecture'] : sheet ? ['architecture','coast','botanical','coast','architecture','botanical'] : palette ? ['botanical','coast','architecture','botanical'] : corner ? ['architecture','botanical','coast'] : ['architecture','coast','botanical','architecture','coast'];
+      const titles = compact ? ['Quiet growth','Coastal light','Structures'] : fan ? ['Salt air','Morning garden','Concrete poetry','Blue distance','Slow afternoon'] : fall ? ['Chapter one','A softer line','The open sea','Green interlude','After the rain'] : sheet ? ['First light','Open water','Greenhouse','Blue afternoon','Geometry','Soft leaves'] : coverflow ? ['Modern lines','Salt and sky','Wild growth','Still forms','A blue ending'] : palette ? ['Golden foliage','Sunlit coast','Warm geometry','Red garden'] : corner ? ['City corner','Garden center','Coastal edge'] : ['The architecture of light','Where the sky meets water','A study in green','Lines of the city','The last blue hour'];
+      const heading = compact ? 'Small stack. Big story.' : fan ? 'A handful of moments.' : fall ? 'Let the frames fall.' : sheet ? 'From pile to contact sheet.' : coverflow ? 'A gallery in perspective.' : palette ? 'Four photos. One frame.' : corner ? 'Three views, one frame.' : 'A story in every layer.';
+      const kicker = compact ? 'STUDY / 02' : fan ? 'PAPER STUDY / 03' : fall ? 'MOTION STUDY / 04' : sheet ? 'CONTACT SHEET / 05' : coverflow ? 'PERSPECTIVE / 06' : palette ? 'PALETTE STUDY / 07' : corner ? 'CORNER STUDY / 08' : 'THE COLLECTION / 01';
+      const style = fan ? 'fan' : fall ? 'fall' : sheet ? 'sheet' : coverflow ? 'coverflow' : palette ? 'palette' : corner ? 'corner' : '';
+      const description = fan ? 'Five photographs open like prints in your hand. Hover to fan them wide, then choose any card to see it in full.' : fall ? 'Each frame drops into its own position, revealing a small gallery underneath. Choose a frame to explore it.' : sheet ? 'A pile of prints assembles into a six-photo contact sheet. Each thumbnail opens its own full-size view.' : coverflow ? 'Five frames glide into a wide perspective rail. Follow the row and select any photo to open the viewer.' : palette ? 'Four photographs meet at the center. Hover or focus a photo to bring it into full view, then select it to open the viewer.' : corner ? 'Three photographs share a diagonal frame. Hover a corner or the center to expand it, then move to an exposed edge to switch directly.' : 'Move over the stack to separate the photographs. Select any exposed edge to open that image; use the arrows to browse the collection.';
       return `<section class="image-stack-demo${compact ? ' image-stack-demo--compact' : ''}${style ? ` image-stack-demo--${style}` : ''}">
         <div class="image-stack-demo__copy"><span class="eyebrow">${kicker}</span><h2>${heading}</h2><p>${description}</p><div class="image-stack-demo__rule"><span>01 — ${String(photos.length).padStart(2,'0')}</span><span>HOVER · SELECT · EXPLORE</span></div></div>
-        <div class="image-stack-demo__scene"><div class="image-stack-demo__halo"></div><ui-image-stack ${style ? `ui-style="${style}"` : ''} aria-label="${variant} photo collection" style="--ui-image-stack-width:${compact ? '260px' : fan ? '280px' : fall ? '290px' : sheet ? '390px' : coverflow ? '680px' : '320px'};--ui-image-stack-height:${compact ? '330px' : fan ? '360px' : fall ? '330px' : sheet ? '380px' : coverflow ? '340px' : '390px'};--ui-image-stack-step:${compact ? '21px' : '17px'};--ui-image-stack-offset:${compact ? '29px' : '26px'}">
+        <div class="image-stack-demo__scene"><div class="image-stack-demo__halo"></div>${palette ? '<div class="image-stack-demo__palette-card">' : ''}<ui-image-stack ${style ? `ui-style="${style}"` : ''} ${palette ? 'ui-badge="04"' : ''} aria-label="${variant} photo collection" style="--ui-image-stack-width:${compact ? '260px' : fan ? '280px' : fall ? '290px' : sheet ? '390px' : coverflow ? '680px' : corner ? '300px' : '320px'};--ui-image-stack-height:${compact ? '330px' : fan ? '360px' : fall ? '330px' : sheet ? '380px' : coverflow ? '340px' : palette ? '320px' : corner ? '430px' : '390px'};--ui-image-stack-step:${compact ? '21px' : '17px'};--ui-image-stack-offset:${compact ? '29px' : '26px'}">
           ${photos.map((photo,index) => `<ui-image-stack-item ui-label="${titles[index]}"><img src="/images/${photo}.jpg" alt="${titles[index]}" draggable="false"><span data-stack-caption>${String(index+1).padStart(2,'0')} / ${titles[index]}</span></ui-image-stack-item>`).join('')}
-        </ui-image-stack><span class="image-stack-demo__scene-note">CLICK A LAYER ↗</span></div>
+        </ui-image-stack>${palette ? '<div class="image-stack-demo__palette-footer"><span>◇ &nbsp; 4 photographs</span><span>•••</span></div></div>' : ''}<span class="image-stack-demo__scene-note">${palette ? 'HOVER A PHOTO ↗' : corner ? 'HOVER A CORNER ↗' : 'CLICK A LAYER ↗'}</span></div>
       </section>`;
     }
     case 'ui-flip-book': {
@@ -1745,6 +1831,73 @@ function wireFlipBookDemo(root: HTMLElement): void {
   });
 }
 
+function wireFakeCursorDemo(root: HTMLElement): void {
+  root.querySelectorAll<HTMLElement>('ui-fake-cursor').forEach((stage) => {
+    stage.querySelector<HTMLButtonElement>('[data-cursor-target]')?.addEventListener('click', () => {
+      const status = stage.querySelector<HTMLElement>('[data-fake-cursor-status]');
+      const count = Number(stage.getAttribute('data-click-count') || 0) + 1;
+      stage.setAttribute('data-click-count', String(count));
+      if (status) status.textContent = stage.hasAttribute('ui-activate')
+        ? `Published ${count} ${count === 1 ? 'time' : 'times'} by the guided cursor.`
+        : `Project created ${count} ${count === 1 ? 'time' : 'times'} by you.`;
+    });
+  });
+}
+
+function wireImageTraceDemo(root: HTMLElement): void {
+  root.querySelectorAll<HTMLButtonElement>('[data-trace-replay]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const trace = button.closest('.image-trace-demo')?.querySelector('ui-image-trace') as HTMLElement & { replay(): void } | null;
+      trace?.replay();
+    });
+  });
+  root.querySelectorAll<HTMLInputElement>('[data-trace-upload]').forEach((input) => {
+    input.addEventListener('change', () => {
+      const file = input.files?.[0];
+      const trace = input.closest('.image-trace-demo')?.querySelector('ui-image-trace') as HTMLElement & { refresh(): void } | null;
+      const image = trace?.querySelector('img');
+      if (!file || !trace || !image) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result !== 'string' || !trace.isConnected) return;
+        image.src = reader.result;
+        image.alt = file.name;
+        image.removeAttribute('width');
+        image.removeAttribute('height');
+        trace.refresh();
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+}
+
+function wireImageFlashlightDemo(root: HTMLElement): void {
+  root.querySelectorAll<HTMLElement>('.image-flashlight-demo').forEach((demo) => {
+    const flashlight = demo.querySelector('ui-image-flashlight') as HTMLElement & { replay(): void; refresh(): void } | null;
+    const status = demo.querySelector<HTMLElement>('[data-flashlight-status]');
+    if (!flashlight) return;
+    flashlight.addEventListener('ui-image-flashlight:start', () => { if (status) status.textContent = 'LIGHT SCAN ACTIVE'; });
+    flashlight.addEventListener('ui-image-flashlight:complete', () => { if (status) status.textContent = 'FULLY ILLUMINATED'; });
+    demo.querySelector<HTMLButtonElement>('[data-flashlight-replay]')?.addEventListener('click', () => flashlight.replay());
+    demo.querySelector<HTMLInputElement>('[data-flashlight-upload]')?.addEventListener('change', (event) => {
+      const input = event.currentTarget as HTMLInputElement;
+      const file = input.files?.[0];
+      const image = flashlight.querySelector<HTMLImageElement>('img:not(.ui-image-flashlight__reveal)');
+      if (!file || !image) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (file !== input.files?.[0] || typeof reader.result !== 'string' || !flashlight.isConnected) return;
+        image.src = reader.result;
+        image.alt = file.name;
+        image.removeAttribute('width');
+        image.removeAttribute('height');
+        flashlight.refresh();
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+}
+
 function wireButtons(): void {
   document.addEventListener(
     'click',
@@ -1762,18 +1915,15 @@ function wireButtons(): void {
         (document.getElementById('drawer-right') as UiDrawer | null)?.openDrawer();
       }
       // Marquee toggle play/pause
-      const marqueeToggle = t.closest<HTMLButtonElement>('[data-marquee-toggle]');
-      if (marqueeToggle) {
-        const m = marqueeToggle.closest('.marquee-showcase')?.querySelector('ui-marquee.marquee-showcase__rail--main') as unknown as { isRunning: boolean; play(): void; pause(): void } | null;
+      if (t.id === 'marquee-toggle') {
+        const m = document.getElementById('demo-marquee-horiz') as unknown as { isRunning: boolean; play(): void; pause(): void } | null;
         if (m) {
           if (m.isRunning) {
             m.pause();
-            marqueeToggle.textContent = 'Play';
-            marqueeToggle.setAttribute('aria-pressed', 'true');
+            t.textContent = 'Play';
           } else {
             m.play();
-            marqueeToggle.textContent = 'Pause';
-            marqueeToggle.setAttribute('aria-pressed', 'false');
+            t.textContent = 'Pause';
           }
         }
       }
@@ -1781,12 +1931,15 @@ function wireButtons(): void {
       const speedBtn = t.closest('.marquee-speed') as HTMLElement | null;
       if (speedBtn) {
         const speed = speedBtn.getAttribute('data-speed') || '6';
-        const showcase = speedBtn.closest('.marquee-showcase');
-        const m = showcase?.querySelector('ui-marquee.marquee-showcase__rail--main');
+        const m = document.getElementById('demo-marquee-horiz') as HTMLElement | null;
         if (m) {
           m.setAttribute('speed', speed);
-          showcase?.querySelectorAll('.marquee-speed').forEach((button) =>
-            button.setAttribute('aria-pressed', String(button === speedBtn)));
+          document.querySelectorAll('.marquee-speed').forEach((b) => {
+            (b as HTMLElement).style.background = '';
+            (b as HTMLElement).style.color = '';
+          });
+          speedBtn.style.background = '#3b82f6';
+          speedBtn.style.color = 'white';
         }
       }
     },

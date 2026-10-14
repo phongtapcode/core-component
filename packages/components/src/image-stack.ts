@@ -5,6 +5,7 @@ import { UiModal } from './modal.js';
 const ITEM = 'ui-image-stack-item';
 
 export class UiImageStack extends HTMLElement {
+  static observedAttributes = ['ui-style'];
   private observer: MutationObserver | null = null;
   private controller: AbortController | null = null;
   private modal: UiModal | null = null;
@@ -17,6 +18,20 @@ export class UiImageStack extends HTMLElement {
     return [...this.children].filter((child): child is HTMLElement => child.localName === ITEM);
   }
 
+  private get isPaletteLayout(): boolean {
+    return this.getAttribute('ui-style') === 'palette' && this.items.length === 4;
+  }
+
+  private get isCornerLayout(): boolean {
+    return this.getAttribute('ui-style') === 'corner' && this.items.length === 3;
+  }
+
+  attributeChangedCallback(): void {
+    this.removeAttribute('data-palette-active');
+    this.removeAttribute('data-corner-active');
+    if (this.controller) this.refresh();
+  }
+
   connectedCallback(): void {
     if (this.controller) return;
     this.controller = new AbortController();
@@ -25,6 +40,12 @@ export class UiImageStack extends HTMLElement {
     if (!this.hasAttribute('aria-label')) this.setAttribute('aria-label', 'Image stack');
     this.addEventListener('click', this.onClick, { signal });
     this.addEventListener('keydown', this.onItemKeyDown, { signal });
+    this.addEventListener('pointerenter', this.onPalettePointerMove, { signal });
+    this.addEventListener('pointermove', this.onPalettePointerMove, { signal });
+    this.addEventListener('pointerenter', this.onCornerPointerMove, { signal });
+    this.addEventListener('pointermove', this.onCornerPointerMove, { signal });
+    this.addEventListener('pointerleave', this.onInteractivePointerLeave, { signal });
+    this.addEventListener('focusin', this.onInteractiveFocusIn, { signal });
     this.observer = new MutationObserver(() => this.refresh());
     this.observer.observe(this, { childList: true });
     this.refresh();
@@ -37,11 +58,17 @@ export class UiImageStack extends HTMLElement {
     this.previewImage = null; this.previewTitle = null; this.previewCounter = null;
     this.activeIndex = -1;
     this.removeAttribute('data-open');
+    this.removeAttribute('data-palette-active');
+    this.removeAttribute('data-corner-active');
+    this.removeAttribute('data-corner-ready');
   }
 
   /** Recalculate layer order after adding, removing, or rearranging photos. */
   refresh(): void {
     const items = this.items;
+    if (!this.isPaletteLayout) this.removeAttribute('data-palette-active');
+    this.toggleAttribute('data-corner-ready', this.isCornerLayout);
+    if (!this.isCornerLayout) this.removeAttribute('data-corner-active');
     this.style.setProperty('--ui-image-stack-count', String(items.length));
     items.forEach((item, index) => {
       item.style.setProperty('--ui-image-stack-index', String(index));
@@ -157,7 +184,54 @@ export class UiImageStack extends HTMLElement {
 
   private readonly onClick = (event: MouseEvent): void => {
     const item = event.target instanceof Element ? event.target.closest(ITEM) : null;
-    if (item?.parentElement === this) this.open(this.items.indexOf(item as HTMLElement));
+    if (item?.parentElement !== this) return;
+    const index = event.detail > 0 && this.isCornerLayout
+      ? this.cornerIndexAt(event.clientX, event.clientY)
+      : this.items.indexOf(item as HTMLElement);
+    this.open(index);
+  };
+
+  private paletteIndexAt(clientX: number, clientY: number): number {
+    const bounds = this.getBoundingClientRect();
+    const x = clientX - bounds.left - bounds.width / 2;
+    const y = clientY - bounds.top - bounds.height / 2;
+    return Math.abs(x) >= Math.abs(y) ? (x >= 0 ? 0 : 2) : (y >= 0 ? 1 : 3);
+  }
+
+  private readonly onPalettePointerMove = (event: PointerEvent): void => {
+    if (!this.isPaletteLayout || event.pointerType === 'touch' || this.hasAttribute('data-palette-active')) return;
+    const index = this.paletteIndexAt(event.clientX, event.clientY);
+    if (this.items[index]) {
+      this.setAttribute('data-palette-active', String(index + 1));
+    }
+  };
+
+  private cornerIndexAt(clientX: number, clientY: number): number {
+    const bounds = this.getBoundingClientRect();
+    if (!bounds.width || !bounds.height) return 1;
+    const diagonal = (clientX - bounds.left) / bounds.width + (clientY - bounds.top) / bounds.height;
+    const active = this.getAttribute('data-corner-active');
+    if (active === '1') return diagonal >= 1.85 ? 2 : diagonal > 1.7 ? 1 : 0;
+    if (active === '3') return diagonal <= .15 ? 0 : diagonal < .3 ? 1 : 2;
+    if (active === '2') return diagonal <= .15 ? 0 : diagonal >= 1.85 ? 2 : 1;
+    return diagonal <= .75 ? 0 : diagonal >= 1.25 ? 2 : 1;
+  }
+
+  private readonly onCornerPointerMove = (event: PointerEvent): void => {
+    if (!this.isCornerLayout || event.pointerType === 'touch') return;
+    const next = String(this.cornerIndexAt(event.clientX, event.clientY) + 1);
+    if (this.getAttribute('data-corner-active') !== next) this.setAttribute('data-corner-active', next);
+  };
+
+  private readonly onInteractivePointerLeave = (): void => {
+    this.removeAttribute('data-palette-active');
+    this.removeAttribute('data-corner-active');
+  };
+
+  private readonly onInteractiveFocusIn = (event: FocusEvent): void => {
+    if (!(event.target instanceof HTMLElement) || !event.target.matches(':focus-visible')) return;
+    if (this.getAttribute('ui-style') === 'palette') this.removeAttribute('data-palette-active');
+    if (this.getAttribute('ui-style') === 'corner') this.removeAttribute('data-corner-active');
   };
 
   private readonly onItemKeyDown = (event: KeyboardEvent): void => {
