@@ -178,6 +178,32 @@ All components share a predictable API — attributes are `kebab-case`, events a
 
 <div class="comp-card">
   <div class="comp-card-header">
+    <h3>Tech Text</h3>
+    <span class="comp-badge motion">Motion</span>
+  </div>
+  <p class="comp-tag">&lt;ui-tech-text&gt;</p>
+  <p class="comp-desc">A wordmark whose letters become dashed outlines under the pointer, with selection and dragging.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/tech-text">📄 Docs</a>
+    <a class="comp-btn demo" href="/html/#/ui-tech-text" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Curved Loop</h3>
+    <span class="comp-badge motion">Motion</span>
+  </div>
+  <p class="comp-tag">&lt;ui-curved-loop&gt;</p>
+  <p class="comp-desc">Loop text along an arc, wave, circle, or straight line, with drag and scroll response.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/curved-loop">📄 Docs</a>
+    <a class="comp-btn demo" href="/html/#/ui-curved-loop" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
     <h3>Animated Background</h3>
     <span class="comp-badge motion">Motion</span>
   </div>

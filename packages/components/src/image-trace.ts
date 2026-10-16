@@ -129,10 +129,16 @@ export class UiImageTrace extends HTMLElement {
   private controller: AbortController | null = null;
   private finishTimer = 0;
   private generation = 0;
+  private resizeObserver: ResizeObserver | null = null;
+  private traceSample: { width: number; height: number } | null = null;
 
   connectedCallback(): void {
     if (this.controller) return;
     this.controller = new AbortController();
+    if (typeof ResizeObserver !== 'undefined') {
+      this.resizeObserver = new ResizeObserver(() => this.updateDashLengths());
+      this.resizeObserver.observe(this);
+    }
     this.refresh();
   }
 
@@ -141,6 +147,8 @@ export class UiImageTrace extends HTMLElement {
     this.controller = null;
     this.generation++;
     window.clearTimeout(this.finishTimer);
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
   }
 
   attributeChangedCallback(): void {
@@ -155,6 +163,7 @@ export class UiImageTrace extends HTMLElement {
     window.clearTimeout(this.finishTimer);
     this.overlay?.remove();
     this.overlay = null;
+    this.traceSample = null;
     this.image = [...this.children].find((child): child is HTMLImageElement => child.localName === 'img') ?? null;
     const image = this.image;
     if (!image) { this.removeAttribute('data-state'); return; }
@@ -200,8 +209,9 @@ export class UiImageTrace extends HTMLElement {
       for (const [index, contour] of contours.entries()) {
         const path = document.createElementNS(svgNS, 'path');
         path.setAttribute('d', contour.d);
-        path.setAttribute('pathLength', '1');
         path.setAttribute('vector-effect', 'non-scaling-stroke');
+        // Store geometric length; rendered dash lengths are measured below.
+        path.setAttribute('data-trace-length', String(contour.length));
         path.style.setProperty('--ui-trace-delay', `${Math.round(index / Math.max(1, contours.length - 1) * duration * .3)}ms`);
         path.style.setProperty('--ui-trace-draw-duration', `${Math.round(duration * .4)}ms`);
         svg.append(path);
@@ -211,6 +221,8 @@ export class UiImageTrace extends HTMLElement {
       this.style.setProperty('--ui-trace-reveal-duration', `${Math.round(duration * .22)}ms`);
       this.insertBefore(svg, image.nextSibling);
       this.overlay = svg;
+      this.traceSample = { width, height };
+      this.updateDashLengths();
       // Ensure a replay during an unfinished draw restarts the image animation.
       void image.offsetWidth;
       this.setAttribute('data-state', 'drawing');
@@ -222,11 +234,25 @@ export class UiImageTrace extends HTMLElement {
     }
   }
 
+  private updateDashLengths(): void {
+    if (!this.overlay || !this.traceSample) return;
+    const bounds = this.overlay.getBoundingClientRect();
+    // With non-scaling strokes, CSS dash lengths use rendered pixels while
+    // contour lengths come from the sampled image's SVG coordinates.
+    const scale = Math.max(1, bounds.width / this.traceSample.width, bounds.height / this.traceSample.height);
+    for (const path of this.overlay.querySelectorAll('path')) {
+      const dashLength = Math.ceil(Number(path.getAttribute('data-trace-length')) * scale + 4);
+      path.style.strokeDasharray = `${dashLength} ${dashLength}`;
+      path.style.strokeDashoffset = `${dashLength}`;
+    }
+  }
+
   private complete(): void {
     window.clearTimeout(this.finishTimer);
     this.setAttribute('data-state', 'complete');
     this.overlay?.remove();
     this.overlay = null;
+    this.traceSample = null;
     this.dispatchEvent(new CustomEvent('ui-image-trace:complete'));
   }
 }

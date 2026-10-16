@@ -76,6 +76,7 @@ describe('Image Trace', () => {
         drawImage: () => undefined,
         getImageData: () => ({ data: pixels }),
       } as unknown as CanvasRenderingContext2D);
+      vi.spyOn(SVGSVGElement.prototype, 'getBoundingClientRect').mockReturnValue({ width: 240, height: 240 } as DOMRect);
       const trace = document.createElement('ui-image-trace') as UiImageTrace;
       trace.setAttribute('ui-duration', '500');
       const image = document.createElement('img');
@@ -84,8 +85,12 @@ describe('Image Trace', () => {
       document.body.append(trace);
       expect(trace.getAttribute('data-state')).toBe('drawing');
       expect(trace.querySelectorAll('svg path').length).toBeGreaterThan(0);
-      expect(trace.querySelector('svg path')?.getAttribute('pathLength')).toBe('1');
-      expect(trace.querySelector('svg path')?.getAttribute('vector-effect')).toBe('non-scaling-stroke');
+      const firstPath = trace.querySelector('svg path')!;
+      expect(firstPath.getAttribute('vector-effect')).toBe('non-scaling-stroke');
+      const [dash, gap] = firstPath.style.strokeDasharray.split(' ').map(Number);
+      expect(dash).toBeGreaterThan(traceImageContours(pixels, 24, 24)[0]!.length * 10);
+      expect(gap).toBe(dash);
+      expect(Number(firstPath.style.strokeDashoffset)).toBe(dash);
       vi.advanceTimersByTime(500);
       expect(trace.getAttribute('data-state')).toBe('complete');
       expect(trace.querySelector('svg')).toBeNull();

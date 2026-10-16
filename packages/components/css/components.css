@@ -1893,7 +1893,6 @@ ui-image-trace > .ui-image-trace__lines {
 }
 ui-image-trace > .ui-image-trace__lines path {
   vector-effect: non-scaling-stroke;
-  stroke-dasharray: 1; stroke-dashoffset: 1;
   animation: ui-image-trace-draw var(--ui-trace-draw-duration) ease-in-out var(--ui-trace-delay) forwards;
 }
 @keyframes ui-image-trace-draw { to { stroke-dashoffset: 0; } }
@@ -2005,3 +2004,20 @@ ui-text-spotlight > .ui-text-spotlight__base [data-spotlight-action]:focus-visib
 /* Animated background: decorative particle morph canvas behind authored content. */
 :is(ui-animated-background, ui-background) { display: block; position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
 :is(ui-animated-background, ui-background) > .ui-animated-background__canvas { display: block; width: 100%; height: 100%; }
+
+/* Tech Text keeps the authored wordmark accessible beneath its canvas. */
+ui-tech-text { display: block; position: relative; width: 100%; height: var(--ui-tech-text-height, 340px); overflow: hidden; color: var(--ui-tech-text-color, currentColor); touch-action: pan-y; }
+ui-tech-text > .ui-tech-text__source { display: block; padding: 2rem; font-size: clamp(2rem, 8vw, 8rem); font-weight: 600; line-height: 1.1; text-align: center; overflow-wrap: anywhere; }
+ui-tech-text[data-ready] > .ui-tech-text__source { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+ui-tech-text > .ui-tech-text__status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+ui-tech-text > .ui-tech-text__canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
+ui-tech-text:focus-visible { outline: 2px solid var(--ui-tech-text-accent, currentColor); outline-offset: 3px; }
+
+/* Curved Loop uses a measured SVG path; source text stays available to assistive technology. */
+ui-curved-loop { display: block; position: relative; width: 100%; height: var(--ui-curved-loop-height, 360px); overflow: hidden; color: var(--ui-curved-loop-color, currentColor); touch-action: pan-y; cursor: grab; }
+ui-curved-loop:active { cursor: grabbing; }
+ui-curved-loop[ui-interactive="false"] { cursor: default; }
+ui-curved-loop > .ui-curved-loop__source { display: block; padding: 1rem; font-weight: 700; font-size: 2rem; overflow-wrap: anywhere; }
+ui-curved-loop[data-ready] > .ui-curved-loop__source { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+ui-curved-loop > .ui-curved-loop__svg { display: block; width: 100%; height: 100%; overflow: hidden; user-select: none; pointer-events: none; }
+ui-curved-loop:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }

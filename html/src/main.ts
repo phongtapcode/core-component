@@ -10,90 +10,73 @@ import { getDocForSlug } from './docs-data.js';
 
 const appRoot = document.getElementById('app')!;
 const storedTheme = localStorage.getItem('ui-theme');
-document.documentElement.dataset['theme'] = storedTheme === 'dark' ||
-  (storedTheme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+document.documentElement.dataset['theme'] = storedTheme === 'light' ? 'light' : 'dark';
 
-/* ============================================================
-   Home page
-   ============================================================ */
+const CATEGORIES = ['Motion', 'Basic UI', 'Media', 'Utility', 'Advanced'] as const;
+let workspaceController: AbortController | null = null;
 
-function renderHome(): void {
-  const search = queryParam('q');
+function renderWorkspace(content: string, activeTag = ''): string {
+  const groups = CATEGORIES.map((category) => {
+    const entries = COMPONENTS.filter((component) => component.category === category);
+    return `<section class="workspace-nav-group"><h2>${category}<span>${entries.length}</span></h2>
+      ${entries.map((component) => `<a href="#/${component.tagName}" class="workspace-nav-item${component.tagName === activeTag ? ' is-active' : ''}" ${component.tagName === activeTag ? 'aria-current="page"' : ''} data-nav-search="${escapeHtml((component.name + ' ' + component.tagName).toLowerCase())}">${component.name}</a>`).join('')}</section>`;
+  }).join('');
+  return `<div class="workspace-shell">
+    <header class="workspace-topbar">
+      <button class="workspace-menu" type="button" aria-label="Open component navigation" aria-expanded="false" aria-controls="workspace-sidebar">Menu</button>
+      <a class="workspace-brand" href="#/" aria-label="UI Core home"><span class="workspace-brand-mark">ui</span><span>UI Core</span><small>components</small></a>
+      <nav class="workspace-toplinks" aria-label="Site"><a href="#/">Components</a><a href="#/docs/animate">API Docs</a></nav>
+      <button type="button" id="gallery-theme" class="workspace-theme" aria-label="Switch color theme"></button>
+    </header>
+    <div class="workspace-layout"><aside class="workspace-sidebar" id="workspace-sidebar" aria-label="Component navigation">
+      <a class="workspace-sidebar-home${activeTag ? '' : ' is-active'}" href="#/">All components <span>${COMPONENTS.length}</span></a>
+      <label class="workspace-sidebar-search"><span class="sr-only">Filter component navigation</span><input type="search" placeholder="Filter navigation…" data-nav-filter autocomplete="off" /></label>
+      <div class="workspace-sidebar-list">${groups}</div>
+    </aside><div class="workspace-content">${content}</div></div>
+  </div>`;
+}
 
-  const grouped: Record<string, ComponentEntry[]> = {};
-  for (const c of COMPONENTS) (grouped[c.category] ??= []).push(c);
-
-  const cats = ['Motion', 'Basic UI', 'Media', 'Utility', 'Advanced'];
-
-  appRoot.innerHTML = `
-    ${renderHero()}
-
-    <main class="container gallery-main" id="components">
-      <section class="section">
-        <div class="section-header">
-          <div>
-            <span class="eyebrow">Explore the library</span>
-            <h2>Components <span class="section-count">${COMPONENTS.length}</span></h2>
-            <p>Real browser components you can open, test, and inspect.</p>
-          </div>
-          <label class="search-field" for="search">
-            <span aria-hidden="true">⌕</span>
-            <input id="search" type="search" placeholder="Search components…" autocomplete="off" />
-          </label>
-        </div>
-
-        ${cats
-          .map((cat) => {
-            const items = grouped[cat] ?? [];
-            if (items.length === 0) return '';
-            return `
-              <div class="category" data-category="${cat}">
-                <h3 class="category-title">${cat} <span class="category-count">${items.length}</span></h3>
-                <div class="cards-grid">
-                  ${items.map(renderCard).join('')}
-                </div>
-              </div>`;
-          })
-          .join('')}
-        <p class="search-empty" id="search-empty" hidden>No components match your search.</p>
-      </section>
-
-      ${renderScrollDemo()}
-      ${renderPhotoFeature()}
-    </main>
-
-    ${renderFooter()}
-  `;
-
-  const input = document.getElementById('search') as HTMLInputElement;
-  input.value = search;
-  const updateResults = (): void => {
-    const term = input.value.trim().toLowerCase();
-    let visibleTotal = 0;
-    appRoot.querySelectorAll<HTMLElement>('.category').forEach((category) => {
-      let visibleCategory = 0;
-      category.querySelectorAll<HTMLElement>('.card').forEach((card) => {
-        const matches = (card.dataset['search'] ?? '').includes(term);
-        card.hidden = !matches;
-        if (matches) visibleCategory++;
-      });
-      category.hidden = visibleCategory === 0;
-      category.querySelector('.category-count')!.textContent = String(visibleCategory);
-      visibleTotal += visibleCategory;
-    });
-    appRoot.querySelector('.section-count')!.textContent = String(visibleTotal);
-    (document.getElementById('search-empty') as HTMLElement).hidden = visibleTotal !== 0;
+function wireWorkspace(): void {
+  workspaceController?.abort();
+  workspaceController = new AbortController();
+  const { signal } = workspaceController;
+  const menu = appRoot.querySelector<HTMLButtonElement>('.workspace-menu');
+  const sidebar = appRoot.querySelector<HTMLElement>('.workspace-sidebar');
+  const mobile = matchMedia('(max-width: 850px)');
+  const syncSidebar = (): void => {
+    if (!sidebar) return;
+    sidebar.inert = mobile.matches && !sidebar.classList.contains('is-open');
   };
-  input.addEventListener('input', () => {
-    const path = location.hash.split('?')[0] || '#/';
-    history.replaceState(null, '', `${location.pathname}${location.search}${path}${input.value ? '?q=' + encodeURIComponent(input.value) : ''}`);
-    updateResults();
+  mobile.addEventListener('change', syncSidebar, { signal });
+  syncSidebar();
+  menu?.addEventListener('click', () => {
+    const open = sidebar?.classList.toggle('is-open') ?? false;
+    menu.setAttribute('aria-expanded', String(open));
+    menu.setAttribute('aria-label', open ? 'Close component navigation' : 'Open component navigation');
+    syncSidebar();
   });
-  updateResults();
-  appRoot.querySelectorAll<HTMLAnchorElement>('[data-scroll-target="components"]').forEach((link) => {
-    link.addEventListener('click', (event) => {
-      event.preventDefault();
-      document.getElementById('components')?.scrollIntoView({ behavior: 'smooth' });
+  appRoot.querySelectorAll<HTMLAnchorElement>('.workspace-sidebar a').forEach((link) => link.addEventListener('click', () => {
+    sidebar?.classList.remove('is-open');
+    menu?.setAttribute('aria-expanded', 'false');
+    syncSidebar();
+  }));
+  appRoot.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && sidebar?.classList.contains('is-open')) {
+      sidebar.classList.remove('is-open');
+      menu?.setAttribute('aria-expanded', 'false');
+      syncSidebar();
+      menu?.focus();
+    }
+  }, { signal });
+  appRoot.querySelector<HTMLInputElement>('[data-nav-filter]')?.addEventListener('input', (event) => {
+    const query = (event.currentTarget as HTMLInputElement).value.trim().toLowerCase();
+    appRoot.querySelectorAll<HTMLElement>('.workspace-nav-group').forEach((group) => {
+      let visible = 0;
+      group.querySelectorAll<HTMLAnchorElement>('.workspace-nav-item').forEach((link) => {
+        link.hidden = !(link.dataset['navSearch'] ?? '').includes(query);
+        if (!link.hidden) visible++;
+      });
+      group.hidden = visible === 0;
     });
   });
   document.getElementById('gallery-theme')?.addEventListener('click', () => {
@@ -103,61 +86,75 @@ function renderHome(): void {
     updateThemeButton();
   });
   updateThemeButton();
+}
 
+/* ============================================================
+   Home page
+   ============================================================ */
+
+function renderHome(): void {
+  const search = queryParam('q');
+  let category = CATEGORIES.includes(queryParam('category') as typeof CATEGORIES[number]) ? queryParam('category') : 'All';
+  appRoot.innerHTML = renderWorkspace(`
+    <main class="container gallery-main" id="components">
+      <header class="catalog-header"><h1>Components</h1><p>Reusable browser components. Find one, try its live demo, then copy the API you need.</p></header>
+      <div class="catalog-toolbar"><label class="search-field" for="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Search components…" autocomplete="off" /></label>
+        <label class="catalog-sort-label">Sort <select id="catalog-sort"><option value="original">Library order</option><option value="az">A–Z</option><option value="za">Z–A</option></select></label></div>
+      <div class="catalog-filters" role="group" aria-label="Filter by category">
+        ${['All', ...CATEGORIES].map((item) => `<button type="button" class="catalog-filter" data-filter-category="${item}" aria-pressed="${item === category}">${item}<span>${item === 'All' ? COMPONENTS.length : COMPONENTS.filter((component) => component.category === item).length}</span></button>`).join('')}
+        <span class="catalog-count" aria-live="polite"><span class="section-count">${COMPONENTS.length}</span> components</span>
+      </div>
+      <div class="cards-grid">${COMPONENTS.map(renderCard).join('')}</div>
+      <p class="search-empty" id="search-empty" hidden>No components match your search.</p>
+    </main>`, '');
+
+  const input = document.getElementById('search') as HTMLInputElement;
+  input.value = search;
+  const updateResults = (): void => {
+    const term = input.value.trim().toLowerCase();
+    let visibleTotal = 0;
+    appRoot.querySelectorAll<HTMLElement>('.cards-grid > .card').forEach((card) => {
+      const matches = (card.dataset['search'] ?? '').includes(term) && (category === 'All' || card.dataset['category'] === category);
+      card.hidden = !matches;
+      if (matches) visibleTotal++;
+    });
+    appRoot.querySelector('.section-count')!.textContent = String(visibleTotal);
+    (document.getElementById('search-empty') as HTMLElement).hidden = visibleTotal !== 0;
+  };
+  input.addEventListener('input', () => {
+    const params = new URLSearchParams();
+    if (input.value) params.set('q', input.value);
+    if (category !== 'All') params.set('category', category);
+    history.replaceState(null, '', `${location.pathname}${location.search}#/${params.size ? `?${params}` : ''}`);
+    updateResults();
+  });
+  appRoot.querySelectorAll<HTMLButtonElement>('[data-filter-category]').forEach((button) => button.addEventListener('click', () => {
+    category = button.dataset['filterCategory'] ?? 'All';
+    appRoot.querySelectorAll<HTMLButtonElement>('[data-filter-category]').forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+    const params = new URLSearchParams();
+    if (input.value) params.set('q', input.value);
+    if (category !== 'All') params.set('category', category);
+    history.replaceState(null, '', `${location.pathname}${location.search}#/${params.size ? `?${params}` : ''}`);
+    updateResults();
+  }));
+  appRoot.querySelector<HTMLSelectElement>('#catalog-sort')?.addEventListener('change', (event) => {
+    const sort = (event.currentTarget as HTMLSelectElement).value;
+    const grid = appRoot.querySelector<HTMLElement>('.cards-grid')!;
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>('.card'));
+    cards.sort((a, b) => sort === 'original' ? Number(a.dataset['order']) - Number(b.dataset['order']) :
+      sort === 'az' ? (a.dataset['name'] ?? '').localeCompare(b.dataset['name'] ?? '') : (b.dataset['name'] ?? '').localeCompare(a.dataset['name'] ?? ''));
+    grid.append(...cards);
+  });
+  updateResults();
+  wireWorkspace();
 }
 
 function updateThemeButton(): void {
   const button = document.getElementById('gallery-theme');
   if (!button) return;
   const dark = document.documentElement.dataset['theme'] === 'dark';
-  button.textContent = dark ? '☀' : '☾';
+  button.textContent = dark ? 'Light' : 'Dark';
   button.setAttribute('aria-label', `Switch to ${dark ? 'light' : 'dark'} theme`);
-}
-
-/* ============================================================
-   Hero
-   ============================================================ */
-
-function renderHero(): string {
-  return `
-    <header class="hero">
-      <nav class="site-nav" aria-label="Main navigation">
-        <a class="brand" href="#/" aria-label="UI Components home"><span class="brand-mark">◈</span> UI Components</a>
-        <div class="site-nav-links"><a href="#/" data-scroll-target="components">Components</a><a href="#/docs/animate">Documentation</a><button type="button" id="gallery-theme" class="theme-button" aria-label="Switch color theme"></button></div>
-      </nav>
-      <div class="hero-grid">
-        <div class="hero-copy">
-          <span class="hero-kicker">WEB COMPONENTS · TYPESCRIPT · NATIVE CSS</span>
-          <h1>
-            <span>Build better UI.</span><br/>
-            <span class="hero-accent">Bring your own stack.</span>
-          </h1>
-          <p class="hero-tagline">
-            ${COMPONENTS.length} reusable components and effects, built with browser APIs.
-            Explore live examples, then drop them into any frontend.
-          </p>
-          <div class="hero-actions">
-            <a class="btn primary" href="#/" data-scroll-target="components">Explore components <span aria-hidden="true">↗</span></a>
-            <a class="btn ghost" href="#/docs/animate">Read the docs</a>
-          </div>
-        </div>
-        <div class="hero-visual" aria-label="Preview of UI components">
-          <div class="preview-window">
-            <div class="preview-bar"><span class="preview-dots"><i></i><i></i><i></i></span><span>component-preview.html</span><span>↗</span></div>
-            <div class="preview-content">
-              <div class="preview-label">LIVE PREVIEW <span>● Interactive</span></div>
-              <div class="preview-panel"><span class="preview-icon">✦</span><div><strong>Made for the modern web</strong><small>Native elements, thoughtful details.</small></div></div>
-              <div class="preview-tabs"><span class="selected">Overview</span><span>Examples</span><span>API</span></div>
-              <div class="preview-line wide"></div><div class="preview-line"></div>
-              <div class="preview-controls"><span class="preview-button">Explore demo →</span><span class="preview-switch" aria-hidden="true"></span></div>
-            </div>
-          </div>
-          <span class="preview-float preview-float-top">✳ Framework agnostic</span>
-          <span class="preview-float preview-float-bottom">${COMPONENTS.length} components</span>
-        </div>
-      </div>
-    </header>
-  `;
 }
 
 function renderFooter(): string {
@@ -179,12 +176,11 @@ function renderFooter(): string {
    ============================================================ */
 
 function renderCard(c: ComponentEntry): string {
-  const thumb = thumbFor(c.tagName);
   const slug = c.tagName.replace(/^ui-/, '');
   return `
-    <article class="card" data-search="${escapeHtml((c.name + ' ' + c.description + ' ' + c.tagName + ' ' + c.category).toLowerCase())}">
+    <article class="card" data-category="${c.category}" data-name="${escapeHtml(c.name)}" data-order="${COMPONENTS.indexOf(c)}" data-search="${escapeHtml((c.name + ' ' + c.description + ' ' + c.tagName + ' ' + c.category).toLowerCase())}">
       <a class="card-thumb" href="#/${c.tagName}" title="View live ${c.name} demo">
-        ${thumb}
+        ${thumbFor(c.tagName)}
       </a>
       <div class="card-body">
         <div class="card-title-row">
@@ -206,59 +202,9 @@ function renderCard(c: ComponentEntry): string {
     </article>`;
 }
 
-/**
- * Generate a long strip of demo cards that fade in as the user scrolls.
- * Each card is wrapped in a <ui-animate> so the IntersectionObserver fires
- * when the card scrolls into view.
- */
-function renderScrollDemo(): string {
-  const effects = ['fade-up', 'zoom-in', 'blur', 'rotate', 'slide-up', 'scale-up'];
-  return `
-    <section class="section scroll-demo">
-      <div class="scroll-demo-heading">
-        <div><span class="eyebrow">Motion in action</span><h2>Watch the details come alive.</h2></div>
-        <p>Scroll through these effects, then open Animate to try the complete set.</p>
-      </div>
-        <div class="scroll-grid">
-          ${effects.map((effect, i) => `
-            <ui-animate effect="${effect}" threshold="0.1">
-              <a class="scroll-card" href="#/ui-animate">
-                <span class="effect-graphic effect-graphic-${i + 1}" aria-hidden="true"><i></i><i></i><i></i></span>
-                <span class="scroll-card-overlay"><strong>${effect}</strong><small>View effect ↗</small></span>
-              </a>
-            </ui-animate>
-          `).join('')}
-        </div>
-    </section>
-  `;
-}
-
-function renderPhotoFeature(): string {
-  return `
-    <section class="section home-photo-feature" aria-label="Photo parallax preview">
-      <div class="scroll-demo-heading">
-        <div><span class="eyebrow">Scroll stories</span><h2>Images with a sense of depth.</h2></div>
-        <p>Follow a photograph through the viewport, then explore the full Parallax demo.</p>
-      </div>
-      <ui-parallax class="home-photo-parallax">
-        <div class="home-photo-stage">
-          <ui-parallax-scroll class="home-photo-image" ui-fit-content="false" ui-keyframes="{'0%': {y: -60, scale: 1.14}, '100%': {y: 65, scale: 1.02}}">
-            <img src="/images/coast.jpg" alt="Sunlit limestone coast and turquoise sea" loading="lazy" />
-          </ui-parallax-scroll>
-          <div class="home-photo-shade"></div>
-          <ui-parallax-scroll class="home-photo-copy" ui-keyframes="{'0%': {y: 65, opacity: 0}, '40%': {y: 0, opacity: 1}, '85%': {y: -20, opacity: 1}, '100%': {y: -45, opacity: 0}}">
-            <span class="photo-story-index">THE SCROLL COLLECTION</span>
-            <h3>Movement made<br />for the moment.</h3>
-            <a href="#/ui-parallax">Explore Parallax →</a>
-          </ui-parallax-scroll>
-        </div>
-      </ui-parallax>
-    </section>`;
-}
-
 function thumbFor(tag: string): string {
   const symbols: Record<string, string> = {
-    'ui-animate': '✦', 'ui-parallax': '▧', 'ui-text-spotlight': '◉', 'ui-animated-background': '✳', 'ui-toggle': '◉',
+    'ui-animate': '✦', 'ui-parallax': '▧', 'ui-text-spotlight': '◉', 'ui-tech-text': 'Aa', 'ui-curved-loop': '⌒', 'ui-animated-background': '✳', 'ui-toggle': '◉',
     'ui-collapse': '⌄', 'ui-accordion': '☷', 'ui-tabs': '▤', 'ui-modal': '▣', 'ui-cursor': '◎', 'ui-fake-cursor': '➤',
     'ui-drawer': '◧', 'ui-popover': '▢', 'ui-tooltip': '?', 'ui-lazyload': '◐',
     'ui-image-comparison': '◒', 'ui-image-trace': '✎', 'ui-image-flashlight': '◉', 'ui-counter': '99', 'ui-dark-mode': '☼',
@@ -289,10 +235,10 @@ function renderDocPage(rawSlug: string): void {
   const tagName = doc.tagName;
   const demoTagName = tagName;
 
-  appRoot.innerHTML = `
+  appRoot.innerHTML = renderWorkspace(`
     <main class="container doc-page">
       <div class="page-nav-bar">
-        <a class="back" href="#/">← All components</a>
+        <a class="back" href="#/">Components</a><span class="page-crumb-separator">›</span><span>${doc.category}</span><span class="page-crumb-separator">›</span><span>${doc.name}</span>
         <div class="page-switcher-tabs">
           <a class="tab-btn" href="#/${demoTagName}">▶ Live Demo</a>
           <a class="tab-btn active" href="#/docs/${doc.slug}">📄 Documentation</a>
@@ -311,6 +257,7 @@ function renderDocPage(rawSlug: string): void {
       <section class="doc-section">
         <h2>Basic Usage</h2>
         <div class="code-box">
+          <button type="button" class="copy-code" data-copy-usage aria-label="Copy usage code">Copy code</button>
           <pre><code>${escapeHtml(doc.usage)}</code></pre>
         </div>
       </section>
@@ -428,35 +375,20 @@ function renderDocPage(rawSlug: string): void {
         </section>
       ` : ''}
 
-      <section class="doc-section preview-section">
-        <h2>Interactive Playground</h2>
-        <div class="demo-block">
-          ${renderDemoBody(demoTagName, 'Quick Demo')}
-        </div>
-        <div style="margin-top: 1rem">
-          <a class="btn primary" href="#/${demoTagName}">Open Full Demo Page →</a>
-        </div>
-      </section>
-
       ${renderFooter()}
     </main>
-  `;
+  `, tagName);
 
-  wireButtons();
-  wireAnimateReplay(appRoot);
-  wireParallaxDemo(appRoot);
-  wireSwipeableStackDemo(appRoot);
-  wireToastDemo(appRoot);
-  wireDotMorphDemo(appRoot);
-  wireLogoAssemblyDemo(appRoot);
-  wireSandPhysicsDemo(appRoot);
-  wireImageSolidDemo(appRoot);
-  wireFlipBookDemo(appRoot);
-  wireFakeCursorDemo(appRoot);
-  wireTextSpotlightDemo(appRoot);
-  wireBackgroundDemo(appRoot);
-  wireImageTraceDemo(appRoot);
-  wireImageFlashlightDemo(appRoot);
+  wireWorkspace();
+  appRoot.querySelector<HTMLButtonElement>('[data-copy-usage]')?.addEventListener('click', async (event) => {
+    const button = event.currentTarget as HTMLButtonElement;
+    try {
+      await navigator.clipboard.writeText(doc.usage);
+      button.textContent = 'Copied';
+    } catch {
+      button.textContent = 'Copy unavailable';
+    }
+  });
 }
 
 /* ============================================================
@@ -471,10 +403,10 @@ function renderDemo(tagName: string): void {
     return;
   }
   const slug = entry.tagName.replace(/^ui-/, '');
-  appRoot.innerHTML = `
+  appRoot.innerHTML = renderWorkspace(`
     <main class="container demo-page">
       <div class="page-nav-bar">
-        <a class="back" href="#/">← All components</a>
+        <a class="back" href="#/">Components</a><span class="page-crumb-separator">›</span><span>${entry.category}</span><span class="page-crumb-separator">›</span><span>${entry.name}</span>
         <div class="page-switcher-tabs">
           <a class="tab-btn active" href="#/${entry.tagName}">▶ Live Demo</a>
           <a class="tab-btn" href="#/docs/${slug}">📄 Documentation</a>
@@ -493,7 +425,8 @@ function renderDemo(tagName: string): void {
       `).join('')}
       ${renderFooter()}
     </main>
-  `;
+  `, entry.tagName);
+  wireWorkspace();
   wireButtons();
   wireAnimateReplay(appRoot);
   wireParallaxDemo(appRoot);
@@ -509,6 +442,8 @@ function renderDemo(tagName: string): void {
   wireBackgroundDemo(appRoot);
   wireImageTraceDemo(appRoot);
   wireImageFlashlightDemo(appRoot);
+  wireTechTextDemo(appRoot);
+  wireCurvedLoopDemo(appRoot);
 }
 
 function renderFlyingWord(word: string, firstIndex: number): string {
@@ -553,6 +488,71 @@ function backgroundControls(textMode: boolean): string {
 function renderDemoBody(tag: string, variant: string): string {
   // Every demo returns a card with the running component + sample content.
   switch (tag) {
+    case 'ui-curved-loop': return `<section class="curved-loop-demo">
+      <div class="curved-loop-demo__presets" role="group" aria-label="Curved Loop styles">
+        <button type="button" class="is-active" data-curved-preset="arc">Arc</button>
+        <button type="button" data-curved-preset="wave">Wave</button>
+        <button type="button" data-curved-preset="circle">Circle</button>
+        <button type="button" data-curved-preset="outline">Outline</button>
+      </div>
+      <div class="curved-loop-demo__stage">
+        <ui-curved-loop ui-shape="arc" ui-text="BE ✦ CREATIVE ✦ WITH ✦ UI CORE ✦" ui-speed="2" ui-curve="400" ui-size="96" style="--ui-curved-loop-color:#ffffff;--ui-curved-loop-separator-color:#ffffff">BE ✦ CREATIVE ✦ WITH ✦ UI CORE ✦</ui-curved-loop>
+        <span class="curved-loop-demo__hint">Drag the text · use ← → when focused</span>
+      </div>
+      <div class="curved-loop-demo__controls">
+        <label>Text<input type="text" maxlength="80" value="BE ✦ CREATIVE ✦ WITH ✦ UI CORE ✦" data-curved-attr="ui-text" /></label>
+        <label>Shape<select data-curved-attr="ui-shape"><option value="arc">Arc</option><option value="wave">Wave</option><option value="circle">Circle</option><option value="line">Line</option></select></label>
+        <label>Separator<select data-curved-attr="ui-separator"><option value="">None</option><option value="—">Dash</option><option value="•">Dot</option><option value="/">Slash</option><option value="✦">Star</option></select></label>
+        <label>Direction<select data-curved-attr="ui-direction"><option value="left">Left</option><option value="right">Right</option></select></label>
+        <label>Text color<input type="color" value="#ffffff" data-curved-color="--ui-curved-loop-color" /></label>
+        <label>Separator color<input type="color" value="#ffffff" data-curved-color="--ui-curved-loop-separator-color" /></label>
+        <label>Speed <output>2</output><input type="range" min="0" max="5" step="0.1" value="2" data-curved-attr="ui-speed" /></label>
+        <label>Scroll boost <output>0</output><input type="range" min="0" max="5" step="0.1" value="0" data-curved-attr="ui-scroll-boost" /></label>
+        <label>Curve <output>400px</output><input type="range" min="-600" max="600" step="10" value="400" data-curved-attr="ui-curve" data-unit="px" /></label>
+        <label>Font size <output>96px</output><input type="range" min="40" max="180" step="2" value="96" data-curved-attr="ui-size" data-unit="px" /></label>
+        <label>Weight <output>700</output><input type="range" min="100" max="900" step="100" value="700" data-curved-attr="ui-weight" /></label>
+        <label>Spacing <output>0px</output><input type="range" min="-12" max="24" step="1" value="0" data-curved-attr="ui-letter-spacing" data-unit="px" /></label>
+        <label>Edge fade <output>0</output><input type="range" min="0" max="1" step="0.05" value="0" data-curved-attr="ui-edge-fade" /></label>
+        <label class="curved-loop-demo__toggle"><input type="checkbox" data-curved-flag="ui-outline" /> Outline</label>
+        <label class="curved-loop-demo__toggle"><input type="checkbox" data-curved-flag="ui-interactive" checked /> Draggable</label>
+        <label class="curved-loop-demo__toggle"><input type="checkbox" data-curved-flag="ui-pause-on-hover" /> Pause on hover</label>
+      </div>
+    </section>`;
+    case 'ui-tech-text': return `<section class="tech-text-demo">
+      <div class="tech-text-demo__stage">
+        <ui-tech-text ui-size="150" ui-reveal="letter" ui-line-style="dashed" ui-dash-length="4" ui-dash-gap="2" ui-reach="200" ui-speed="1" style="--ui-tech-text-color:#fff;--ui-tech-text-accent:#a8eed2">UI Core</ui-tech-text>
+        <span class="tech-text-demo__hint">Move over the letters · drag one · use arrow keys</span>
+      </div>
+      <div class="tech-text-demo__controls">
+        <label>Text<input type="text" value="UI Core" maxlength="28" data-tech-text-attr="ui-text" /></label>
+        <label>Reveal<select data-tech-text-attr="ui-reveal"><option value="letter">Letter</option><option value="area">Area</option><option value="off">Off</option></select></label>
+        <label>Line<select data-tech-text-attr="ui-line-style"><option value="dashed">Dashed</option><option value="solid">Solid</option></select></label>
+        <label>Color<input type="color" value="#ffffff" data-tech-text-color="--ui-tech-text-color" /></label>
+        <label>Accent<input type="color" value="#a8eed2" data-tech-text-color="--ui-tech-text-accent" /></label>
+        <label>Font<select data-tech-text-attr="ui-font-family"><option value="">Inherit</option><option value="Georgia, serif">Serif</option><option value="ui-monospace, monospace">Mono</option></select></label>
+        <label>Align<select data-tech-text-attr="ui-align"><option value="center">Center</option><option value="left">Left</option><option value="right">Right</option></select></label>
+        <label>Intro<select data-tech-text-attr="ui-intro"><option value="none">None</option><option value="type">Type</option><option value="assemble">Assemble</option><option value="metrics">Metrics</option></select></label>
+        <label>Intro time <output>2s</output><input type="range" min="0.5" max="5" step="0.1" value="2" data-tech-text-attr="ui-intro-duration" data-unit="s" /></label>
+        <label>Size <output>150px</output><input type="range" min="48" max="220" value="150" data-tech-text-attr="ui-size" data-unit="px" /></label>
+        <label>Weight <output>600</output><input type="range" min="100" max="900" step="100" value="600" data-tech-text-attr="ui-weight" /></label>
+        <label>Spacing <output>-0.05em</output><input type="range" min="-0.15" max="0.2" step="0.01" value="-0.05" data-tech-text-attr="ui-letter-spacing" data-unit="em" /></label>
+        <label>Reach <output>200px</output><input type="range" min="50" max="350" value="200" data-tech-text-attr="ui-reach" data-unit="px" /></label>
+        <label>Softness <output>0.7</output><input type="range" min="0" max="1" step="0.05" value="0.7" data-tech-text-attr="ui-softness" /></label>
+        <label>Dash <output>4px</output><input type="range" min="1" max="16" value="4" data-tech-text-attr="ui-dash-length" data-unit="px" /></label>
+        <label>Gap <output>2px</output><input type="range" min="1" max="12" value="2" data-tech-text-attr="ui-dash-gap" data-unit="px" /></label>
+        <label>Stroke <output>1.5px</output><input type="range" min="0.5" max="4" step="0.1" value="1.5" data-tech-text-attr="ui-stroke-width" data-unit="px" /></label>
+        <label>Speed <output>1×</output><input type="range" min="0.2" max="3" step="0.1" value="1" data-tech-text-attr="ui-speed" data-unit="×" /></label>
+        <label>Bounce <output>0.4</output><input type="range" min="0" max="1" step="0.05" value="0.4" data-tech-text-attr="ui-bounce" /></label>
+        <label>Specks <output>15</output><input type="range" min="0" max="40" value="15" data-tech-text-attr="ui-specks" /></label>
+        <label class="tech-text-demo__toggle"><input type="checkbox" data-tech-text-flag="ui-sweep" checked /> Sweep</label>
+        <label class="tech-text-demo__toggle"><input type="checkbox" data-tech-text-flag="ui-selection" checked /> Selection</label>
+        <label class="tech-text-demo__toggle"><input type="checkbox" data-tech-text-flag="ui-labels" checked /> Labels</label>
+        <label class="tech-text-demo__toggle"><input type="checkbox" data-tech-text-flag="ui-draggable" checked /> Draggable</label>
+        <label class="tech-text-demo__toggle"><input type="checkbox" data-tech-text-flag="ui-click-kick" checked /> Click kick</label>
+        <label class="tech-text-demo__toggle"><input type="checkbox" data-tech-text-flag="ui-guides" /> Guides</label>
+        <button type="button" data-tech-text-replay>Replay sweep</button>
+      </div>
+    </section>`;
     case 'ui-animated-background': {
       const textMode = variant === 'Text particle morph';
       return `<section class="background-demo">
@@ -955,7 +955,12 @@ function renderDemoBody(tag: string, variant: string): string {
           <ui-cursor class="cursor-distortion-card" ui-name="cursor-distortion-${index}" ui-distortion="distortion-${index}" ui-lerp-ease="0.16">
             <span>Distortion ${index}</span>
             <strong>Move here</strong>
-            <ui-cursor-item class="cursor-image-item" ui-name="cursor-distortion-${index}"><img src="https://images.pexels.com/photos/${[432059, 842963, 157886, 6207714, 6214365][index - 1]}/pexels-photo-${[432059, 842963, 157886, 6207714, 6214365][index - 1]}.jpeg?auto=compress&cs=tinysrgb&w=400" alt=""></ui-cursor-item>
+            <ui-cursor-item class="cursor-image-item" ui-name="cursor-distortion-${index}"><img src="${[
+              'https://images.pexels.com/photos/842963/pexels-photo-842963.jpeg?auto=compress&cs=tinysrgb&w=400',
+              '/images/architecture.jpg',
+              'https://images.pexels.com/photos/6207714/pexels-photo-6207714.jpeg?auto=compress&cs=tinysrgb&w=400',
+              'https://images.pexels.com/photos/6214365/pexels-photo-6214365.jpeg?auto=compress&cs=tinysrgb&w=400',
+            ][index - 2]}" alt=""></ui-cursor-item>
           </ui-cursor>`).join('')}</div>`;
       if (variant === 'Magnetic button') return `
         <p class="demo-text">The button reacts to the same pointer coordinates that drive the cursor item.</p>
@@ -1992,6 +1997,88 @@ function wireBackgroundDemo(root: HTMLElement): void {
     demo.querySelector<HTMLButtonElement>('[data-background-replay]')?.addEventListener('click', () => {
       background.refresh();
       report('Entrance animation restarted.');
+    });
+  });
+}
+
+function wireTechTextDemo(root: HTMLElement): void {
+  root.querySelectorAll<HTMLElement>('.tech-text-demo').forEach((demo) => {
+    const text = demo.querySelector('ui-tech-text') as HTMLElement & { replay(): void; refresh(): void } | null;
+    if (!text) return;
+    demo.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[data-tech-text-attr]').forEach((control) => {
+      control.addEventListener('input', () => {
+        const name = control.dataset['techTextAttr']!;
+        text.setAttribute(name, control.value);
+        if (name === 'ui-intro' || name === 'ui-intro-duration') text.replay();
+        const output = control.parentElement?.querySelector('output');
+        if (output) output.textContent = `${control.value}${control.dataset['unit'] ?? ''}`;
+      });
+    });
+    demo.querySelectorAll<HTMLInputElement>('[data-tech-text-flag]').forEach((control) => {
+      control.addEventListener('change', () => text.setAttribute(control.dataset['techTextFlag']!, String(control.checked)));
+    });
+    demo.querySelectorAll<HTMLInputElement>('[data-tech-text-color]').forEach((control) => {
+      control.addEventListener('input', () => {
+        text.style.setProperty(control.dataset['techTextColor']!, control.value);
+        if (control.dataset['techTextColor'] === '--ui-tech-text-color') text.refresh();
+      });
+    });
+    demo.querySelector<HTMLButtonElement>('[data-tech-text-replay]')?.addEventListener('click', () => text.replay());
+  });
+}
+
+function wireCurvedLoopDemo(root: HTMLElement): void {
+  const presets: Record<string, { text: string; shape: string; separator: string; direction: string; speed: string; boost: string; curve: string; size: string; weight: string; spacing: string; fade: string; outline: boolean; color: string; separatorColor: string }> = {
+    arc: { text: 'BE ✦ CREATIVE ✦ WITH ✦ UI CORE ✦', shape: 'arc', separator: '', direction: 'left', speed: '2', boost: '0', curve: '400', size: '96', weight: '700', spacing: '0', fade: '0', outline: false, color: '#ffffff', separatorColor: '#ffffff' },
+    wave: { text: 'RIDE THE WAVE', shape: 'wave', separator: '—', direction: 'right', speed: '1.5', boost: '0', curve: '360', size: '84', weight: '500', spacing: '0', fade: '.35', outline: false, color: '#ffffff', separatorColor: '#ffffff' },
+    circle: { text: 'AROUND AND', shape: 'circle', separator: '•', direction: 'right', speed: '1.2', boost: '0', curve: '400', size: '80', weight: '800', spacing: '0', fade: '0', outline: false, color: '#ffffff', separatorColor: '#ffffff' },
+    outline: { text: 'SCROLL FASTER', shape: 'line', separator: '/', direction: 'left', speed: '1', boost: '2', curve: '400', size: '136', weight: '800', spacing: '-2', fade: '.7', outline: true, color: '#ffffff', separatorColor: '#ff5a1f' },
+  };
+  root.querySelectorAll<HTMLElement>('.curved-loop-demo').forEach((demo) => {
+    const loop = demo.querySelector('ui-curved-loop') as HTMLElement | null;
+    if (!loop) return;
+    const buttons = demo.querySelectorAll<HTMLButtonElement>('[data-curved-preset]');
+    const markCustom = () => buttons.forEach((button) => { button.classList.remove('is-active'); button.setAttribute('aria-pressed', 'false'); });
+    demo.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[data-curved-attr]').forEach((control) => {
+      control.addEventListener('input', () => {
+        markCustom();
+        loop.setAttribute(control.dataset['curvedAttr']!, control.value);
+        const output = control.parentElement?.querySelector('output');
+        if (output) output.textContent = `${control.value}${control.dataset['unit'] ?? ''}`;
+      });
+    });
+    demo.querySelectorAll<HTMLInputElement>('[data-curved-flag]').forEach((control) => {
+      control.addEventListener('change', () => { markCustom(); loop.setAttribute(control.dataset['curvedFlag']!, String(control.checked)); });
+    });
+    demo.querySelectorAll<HTMLInputElement>('[data-curved-color]').forEach((control) => {
+      control.addEventListener('input', () => { markCustom(); loop.style.setProperty(control.dataset['curvedColor']!, control.value); });
+    });
+    buttons.forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset['curvedPreset'] === 'arc'));
+      button.addEventListener('click', () => {
+        const preset = presets[button.dataset['curvedPreset']!];
+        if (!preset) return;
+        const values: Record<string, string> = { 'ui-text': preset.text, 'ui-shape': preset.shape, 'ui-separator': preset.separator,
+          'ui-direction': preset.direction, 'ui-speed': preset.speed, 'ui-scroll-boost': preset.boost, 'ui-curve': preset.curve,
+          'ui-size': preset.size, 'ui-weight': preset.weight, 'ui-letter-spacing': preset.spacing, 'ui-edge-fade': preset.fade,
+          'ui-outline': String(preset.outline) };
+        Object.entries(values).forEach(([name, value]) => loop.setAttribute(name, value));
+        loop.style.setProperty('--ui-curved-loop-color', preset.color);
+        loop.style.setProperty('--ui-curved-loop-separator-color', preset.separatorColor);
+        demo.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[data-curved-attr]').forEach((control) => {
+          control.value = values[control.dataset['curvedAttr']!] ?? control.value;
+          const output = control.parentElement?.querySelector('output');
+          if (output) output.textContent = `${control.value}${control.dataset['unit'] ?? ''}`;
+        });
+        const outline = demo.querySelector<HTMLInputElement>('[data-curved-flag="ui-outline"]');
+        if (outline) outline.checked = preset.outline;
+        demo.querySelectorAll<HTMLInputElement>('[data-curved-color]').forEach((control) => {
+          control.value = control.dataset['curvedColor'] === '--ui-curved-loop-color' ? preset.color : preset.separatorColor;
+        });
+        markCustom();
+        button.classList.add('is-active');
+        button.setAttribute('aria-pressed', 'true');
+      });
     });
   });
 }

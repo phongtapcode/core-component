@@ -1,4 +1,4 @@
-# UI Components
+# UI Core
 
 A framework-agnostic, production-quality web component library.
 
@@ -38,8 +38,7 @@ See [Architecture](/architecture) for the full design, including:
 
 ## Status
 
-Phase 0–5 shipped. **60+ unit tests, 114+ tests passing**. Build, typecheck, and
-unit suite pass on the master branch.
+The library currently includes **38 components and effects**. The workspace test suite has **321 passing tests**.
 
 ### Shipped components
 

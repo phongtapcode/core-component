@@ -56,6 +56,20 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     demos: ['Typewriter hero', 'Slide headline', 'Goo morph'],
   },
   {
+    name: 'Tech Text',
+    tagName: 'ui-tech-text',
+    category: 'Motion',
+    description: 'Letters become dashed outlines under the pointer, with selection guides and spring-back dragging.',
+    demos: ['Interactive wordmark'],
+  },
+  {
+    name: 'Curved Loop',
+    tagName: 'ui-curved-loop',
+    category: 'Motion',
+    description: 'Looping text along arc, wave, circle, or straight paths with drag and scroll response.',
+    demos: ['Four styles and live controls'],
+  },
+  {
     name: 'Cursor',
     tagName: 'ui-cursor',
     category: 'Motion',

@@ -405,6 +405,75 @@ uiToast.push({
     ],
     a11y: 'Live notifications use role="status" and polite announcements by default. The close button is keyboard accessible. Reduced motion removes enter and exit animation.',
   },
+  'tech-text': {
+    slug: 'tech-text', tagName: 'ui-tech-text', name: 'Tech Text', category: 'Motion',
+    summary: 'A canvas wordmark whose letters turn into dashed outlines under the pointer, with a selection frame and spring-back dragging.',
+    usage: `<ui-tech-text ui-size="150" ui-reveal="letter" ui-sweep="true"
+  style="--ui-tech-text-color:#fff;--ui-tech-text-accent:#a8eed2;--ui-tech-text-height:340px">
+  UI Core
+</ui-tech-text>`,
+    attributes: [
+      { name: 'ui-text', type: 'string', default: 'element text', description: 'Wordmark text. Updating it rebuilds the glyphs.' },
+      { name: 'ui-font-family', type: 'string', default: 'inherit', description: 'Canvas font family; defaults to the computed font family of the element.' },
+      { name: 'ui-size / ui-weight / ui-letter-spacing', type: 'number', default: '150 / 600 / -0.05', description: 'Maximum font size in px, font weight, and letter spacing in em. Text shrinks to fit.' },
+      { name: 'ui-align', type: 'left | center | right', default: 'center', description: 'Horizontal alignment.' },
+      { name: 'ui-reveal', type: 'letter | area | off', default: 'letter', description: 'Outline one letter, nearby letters, or none.' },
+      { name: 'ui-reach / ui-softness', type: 'number', default: '200 / 0.7', description: 'Radius and falloff used by area reveal.' },
+      { name: 'ui-line-style', type: 'dashed | solid', default: 'dashed', description: 'Outline style.' },
+      { name: 'ui-dash-length / ui-dash-gap / ui-stroke-width', type: 'number', default: '4 / 2 / 1.5', description: 'Outline dash geometry in CSS pixels.' },
+      { name: 'ui-sweep / ui-speed', type: 'boolean / number', default: 'true / 1', description: 'Idle letter sweep and its speed.' },
+      { name: 'ui-selection / ui-labels / ui-specks', type: 'boolean / boolean / number', default: 'true / true / 15', description: 'Selection frame, glyph metrics label, and surrounding pixels.' },
+      { name: 'ui-draggable', type: 'boolean', default: 'true', description: 'Allow pointer dragging; letters return on release.' },
+      { name: 'ui-bounce / ui-click-kick', type: 'number / boolean', default: '0.4 / true', description: 'Spring damping and a short impulse when a letter is clicked.' },
+      { name: 'ui-guides', type: 'boolean', default: 'false', description: 'Show cap-height and baseline guides.' },
+      { name: 'ui-intro / ui-intro-duration', type: 'none | type | assemble | metrics / number', default: 'none / 2', description: 'Optional entrance effect and its duration in seconds.' },
+    ],
+    methods: [
+      { name: 'refresh()', description: 'Remeasure text and rebuild cached outlines.' },
+      { name: 'replay()', description: 'Restart the idle sweep and return letters to baseline.' },
+    ],
+    events: [
+      { name: 'ui:tech-text:select', detail: '{ index, char }', description: 'A letter is selected with the keyboard.' },
+      { name: 'ui:tech-text:release', detail: '{ index, char, x, y }', description: 'A dragged letter is released.' },
+    ],
+    cssVars: [
+      { name: '--ui-tech-text-color', default: 'currentColor', description: 'Fill and outline color.' },
+      { name: '--ui-tech-text-accent', default: 'currentColor', description: 'Frame, label, and speck color.' },
+      { name: '--ui-tech-text-height', default: '340px', description: 'Canvas height; width follows its container.' },
+    ],
+    a11y: 'The source wordmark remains in the DOM for screen readers and the canvas is aria-hidden. Focus the element and use Left/Right, Home/End to inspect letters; Escape clears selection. Reduced motion disables the idle sweep and uses immediate reveal.',
+  },
+  'curved-loop': {
+    slug: 'curved-loop', tagName: 'ui-curved-loop', name: 'Curved Loop', category: 'Motion',
+    summary: 'Repeating SVG text follows arc, wave, circle, or line paths. Drag the ribbon, adjust its speed, or add a temporary scroll boost.',
+    usage: `<ui-curved-loop ui-shape="wave" ui-text="RIDE THE WAVE" ui-separator="—"
+  ui-direction="right" ui-speed="1.5" ui-curve="360"
+  style="--ui-curved-loop-height:360px;--ui-curved-loop-color:#fff">
+  RIDE THE WAVE
+</ui-curved-loop>`,
+    attributes: [
+      { name: 'ui-text', type: 'string', default: 'element text', description: 'Phrase repeated along the path.' },
+      { name: 'ui-shape', type: 'arc | wave | circle | line', default: 'arc', description: 'Choose the path geometry. Invalid values use arc.' },
+      { name: 'ui-separator', type: 'string', default: '', description: 'Mark inserted between each repeat.' },
+      { name: 'ui-direction / ui-speed', type: 'left | right / number', default: 'left / 2', description: 'Travel direction and speed (0–10); zero stops automatic movement.' },
+      { name: 'ui-scroll-boost', type: 'number', default: '0', description: 'Temporary velocity from page scrolling (0–10).' },
+      { name: 'ui-curve', type: 'number', default: '400', description: 'Arc bend or wave amplitude at 1440px width, scaled with the container.' },
+      { name: 'ui-size / ui-weight / ui-letter-spacing', type: 'number', default: '96 / 700 / 0', description: 'Font size and spacing at 1440px width, plus font weight. Circle scales the size down to prevent crowding.' },
+      { name: 'ui-edge-fade', type: 'number', default: '0', description: 'Side fade strength (0–1), ignored on the circle.' },
+      { name: 'ui-outline', type: 'boolean', default: 'false', description: 'Outline the phrase while leaving separators filled.' },
+      { name: 'ui-interactive / ui-pause-on-hover', type: 'boolean', default: 'true / false', description: 'Allow dragging and optionally pause automatic travel on hover.' },
+    ],
+    methods: [
+      { name: 'refresh()', description: 'Remeasure the path and phrase after external font or layout changes.' },
+      { name: 'play() / pause()', description: 'Resume or stop automatic movement.' },
+    ],
+    cssVars: [
+      { name: '--ui-curved-loop-color', default: 'currentColor', description: 'Phrase color.' },
+      { name: '--ui-curved-loop-separator-color', default: 'currentColor', description: 'Separator color.' },
+      { name: '--ui-curved-loop-height', default: '360px', description: 'Component height.' },
+    ],
+    a11y: 'Source text remains readable to assistive technology; the duplicate SVG is decorative. Focus the element and press Left/Right to shift the ribbon. Reduced motion stops automatic travel. The loop pauses when offscreen or the tab is hidden.',
+  },
   typing: {
     slug: 'typing',
     tagName: 'ui-typing',
