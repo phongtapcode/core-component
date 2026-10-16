@@ -30,6 +30,8 @@ import './image-solid.js';
 import './image-stack.js';
 import './image-trace.js';
 import './image-flashlight.js';
+import './text-spotlight.js';
+import './animated-background.js';
 import './flip-book.js';
 import './grid-hover-expand.js';
 import './swipeable-card-stack.js';
@@ -93,6 +95,8 @@ export { UiImageSolid, UiImageSolidFace, imageSolidGeometry, type ImageSolidShap
 export { UiImageStack, UiImageStackItem } from './image-stack.js';
 export { UiImageTrace, traceImageContours, type ImageTracePath } from './image-trace.js';
 export { UiImageFlashlight, flashlightFrame, type FlashlightFrame } from './image-flashlight.js';
+export { UiTextSpotlight } from './text-spotlight.js';
+export { UiAnimatedBackground, UiBackground } from './animated-background.js';
 export { UiFlipBook, UiFlipBookCover, UiFlipBookPage } from './flip-book.js';
 export { UiGridHoverExpand } from './grid-hover-expand.js';
 export { UiSwipeableCardStack } from './swipeable-card-stack.js';

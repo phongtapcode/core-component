@@ -23,9 +23,14 @@ automatically when their tags appear in the DOM.
 
 ## CSS
 
-The default styles are in `@ui/components/css/components.css`. They are also
-imported by the JS entry. To customise, override the CSS Custom Properties on
-`:root`:
+The default styles are in `@ui/components/css/components.css`. Import them
+separately alongside the JavaScript entry:
+
+```ts
+import '@ui/components/css';
+```
+
+To customise, override the CSS Custom Properties on `:root`:
 
 ```css
 :root {

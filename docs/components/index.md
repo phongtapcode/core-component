@@ -165,6 +165,32 @@ All components share a predictable API — attributes are `kebab-case`, events a
 
 <div class="comp-card">
   <div class="comp-card-header">
+    <h3>Text Spotlight</h3>
+    <span class="comp-badge motion">Motion</span>
+  </div>
+  <p class="comp-tag">&lt;ui-text-spotlight&gt;</p>
+  <p class="comp-desc">A soft pointer-following light reveals text hidden in a dark card.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/text-spotlight">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5175/#/ui-text-spotlight" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Animated Background</h3>
+    <span class="comp-badge motion">Motion</span>
+  </div>
+  <p class="comp-tag">&lt;ui-animated-background&gt;</p>
+  <p class="comp-desc">Particle backgrounds that morph between SVG shapes or words and respond to the pointer.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/animated-background">📄 Docs</a>
+    <a class="comp-btn demo" href="/html/#/ui-animated-background" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
     <h3>Typing</h3>
     <span class="comp-badge motion">Motion</span>
   </div>

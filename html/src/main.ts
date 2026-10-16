@@ -2,7 +2,7 @@
  * Gallery SPA entry. Hash-based routing.
  */
 
-import { uiToast, type ToastPlacement, type UiModal, type UiDrawer } from '@ui/components';
+import { uiToast, type ToastPlacement, type UiModal, type UiDrawer, type UiAnimatedBackground } from '@ui/components';
 import { EFFECTS } from '@ui/motion';
 import './styles.css';
 import { COMPONENTS, type ComponentEntry } from './components.js';
@@ -258,7 +258,7 @@ function renderPhotoFeature(): string {
 
 function thumbFor(tag: string): string {
   const symbols: Record<string, string> = {
-    'ui-animate': '✦', 'ui-parallax': '▧', 'ui-toggle': '◉',
+    'ui-animate': '✦', 'ui-parallax': '▧', 'ui-text-spotlight': '◉', 'ui-animated-background': '✳', 'ui-toggle': '◉',
     'ui-collapse': '⌄', 'ui-accordion': '☷', 'ui-tabs': '▤', 'ui-modal': '▣', 'ui-cursor': '◎', 'ui-fake-cursor': '➤',
     'ui-drawer': '◧', 'ui-popover': '▢', 'ui-tooltip': '?', 'ui-lazyload': '◐',
     'ui-image-comparison': '◒', 'ui-image-trace': '✎', 'ui-image-flashlight': '◉', 'ui-counter': '99', 'ui-dark-mode': '☼',
@@ -453,6 +453,8 @@ function renderDocPage(rawSlug: string): void {
   wireImageSolidDemo(appRoot);
   wireFlipBookDemo(appRoot);
   wireFakeCursorDemo(appRoot);
+  wireTextSpotlightDemo(appRoot);
+  wireBackgroundDemo(appRoot);
   wireImageTraceDemo(appRoot);
   wireImageFlashlightDemo(appRoot);
 }
@@ -462,7 +464,8 @@ function renderDocPage(rawSlug: string): void {
    ============================================================ */
 
 function renderDemo(tagName: string): void {
-  const entry = COMPONENTS.find((c) => c.tagName === tagName || c.tagName === `ui-${tagName}`);
+  const resolvedTagName = tagName === 'ui-background' || tagName === 'background' ? 'ui-animated-background' : tagName;
+  const entry = COMPONENTS.find((c) => c.tagName === resolvedTagName || c.tagName === `ui-${resolvedTagName}`);
   if (!entry) {
     renderHome();
     return;
@@ -502,6 +505,8 @@ function renderDemo(tagName: string): void {
   wireImageSolidDemo(appRoot);
   wireFlipBookDemo(appRoot);
   wireFakeCursorDemo(appRoot);
+  wireTextSpotlightDemo(appRoot);
+  wireBackgroundDemo(appRoot);
   wireImageTraceDemo(appRoot);
   wireImageFlashlightDemo(appRoot);
 }
@@ -518,9 +523,75 @@ function renderFlyingWord(word: string, firstIndex: number): string {
   }).join('')}</span>`;
 }
 
+const BACKGROUND_PATHS = [
+  'M 50,10 L 61,40 L 95,40 L 68,60 L 79,90 L 50,70 L 21,90 L 32,60 L 5,40 L 39,40 Z',
+  'M 50,10 A 40,40 0 1,1 49.9,10 Z',
+  'M 50,30 C 50,20 40,10 30,10 C 20,10 10,20 10,30 C 10,45 30,60 50,90 C 70,60 90,45 90,30 C 90,20 80,10 70,10 C 60,10 50,20 50,30 Z',
+];
+
+function backgroundSlider(label: string, attr: string, value: string, min: number, max: number, step: number, unit = ''): string {
+  return `<label class="background-demo__slider"><span>${label}<output>${value}${unit}</output></span><input type="range" min="${min}" max="${max}" step="${step}" value="${value}" data-background-attr="${attr}" data-unit="${unit}" /></label>`;
+}
+
+function backgroundControls(textMode: boolean): string {
+  return `<aside class="background-demo__controls">
+    <div class="background-demo__controls-heading"><span>LIVE CONTROLS</span><strong>${textMode ? 'Text particles' : 'SVG particles'}</strong><p>Change the values and watch the preview update.</p></div>
+    ${textMode ? `<div class="background-demo__field"><label>First word<input type="text" value="MOTION" maxlength="16" data-background-word="0" /></label><label>Second word<input type="text" value="DESIGN" maxlength="16" data-background-word="1" /></label><button type="button" data-background-apply="words">Apply words</button></div>`
+      : `<label class="background-demo__field">Shapes<select data-background-shape><option value="all">Star → Circle → Heart</option><option value="0">Star only</option><option value="1">Circle only</option><option value="2">Heart only</option><option value="custom">Custom paths</option></select></label><details class="background-demo__custom"><summary>Custom SVG paths</summary><label>SVG viewBox<input type="text" value="0 0 100 100" spellcheck="false" data-background-viewbox /></label><textarea rows="4" spellcheck="false" aria-label="SVG path array" data-background-paths>${JSON.stringify(BACKGROUND_PATHS)}</textarea><button type="button" data-background-apply="paths">Apply paths</button></details>`}
+    <label class="background-demo__field">Color palette<select data-background-palette><option value="${textMode ? 'ice' : 'warm'}">${textMode ? 'Ice' : 'Warm gold'}</option><option value="${textMode ? 'warm' : 'ice'}">${textMode ? 'Warm gold' : 'Ice'}</option><option value="neon">Neon</option><option value="mono">White</option></select></label>
+    ${backgroundSlider('Particles', 'ui-particle-count', textMode ? '2200' : '2300', 300, 4000, 100)}
+    ${textMode ? backgroundSlider('Font size', 'ui-font-size', '230', 60, 300, 10, 'px') : ''}
+    ${backgroundSlider('Turbulence', 'ui-turbulence', textMode ? '.65' : '1', 0, 2, .05)}
+    ${backgroundSlider('Pull strength', 'ui-pull-strength', textMode ? '.45' : '.55', 0, 2, .05)}
+    ${backgroundSlider('Mouse radius', 'ui-influence-radius', textMode ? '180' : '210', 60, 400, 10, 'px')}
+    ${backgroundSlider('Flow speed', 'ui-flow-speed', '.5', 0, 2, .05)}
+    ${backgroundSlider('Morph duration', 'ui-morph-duration', textMode ? '3.8' : '3.2', 1, 8, .1, 's')}
+    <div class="background-demo__actions"><button type="button" data-background-replay>↻ Replay entrance</button><span data-background-message role="status" aria-live="polite"></span></div>
+  </aside>`;
+}
+
 function renderDemoBody(tag: string, variant: string): string {
   // Every demo returns a card with the running component + sample content.
   switch (tag) {
+    case 'ui-animated-background': {
+      const textMode = variant === 'Text particle morph';
+      return `<section class="background-demo">
+        <div class="background-demo__preview${textMode ? ' background-demo__preview--text' : ''}">
+          <ui-animated-background ui-style="particle-morph" ${textMode ? 'ui-texts=\'["MOTION","DESIGN"]\'' : `ui-svg-paths='${JSON.stringify(BACKGROUND_PATHS)}'`}
+            ui-colors='${textMode ? '["#d6f5ff","#8ae6ee","#ffffff"]' : '["#ffffff","#ffe46d","#e6ad69"]'}'
+            ui-particle-count="${textMode ? '2200' : '2300'}" ui-font-size="230" ui-turbulence="${textMode ? '.65' : '1'}"
+            ui-pull-strength="${textMode ? '.45' : '.55'}" ui-flow-speed=".5" ui-influence-radius="${textMode ? '180' : '210'}"
+            ui-morph-duration="${textMode ? '3.8' : '3.2'}" ui-mouse-container=".background-demo__preview"></ui-animated-background>
+          <span class="background-demo__preview-label">${textMode ? 'TEXT MORPH' : 'SVG MORPH'}</span>
+          <span class="background-demo__preview-hint">MOVE YOUR CURSOR OVER THE PARTICLES</span>
+        </div>
+        ${backgroundControls(textMode)}
+      </section>`;
+    }
+    case 'ui-text-spotlight': {
+      if (variant === 'Archive transcript') return `<section class="text-spotlight-demo text-spotlight-demo--transcript">
+        <header class="text-spotlight-demo__transcript-heading"><div><span>THE AFTER HOURS INDEX / 002</span><h2>Conversations<br><em>left in the dark.</em></h2></div><p>A wider editorial layout gives the light more space to travel. Follow it across the transcript to uncover each line.</p></header>
+        <div class="text-spotlight-demo__stage"><div class="text-spotlight-demo__glow"></div>
+          <ui-text-spotlight aria-label="Archive transcript" style="--ui-text-spotlight-radius:175px">
+            <div class="text-spotlight-demo__transcript-rail"><span data-spotlight-badge>ARCHIVE / 017</span><span>23:48<br>RECORDING</span><span>◉</span></div>
+            <div class="text-spotlight-demo__transcript-copy"><span class="text-spotlight-demo__speaker">INTERVIEWER · THE LAST QUESTION</span><h3 data-spotlight-title>“What did you see<br>when the lights went out?”</h3><p data-spotlight-description>“At first, nothing. Then the details appeared one by one, exactly where I chose to look.”</p><button type="button" data-spotlight-action>Open full transcript ↗</button></div>
+          </ui-text-spotlight>
+          <span class="text-spotlight-demo__hint" aria-live="polite">SCAN THE TRANSCRIPT · FOLLOW THE LIGHT</span>
+        </div>
+      </section>`;
+      return `<section class="text-spotlight-demo">
+        <div class="text-spotlight-demo__intro"><span>POINTER LIGHT / 01</span><h2>Find the words<br><em>in the dark.</em></h2><p>Move across the card to reveal fragments of its text. The beam follows smoothly and fades when you leave.</p></div>
+        <div class="text-spotlight-demo__stage"><div class="text-spotlight-demo__glow"></div>
+          <ui-text-spotlight aria-label="Hidden artifact" style="--ui-text-spotlight-radius:145px">
+            <span data-spotlight-badge>OBJECT / 404</span>
+            <h3 data-spotlight-title>Hidden Artifact</h3>
+            <p data-spotlight-description>A forgotten object is concealed in darkness. Guide the beam across the card to uncover its details.</p>
+            <button type="button" data-spotlight-action>Explore artifact →</button>
+          </ui-text-spotlight>
+          <span class="text-spotlight-demo__hint" aria-live="polite">MOVE THE CURSOR · FOLLOW THE LIGHT</span>
+        </div>
+      </section>`;
+    }
     case 'ui-image-flashlight': {
       const botanical = variant === 'Botanical night';
       return `<section class="image-flashlight-demo">
@@ -1840,6 +1911,87 @@ function wireFakeCursorDemo(root: HTMLElement): void {
       if (status) status.textContent = stage.hasAttribute('ui-activate')
         ? `Published ${count} ${count === 1 ? 'time' : 'times'} by the guided cursor.`
         : `Project created ${count} ${count === 1 ? 'time' : 'times'} by you.`;
+    });
+  });
+}
+
+function wireTextSpotlightDemo(root: HTMLElement): void {
+  root.querySelectorAll<HTMLElement>('ui-text-spotlight').forEach((card) => {
+    card.querySelector<HTMLButtonElement>('.ui-text-spotlight__base [data-spotlight-action]')?.addEventListener('click', () => {
+      const hint = card.parentElement?.querySelector<HTMLElement>('.text-spotlight-demo__hint');
+      if (hint) hint.textContent = 'DISCOVERED · THE ACTION STILL WORKS';
+    });
+  });
+}
+
+function wireBackgroundDemo(root: HTMLElement): void {
+  const palettes: Record<string, string[]> = {
+    warm: ['#ffffff', '#ffe46d', '#e6ad69'],
+    ice: ['#d6f5ff', '#8ae6ee', '#ffffff'],
+    neon: ['#f5a6ff', '#8b7cff', '#74f8c4'],
+    mono: ['#ffffff'],
+  };
+  root.querySelectorAll<HTMLElement>('.background-demo').forEach((demo) => {
+    const background = demo.querySelector<UiAnimatedBackground>('ui-animated-background');
+    if (!background) return;
+    const message = demo.querySelector<HTMLElement>('[data-background-message]');
+    const report = (value: string): void => { if (message) message.textContent = value; };
+    demo.querySelectorAll<HTMLInputElement>('[data-background-attr]').forEach((input) => {
+      const attribute = input.dataset['backgroundAttr']!;
+      const output = input.parentElement?.querySelector<HTMLOutputElement>('output');
+      const update = (): void => { if (output) output.value = `${input.value}${input.dataset['unit'] || ''}`; };
+      input.addEventListener('input', () => {
+        update();
+        if (attribute !== 'ui-particle-count' && attribute !== 'ui-font-size') background.setAttribute(attribute, input.value);
+      });
+      input.addEventListener('change', () => background.setAttribute(attribute, input.value));
+    });
+    demo.querySelector<HTMLSelectElement>('[data-background-palette]')?.addEventListener('change', (event) => {
+      const palette = palettes[(event.target as HTMLSelectElement).value] ?? palettes['warm']!;
+      background.colors = palette;
+    });
+    const shapeSelect = demo.querySelector<HTMLSelectElement>('[data-background-shape]');
+    shapeSelect?.addEventListener('change', () => {
+      if (shapeSelect.value === 'custom') {
+        const editor = demo.querySelector<HTMLDetailsElement>('.background-demo__custom');
+        if (editor) editor.open = true;
+        report('Edit the SVG paths and press Apply.');
+        return;
+      }
+      const paths = shapeSelect.value === 'all' ? BACKGROUND_PATHS : [BACKGROUND_PATHS[Number(shapeSelect.value)]!];
+      background.setAttribute('ui-view-box', '0 0 100 100');
+      background.svgPaths = paths;
+      report(paths.length === 1 ? 'Showing one shape.' : 'Morphing through three shapes.');
+    });
+    demo.querySelectorAll<HTMLButtonElement>('[data-background-apply]').forEach((button) => button.addEventListener('click', () => {
+      if (button.dataset['backgroundApply'] === 'words') {
+        const words = [...demo.querySelectorAll<HTMLInputElement>('[data-background-word]')].map((input) => input.value.trim()).filter(Boolean);
+        if (!words.length) { report('Enter at least one word.'); return; }
+        background.texts = words;
+        report(`${words.length} ${words.length === 1 ? 'word' : 'words'} applied.`);
+        return;
+      }
+      const raw = demo.querySelector<HTMLTextAreaElement>('[data-background-paths]')?.value ?? '';
+      const viewBox = demo.querySelector<HTMLInputElement>('[data-background-viewbox]')?.value.trim() ?? '';
+      try {
+        const paths: unknown = JSON.parse(raw);
+        if (!Array.isArray(paths) || !paths.length || !paths.every((path) => typeof path === 'string' && /^\s*[Mm]/.test(path))) throw new Error('invalid paths');
+        const bounds = viewBox.split(/[\s,]+/).map(Number);
+        if (bounds.length !== 4 || !bounds.every(Number.isFinite) || bounds[2]! <= 0 || bounds[3]! <= 0) {
+          report('Enter a viewBox as x y width height, with positive width and height.');
+          return;
+        }
+        background.setAttribute('ui-view-box', viewBox);
+        background.svgPaths = paths;
+        if (shapeSelect) shapeSelect.value = 'custom';
+        report(background.hasShapes
+          ? `${paths.length} ${paths.length === 1 ? 'path' : 'paths'} applied.`
+          : 'No filled pixels found. Check the path and viewBox.');
+      } catch { report('Enter a JSON array of SVG path strings.'); }
+    }));
+    demo.querySelector<HTMLButtonElement>('[data-background-replay]')?.addEventListener('click', () => {
+      background.refresh();
+      report('Entrance animation restarted.');
     });
   });
 }

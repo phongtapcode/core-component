@@ -29,6 +29,8 @@ export default defineConfig({
           { text: 'Typing', link: '/components/typing' },
           { text: 'Cursor', link: '/components/cursor' },
           { text: 'Fake Cursor', link: '/components/fake-cursor' },
+          { text: 'Text Spotlight', link: '/components/text-spotlight' },
+          { text: 'Animated Background', link: '/components/animated-background' },
           { text: 'Toggle', link: '/components/toggle' },
           { text: 'Collapse', link: '/components/collapse' },
           { text: 'Tabs', link: '/components/tabs' },

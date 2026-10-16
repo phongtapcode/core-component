@@ -456,6 +456,67 @@ uiToast.push({
     ],
     a11y: 'Decorative cursor items ignore pointer events. The native cursor remains on touch devices and in disabled zones; reduced motion disables the custom effect.',
   },
+  'animated-background': {
+    slug: 'animated-background',
+    tagName: 'ui-animated-background',
+    name: 'Animated Background',
+    category: 'Motion',
+    summary: 'Particle morph background that forms SVG shapes or words and responds to the pointer.',
+    usage: `<section class="scene" style="position:relative;min-height:480px;overflow:hidden;background:#101622">
+  <ui-animated-background
+    ui-style="particle-morph"
+    ui-svg-paths='["M 50,10 L 61,40 L 95,40 L 68,60 L 79,90 L 50,70 L 21,90 L 32,60 L 5,40 L 39,40 Z","M 50,10 A 40,40 0 1,1 49.9,10 Z"]'
+    ui-colors='["#ffffff","#ffeb3b"]'
+    ui-particle-count="2000"
+    ui-morph-duration="3"
+    ui-mouse-container=".scene"></ui-animated-background>
+  <h2 style="position:relative">Your content</h2>
+</section>`,
+    attributes: [
+      { name: 'ui-style', type: 'string', default: 'particle-morph', description: 'Background style. Particle morph is the first available style.' },
+      { name: 'ui-svg-paths', type: 'JSON string[]', default: 'star, circle, heart', description: 'Filled SVG path data. Coordinates use ui-view-box.' },
+      { name: 'ui-texts', type: 'JSON string[]', default: '[]', description: 'Words to form; takes precedence over SVG paths.' },
+      { name: 'ui-colors', type: 'JSON string[]', default: '["#ffffff","#ffeb3b"]', description: 'Particle colors.' },
+      { name: 'ui-particle-count', type: 'number', default: '2000', description: 'Number of particles, clamped to 50–6000.' },
+      { name: 'ui-view-box', type: 'four numbers', default: '0 0 100 100', description: 'Coordinate system for SVG paths.' },
+      { name: 'ui-font-size', type: 'px', default: '160', description: 'Requested text size, scaled down to fit.' },
+      { name: 'ui-font-family', type: 'CSS font family', default: 'inherited', description: 'Font used to sample text.' },
+      { name: 'ui-max-width', type: 'px', default: 'host width', description: 'Maximum text width.' },
+      { name: 'ui-turbulence', type: '0–2', default: '1', description: 'Idle movement and pointer swirl.' },
+      { name: 'ui-pull-strength', type: '0–2', default: '0.5', description: 'Speed of return to the shape.' },
+      { name: 'ui-flow-speed', type: '0–3', default: '0.5', description: 'Speed of idle flow.' },
+      { name: 'ui-influence-radius', type: 'px', default: '200', description: 'Pointer influence distance.' },
+      { name: 'ui-morph-duration', type: 'seconds', default: '3', description: 'Time to change between shapes or words.' },
+      { name: 'ui-mouse-container', type: 'CSS selector', default: 'parent element', description: 'Area that tracks pointer movement.' },
+    ],
+    methods: [{ name: 'refresh()', description: 'Re-measure, sample source shapes again, and replay the entrance.' }],
+    a11y: 'The canvas is decorative and ignores pointer input. Animation pauses offscreen; changing reduced-motion preference immediately switches between animation and a static shape. Typed JS properties texts, svgPaths, and colors reflect to the JSON attributes; hasShapes reports whether sampling succeeded.',
+  },
+  'text-spotlight': {
+    slug: 'text-spotlight',
+    tagName: 'ui-text-spotlight',
+    name: 'Text Spotlight',
+    category: 'Motion',
+    summary: 'Reveal text and controls through a soft light that follows the pointer.',
+    usage: `<ui-text-spotlight style="--ui-text-spotlight-radius: 145px">
+  <span data-spotlight-badge>Object / 404</span>
+  <h2 data-spotlight-title>Hidden Artifact</h2>
+  <p data-spotlight-description>Move the pointer to discover this text.</p>
+  <button type="button" data-spotlight-action>Explore</button>
+</ui-text-spotlight>`,
+    attributes: [],
+    methods: [
+      { name: 'refresh()', description: 'Synchronize the decorative light layer after authored content changes; ordinary DOM edits synchronize automatically.' },
+    ],
+    cssVars: [
+      { name: '--ui-text-spotlight-radius', default: '140px', description: 'Radius of the soft light.' },
+      { name: '--ui-text-spotlight-width', default: '320px', description: 'Card width.' },
+      { name: '--ui-text-spotlight-padding', default: '38px 30px', description: 'Space around card content.' },
+      { name: '--ui-text-spotlight-dark-background', default: '#09090d', description: 'Base background color.' },
+      { name: '--ui-text-spotlight-lit-background', default: '#191921', description: 'Color shown inside the light.' },
+    ],
+    a11y: 'The light layer is hidden from assistive technology and cannot receive pointer or keyboard input. The original button stays interactive. Touch and reduced-motion users see the readable version.',
+  },
   'fake-cursor': {
     slug: 'fake-cursor',
     tagName: 'ui-fake-cursor',
@@ -1082,5 +1143,5 @@ uiToast.push({
 
 export function getDocForSlug(slug: string): ComponentDoc | undefined {
   const clean = slug.replace(/^ui-/, '');
-  return COMPONENT_DOCS[clean];
+  return COMPONENT_DOCS[clean === 'background' ? 'animated-background' : clean];
 }

@@ -70,6 +70,20 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     demos: ['Visual guide', 'Auto click'],
   },
   {
+    name: 'Text Spotlight',
+    tagName: 'ui-text-spotlight',
+    category: 'Motion',
+    description: 'Reveal dim text with a soft light that follows the pointer while keeping buttons interactive.',
+    demos: ['Hidden artifact', 'Archive transcript'],
+  },
+  {
+    name: 'Animated Background',
+    tagName: 'ui-animated-background',
+    category: 'Motion',
+    description: 'Animated particle backgrounds that morph between SVG shapes or words and respond to the pointer.',
+    demos: ['SVG particle morph', 'Text particle morph'],
+  },
+  {
     name: 'Toggle',
     tagName: 'ui-toggle',
     category: 'Basic UI',
