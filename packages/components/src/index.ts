@@ -33,6 +33,8 @@ import './image-flashlight.js';
 import './text-spotlight.js';
 import './tech-text.js';
 import './curved-loop.js';
+import './falling-text.js';
+import './flex-carousel.js';
 import './animated-background.js';
 import './flip-book.js';
 import './grid-hover-expand.js';
@@ -100,6 +102,8 @@ export { UiImageFlashlight, flashlightFrame, type FlashlightFrame } from './imag
 export { UiTextSpotlight } from './text-spotlight.js';
 export { UiTechText } from './tech-text.js';
 export { UiCurvedLoop, type CurvedLoopShape } from './curved-loop.js';
+export { UiFallingText } from './falling-text.js';
+export { UiFlexCarousel, UiFlexCarouselItem, type FlexCarouselPreset, type FlexCarouselFit, type FlexCarouselIntro } from './flex-carousel.js';
 export { UiAnimatedBackground, UiBackground } from './animated-background.js';
 export { UiFlipBook, UiFlipBookCover, UiFlipBookPage } from './flip-book.js';
 export { UiGridHoverExpand } from './grid-hover-expand.js';

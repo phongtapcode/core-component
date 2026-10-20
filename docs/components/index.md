@@ -204,6 +204,32 @@ All components share a predictable API — attributes are `kebab-case`, events a
 
 <div class="comp-card">
   <div class="comp-card-header">
+    <h3>Falling Text</h3>
+    <span class="comp-badge motion">Motion</span>
+  </div>
+  <p class="comp-tag">&lt;ui-falling-text&gt;</p>
+  <p class="comp-desc">Words or letters fall, collide, bounce, and respond to dragging and swiping.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/falling-text">📄 Docs</a>
+    <a class="comp-btn demo" href="/html/#/ui-falling-text" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
+    <h3>Flex Carousel</h3>
+    <span class="comp-badge media">Media</span>
+  </div>
+  <p class="comp-tag">&lt;ui-flex-carousel&gt;</p>
+  <p class="comp-desc">An infinite image row with a liquid lens, drag momentum, focus, and keyboard navigation.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/flex-carousel">📄 Docs</a>
+    <a class="comp-btn demo" href="/html/#/ui-flex-carousel" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
     <h3>Animated Background</h3>
     <span class="comp-badge motion">Motion</span>
   </div>

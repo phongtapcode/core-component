@@ -70,6 +70,20 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     demos: ['Four styles and live controls'],
   },
   {
+    name: 'Falling Text',
+    tagName: 'ui-falling-text',
+    category: 'Motion',
+    description: 'Words and letters tumble as physical bodies, collide, and respond to dragging or swiping.',
+    demos: ['Physics playground'],
+  },
+  {
+    name: 'Flex Carousel',
+    tagName: 'ui-flex-carousel',
+    category: 'Media',
+    description: 'An infinite image row with a liquid lens, drag momentum, focus and live controls.',
+    demos: ['Liquid lens playground'],
+  },
+  {
     name: 'Cursor',
     tagName: 'ui-cursor',
     category: 'Motion',

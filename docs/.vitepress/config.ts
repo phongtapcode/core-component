@@ -26,6 +26,8 @@ export default defineConfig({
         { text: 'Typing', link: '/components/typing' },
         { text: 'Tech Text', link: '/components/tech-text' },
         { text: 'Curved Loop', link: '/components/curved-loop' },
+        { text: 'Falling Text', link: '/components/falling-text' },
+        { text: 'Flex Carousel', link: '/components/flex-carousel' },
         { text: 'Cursor', link: '/components/cursor' },
         { text: 'Fake Cursor', link: '/components/fake-cursor' },
         { text: 'Text Spotlight', link: '/components/text-spotlight' },

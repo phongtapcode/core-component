@@ -405,6 +405,94 @@ uiToast.push({
     ],
     a11y: 'Live notifications use role="status" and polite announcements by default. The close button is keyboard accessible. Reduced motion removes enter and exit animation.',
   },
+  'flex-carousel': {
+    slug: 'flex-carousel', tagName: 'ui-flex-carousel', name: 'Flex Carousel', category: 'Media',
+    summary: 'An infinite image row warped by a liquid lens, with drag momentum, wheel, keyboard navigation and click focus.',
+    usage: `<ui-flex-carousel ui-preset="liquid" ui-intro="rise" aria-label="Studio work"
+  style="--ui-flex-carousel-height:520px">
+  <ui-flex-carousel-item ui-title="Iridescence" ui-subtitle="Form study">
+    <img src="/images/flex-1.jpg" alt="Iridescent chrome head sculpture">
+  </ui-flex-carousel-item>
+  <ui-flex-carousel-item ui-title="White Room">
+    <img src="/images/flex-2.jpg" alt="Person against a white backdrop">
+  </ui-flex-carousel-item>
+</ui-flex-carousel>`,
+    attributes: [
+      { name: 'ui-preset', type: 'liquid | ribbon | vortex | arch', default: 'liquid', description: 'Lens shape preset; invalid values use liquid.' },
+      { name: 'ui-intro', type: 'rise | bloom | spin | deal | none', default: 'rise', description: 'Entrance animation; invalid values use rise.' },
+      { name: 'ui-fit', type: 'natural | portrait | square | landscape', default: 'natural', description: 'Card proportions. Natural uses each image ratio.' },
+      { name: 'ui-card-height / ui-gap / ui-radius', type: 'number', default: '0.5 / 12 / 0', description: 'Card height as fraction of stage, gap and corner radius in pixels.' },
+      { name: 'ui-lens-width / ui-lens-height / ui-tilt', type: 'number', default: 'preset', description: 'Lens dimensions as stage-width fractions and rotation in degrees.' },
+      { name: 'ui-flat-width', type: 'number', default: '0.22', description: 'Undistorted center width as a fraction of the stage; clamped to 0.1–0.7. The current card always remains inside it.' },
+      { name: 'ui-bend / ui-reach / ui-roundness / ui-dispersion', type: 'number', default: 'preset', description: 'Lens distortion controls, each 0–1.' },
+      { name: 'ui-curl', type: 'twist | rise | fall', default: 'preset', description: 'Direction of horizontal motion at the lens edge.' },
+      { name: 'ui-follow-cursor / ui-autoplay', type: 'boolean', default: 'false', description: 'Move the lens with the pointer or advance automatically.' },
+      { name: 'ui-interval', type: 'number', default: '4', description: 'Seconds between autoplay advances; clamped to 1–30.' },
+      { name: 'ui-focus-on-click / ui-captions / ui-capture-wheel', type: 'true | false', default: 'true', description: 'Enable focus, captions and wheel navigation.' },
+      { name: 'ui-title / ui-subtitle (item)', type: 'string', default: 'image alt / empty', description: 'Caption text on each ui-flex-carousel-item.' },
+    ],
+    methods: [
+      { name: 'next() / previous()', description: 'Advance by one image.' },
+      { name: 'goTo(index)', description: 'Move to an image using the shortest wrapped path.' },
+      { name: 'open() / close()', description: 'Expand or close the current image.' },
+      { name: 'replay()', description: 'Restart the selected intro animation.' },
+      { name: 'refresh()', description: 'Read changed images or item captions.' },
+    ],
+    events: [
+      { name: 'ui:flex-carousel:change', detail: '{ index, item }', description: 'The centered image changed.' },
+      { name: 'ui:flex-carousel:select', detail: '{ index, item }', description: 'The current image was opened.' },
+    ],
+    cssVars: [
+      { name: '--ui-flex-carousel-height', default: '520px', description: 'Carousel height.' },
+      { name: '--ui-flex-carousel-caption-color', default: 'currentColor', description: 'Caption color.' },
+      { name: '--ui-flex-carousel-focus', default: '#a5caff', description: 'Keyboard focus outline.' },
+    ],
+    a11y: 'Focus the carousel and use Left/Right arrows, Enter or Space to expand, and Escape to close. Image alt text remains in authored items; the canvas is decorative. Reduced motion or missing WebGL2 shows a scrollable image row. The animation pauses offscreen and in hidden tabs.',
+  },
+  'falling-text': {
+    slug: 'falling-text', tagName: 'ui-falling-text', name: 'Falling Text', category: 'Motion',
+    summary: 'Words or letters become colliding rigid bodies that can be dragged, thrown, swiped, and restored.',
+    usage: `<ui-falling-text ui-trigger="click" ui-split="words" ui-order="random"
+  ui-gravity="1" ui-bounciness="0.2" ui-restore-delay="2"
+  ui-highlight-words="falls,apart"
+  style="--ui-falling-text-height:360px;--ui-falling-text-accent:#5b8cff">
+  This sentence falls apart when you touch it.
+</ui-falling-text>`,
+    attributes: [
+      { name: 'ui-text', type: 'string', default: 'element text', description: 'Text to split; changing it rebuilds the simulation.' },
+      { name: 'ui-highlight-words', type: 'comma-separated string', default: '', description: 'Prefixes that receive the accent color.' },
+      { name: 'ui-trigger', type: 'auto | hover | click | scroll', default: 'click', description: 'How the fall begins. Invalid values use click.' },
+      { name: 'ui-variant / ui-split', type: 'text | tiles / words | letters', default: 'text / words', description: 'Visual style and size of each physical piece.' },
+      { name: 'ui-order', type: 'random | sequence | center | together', default: 'random', description: 'Order in which pieces are released.' },
+      { name: 'ui-stagger', type: 'number', default: '0.03', description: 'Delay between releases, in seconds (0–0.5).' },
+      { name: 'ui-gravity', type: 'number', default: '1', description: 'Gravity strength (-2–3); negative values rise.' },
+      { name: 'ui-bounciness / ui-scatter', type: 'number', default: '0.2 / 0.5', description: 'Restitution and sideways rotation, each 0–1.' },
+      { name: 'ui-draggable / ui-drag-stiffness', type: 'boolean / number', default: 'true / 0.2', description: 'Enable pointer dragging and set its follow strength (0.05–1).' },
+      { name: 'ui-cursor-push', type: 'number', default: '0.5', description: 'Swipe impulse strength (0–2).' },
+      { name: 'ui-restore-delay', type: 'number', default: '0', description: 'Seconds after settling to restore, when the pointer is away. Zero leaves the pile in place.' },
+      { name: 'ui-wireframes', type: 'boolean', default: 'false', description: 'Outline the collision pieces for inspection.' },
+    ],
+    methods: [
+      { name: 'start()', description: 'Start the physics fall manually.' },
+      { name: 'reset()', description: 'Animate pieces back to their original positions.' },
+      { name: 'replay()', description: 'Rebuild and immediately start again.' },
+      { name: 'refresh()', description: 'Remeasure after changing the surrounding font or size.' },
+    ],
+    events: [
+      { name: 'ui:falling-text:start', detail: '{ count }', description: 'Physics begins.' },
+      { name: 'ui:falling-text:settle', description: 'All pieces settle.' },
+      { name: 'ui:falling-text:restore', description: 'The return animation begins.' },
+    ],
+    cssVars: [
+      { name: '--ui-falling-text-height', default: '360px', description: 'Height of the physics container.' },
+      { name: '--ui-falling-text-font-size', default: '2rem', description: 'Initial text size.' },
+      { name: '--ui-falling-text-weight', default: '400', description: 'Font weight of each piece.' },
+      { name: '--ui-falling-text-text-width', default: '720px', description: 'Maximum width of the initial text block.' },
+      { name: '--ui-falling-text-color', default: 'currentColor', description: 'Normal text color.' },
+      { name: '--ui-falling-text-accent', default: '#5b8cff', description: 'Highlighted text and tile color.' },
+    ],
+    a11y: 'The original sentence remains in the DOM for assistive technology; moving pieces are decorative. Focus the element and press Enter or Space to start/replay, Escape to reset. Reduced motion leaves the sentence still and readable. The simulation stops offscreen and in hidden tabs.',
+  },
   'tech-text': {
     slug: 'tech-text', tagName: 'ui-tech-text', name: 'Tech Text', category: 'Motion',
     summary: 'A canvas wordmark whose letters turn into dashed outlines under the pointer, with a selection frame and spring-back dragging.',

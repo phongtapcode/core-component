@@ -2021,3 +2021,58 @@ ui-curved-loop > .ui-curved-loop__source { display: block; padding: 1rem; font-w
 ui-curved-loop[data-ready] > .ui-curved-loop__source { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 ui-curved-loop > .ui-curved-loop__svg { display: block; width: 100%; height: 100%; overflow: hidden; user-select: none; pointer-events: none; }
 ui-curved-loop:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+
+/* Falling Text: semantic source plus transform-only Matter.js bodies. */
+ui-falling-text { display: block; position: relative; width: 100%; height: var(--ui-falling-text-height, 360px); overflow: hidden; color: var(--ui-falling-text-color, currentColor); font-size: var(--ui-falling-text-font-size, 2rem); line-height: 1.35; touch-action: pan-y; }
+ui-falling-text:not([data-state]), ui-falling-text[data-state='idle'] { cursor: pointer; }
+ui-falling-text[data-state='falling'], ui-falling-text[data-state='settled'] { cursor: grab; }
+ui-falling-text:focus-visible { outline: 2px solid var(--ui-falling-text-accent, #5b8cff); outline-offset: 3px; }
+ui-falling-text > .ui-falling-text__source { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+ui-falling-text > .ui-falling-text__stage { position: absolute; inset: 0; display: flex; flex-wrap: wrap; align-content: center; align-items: center; justify-content: center; column-gap: .22em; padding-block: 1.5rem; padding-inline: max(1.5rem, calc((100% - var(--ui-falling-text-text-width, 720px)) / 2)); box-sizing: border-box; overflow: hidden; }
+ui-falling-text > .ui-falling-text__stage .ui-falling-text__piece { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; white-space: pre; font-weight: var(--ui-falling-text-weight, 400); color: inherit; user-select: none; transform-origin: center; }
+ui-falling-text[data-state='falling'] > .ui-falling-text__stage .ui-falling-text__piece,
+ui-falling-text[data-state='restoring'] > .ui-falling-text__stage .ui-falling-text__piece { will-change: transform; }
+ui-falling-text[data-state='falling'] > .ui-falling-text__stage .ui-falling-text__piece,
+ui-falling-text[data-state='settled'] > .ui-falling-text__stage .ui-falling-text__piece { touch-action: none; }
+ui-falling-text > .ui-falling-text__stage .ui-falling-text__piece.is-highlighted { color: var(--ui-falling-text-accent, #5b8cff); }
+ui-falling-text > .ui-falling-text__stage--letters { column-gap: 0; }
+ui-falling-text > .ui-falling-text__stage--tiles .ui-falling-text__piece { padding: .12em .32em; border: 1px solid color-mix(in srgb, currentColor 25%, transparent); border-radius: .2em; background: var(--ui-falling-text-tile-background, #ffffff18); box-shadow: 0 3px 0 #0003; }
+ui-falling-text > .ui-falling-text__stage--tiles .ui-falling-text__piece.is-highlighted { background: var(--ui-falling-text-accent, #5b8cff); color: var(--ui-falling-text-tile-accent-color, #111015); }
+ui-falling-text > .ui-falling-text__stage--wireframes .ui-falling-text__piece { outline: 1px dashed var(--ui-falling-text-accent, #5b8cff); outline-offset: 1px; }
+ui-falling-text[data-state='restoring'] > .ui-falling-text__stage .ui-falling-text__piece { transition: transform .62s cubic-bezier(.2,.7,.16,1); }
+ui-falling-text[data-reduced-motion] > .ui-falling-text__stage .ui-falling-text__piece { will-change: auto; }
+@media (max-width: 600px) { ui-falling-text { font-size: min(var(--ui-falling-text-font-size, 2rem), 1.45rem); } ui-falling-text > .ui-falling-text__stage { padding: 1rem; } }
+
+/* Flex Carousel */
+ui-flex-carousel {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: var(--ui-flex-carousel-height, 520px);
+  overflow: hidden;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+  overscroll-behavior: contain;
+  outline: none;
+}
+ui-flex-carousel[data-dragging] { cursor: grabbing; }
+ui-flex-carousel[data-focused] { cursor: zoom-out; }
+ui-flex-carousel:focus-visible { outline: 2px solid var(--ui-flex-carousel-focus, #a5caff); outline-offset: -4px; }
+ui-flex-carousel > .ui-flex-carousel__canvas { position: absolute; inset: 0; display: block; pointer-events: none; }
+ui-flex-carousel > .ui-flex-carousel__caption {
+  position: absolute; left: 0; right: 0; top: calc(50% + var(--ui-flex-carousel-height, 520px) * .25 + 20px);
+  display: flex; flex-direction: column; align-items: center; gap: 3px; padding: 0 18px;
+  text-align: center; color: var(--ui-flex-carousel-caption-color, currentColor); pointer-events: none;
+}
+ui-flex-carousel > .ui-flex-carousel__caption strong { font-size: .95rem; font-weight: 600; }
+ui-flex-carousel > .ui-flex-carousel__caption span { font-size: .75rem; opacity: .7; }
+ui-flex-carousel > .ui-flex-carousel__caption small { margin-top: 4px; font-size: .7rem; font-variant-numeric: tabular-nums; opacity: .5; }
+ui-flex-carousel[data-ready] > ui-flex-carousel-item { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+ui-flex-carousel:not([data-ready]) {
+  display: flex; gap: 12px; align-items: center; overflow-x: auto; scroll-snap-type: x mandatory;
+  padding: 22px; cursor: auto; touch-action: pan-x pan-y;
+}
+ui-flex-carousel:not([data-ready]) > ui-flex-carousel-item { display: block; flex: 0 0 auto; width: min(70vw, 240px); height: 75%; scroll-snap-align: center; }
+ui-flex-carousel:not([data-ready]) > ui-flex-carousel-item img { display: block; width: 100%; height: 100%; object-fit: cover; }
+@media (prefers-reduced-motion: reduce) { ui-flex-carousel { scroll-behavior: auto; } }

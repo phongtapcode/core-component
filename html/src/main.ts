@@ -204,7 +204,7 @@ function renderCard(c: ComponentEntry): string {
 
 function thumbFor(tag: string): string {
   const symbols: Record<string, string> = {
-    'ui-animate': '✦', 'ui-parallax': '▧', 'ui-text-spotlight': '◉', 'ui-tech-text': 'Aa', 'ui-curved-loop': '⌒', 'ui-animated-background': '✳', 'ui-toggle': '◉',
+    'ui-animate': '✦', 'ui-parallax': '▧', 'ui-text-spotlight': '◉', 'ui-tech-text': 'Aa', 'ui-curved-loop': '⌒', 'ui-falling-text': '↓', 'ui-flex-carousel': '◧', 'ui-animated-background': '✳', 'ui-toggle': '◉',
     'ui-collapse': '⌄', 'ui-accordion': '☷', 'ui-tabs': '▤', 'ui-modal': '▣', 'ui-cursor': '◎', 'ui-fake-cursor': '➤',
     'ui-drawer': '◧', 'ui-popover': '▢', 'ui-tooltip': '?', 'ui-lazyload': '◐',
     'ui-image-comparison': '◒', 'ui-image-trace': '✎', 'ui-image-flashlight': '◉', 'ui-counter': '99', 'ui-dark-mode': '☼',
@@ -444,6 +444,8 @@ function renderDemo(tagName: string): void {
   wireImageFlashlightDemo(appRoot);
   wireTechTextDemo(appRoot);
   wireCurvedLoopDemo(appRoot);
+  wireFallingTextDemo(appRoot);
+  wireFlexCarouselDemo(appRoot);
 }
 
 function renderFlyingWord(word: string, firstIndex: number): string {
@@ -488,6 +490,68 @@ function backgroundControls(textMode: boolean): string {
 function renderDemoBody(tag: string, variant: string): string {
   // Every demo returns a card with the running component + sample content.
   switch (tag) {
+    case 'ui-flex-carousel': return `<section class="flex-demo">
+      <div class="flex-demo__stage">
+        <ui-flex-carousel aria-label="Studio image carousel" ui-preset="liquid" ui-intro="rise">
+          <ui-flex-carousel-item ui-title="Iridescence" ui-subtitle="Form study · 01"><img src="/images/flex-1.jpg" alt="Iridescent chrome head sculpture" /></ui-flex-carousel-item>
+          <ui-flex-carousel-item ui-title="White Room" ui-subtitle="Portrait · 02"><img src="/images/flex-2.jpg" alt="Person in dark clothes against a white backdrop" /></ui-flex-carousel-item>
+          <ui-flex-carousel-item ui-title="Liquid Metal" ui-subtitle="Object study · 03"><img src="/images/flex-3.jpg" alt="Twisted chrome form on black" /></ui-flex-carousel-item>
+          <ui-flex-carousel-item ui-title="Clay Study" ui-subtitle="Sculpture · 04"><img src="/images/flex-4.jpg" alt="Clay bust in profile" /></ui-flex-carousel-item>
+          <ui-flex-carousel-item ui-title="Low Tops" ui-subtitle="Editorial · 05"><img src="/images/flex-5.jpg" alt="Black and white low-top sneakers" /></ui-flex-carousel-item>
+          <ui-flex-carousel-item ui-title="Brim" ui-subtitle="Portrait · 06"><img src="/images/flex-6.jpg" alt="Woman in a wide black hat" /></ui-flex-carousel-item>
+        </ui-flex-carousel>
+        <span class="flex-demo__hint">Drag · Scroll · Arrow keys · Click to focus</span>
+      </div>
+      <div class="flex-demo__controls">
+        <label>Preset<select data-flex-attr="ui-preset"><option value="liquid">Liquid</option><option value="ribbon">Ribbon</option><option value="vortex">Vortex</option><option value="arch">Arch</option></select></label>
+        <label>Intro<select data-flex-attr="ui-intro"><option value="rise">Rise</option><option value="bloom">Bloom</option><option value="spin">Spin</option><option value="deal">Deal</option><option value="none">None</option></select></label>
+        <label>Image fit<select data-flex-attr="ui-fit"><option value="natural">Natural</option><option value="portrait">Portrait</option><option value="square">Square</option><option value="landscape">Landscape</option></select></label>
+        <label>Lens curl<select data-flex-attr="ui-curl"><option value="twist">Twist</option><option value="rise">Rise</option><option value="fall">Fall</option></select></label>
+        <label>Card height <output>0.50</output><input type="range" min=".25" max=".8" step=".01" value=".5" data-flex-attr="ui-card-height" /></label>
+        <label>Gap <output>12px</output><input type="range" min="0" max="50" step="1" value="12" data-flex-attr="ui-gap" data-unit="px" /></label>
+        <label>Radius <output>0px</output><input type="range" min="0" max="40" step="1" value="0" data-flex-attr="ui-radius" data-unit="px" /></label>
+        <label>Lens width <output>0.74</output><input type="range" min=".2" max="1.2" step=".01" value=".74" data-flex-attr="ui-lens-width" /></label>
+        <label>Lens height <output>1.18</output><input type="range" min=".25" max="1.8" step=".01" value="1.18" data-flex-attr="ui-lens-height" /></label>
+        <label>Straight center <output>0.22</output><input type="range" min=".1" max=".7" step=".01" value=".22" data-flex-attr="ui-flat-width" /></label>
+        <label>Tilt <output>62°</output><input type="range" min="-90" max="90" step="1" value="62" data-flex-attr="ui-tilt" data-unit="°" /></label>
+        <label>Bend <output>0.34</output><input type="range" min="0" max="1" step=".01" value=".34" data-flex-attr="ui-bend" /></label>
+        <label>Reach <output>0.38</output><input type="range" min=".05" max="1" step=".01" value=".38" data-flex-attr="ui-reach" /></label>
+        <label>Roundness <output>1.00</output><input type="range" min="0" max="1" step=".01" value="1" data-flex-attr="ui-roundness" /></label>
+        <label>Dispersion <output>0.45</output><input type="range" min="0" max="1" step=".01" value=".45" data-flex-attr="ui-dispersion" /></label>
+        <label class="flex-demo__check"><input type="checkbox" data-flex-flag="ui-follow-cursor" /> Follow cursor</label>
+        <label class="flex-demo__check"><input type="checkbox" data-flex-flag="ui-autoplay" /> Autoplay</label>
+        <label class="flex-demo__check"><input type="checkbox" data-flex-flag="ui-captions" checked /> Captions</label>
+        <label class="flex-demo__check"><input type="checkbox" data-flex-flag="ui-focus-on-click" checked /> Click to focus</label>
+        <div class="flex-demo__actions"><button type="button" data-flex-action="previous" aria-label="Previous image">← Previous</button><button type="button" data-flex-action="next" aria-label="Next image">Next →</button><button type="button" data-flex-action="replay">↻ Replay intro</button><span role="status" aria-live="polite" data-flex-status>1 / 6</span></div>
+      </div>
+    </section>`;
+    case 'ui-falling-text': return `<section class="falling-text-demo">
+      <div class="falling-text-demo__stage">
+        <ui-falling-text ui-highlight-words="falls,apart" ui-restore-delay="2" style="--ui-falling-text-accent:#5b8cff;--ui-falling-text-font-size:2rem">Some sentences are built to last. This one falls apart on contact.</ui-falling-text>
+        <span class="falling-text-demo__hint">Click or press Enter to drop · then drag, throw, or swipe</span>
+      </div>
+      <div class="falling-text-demo__controls">
+        <label class="falling-text-demo__wide">Text<input type="text" maxlength="180" value="Some sentences are built to last. This one falls apart on contact." data-falling-attr="ui-text" /></label>
+        <label class="falling-text-demo__wide">Highlight words (comma separated)<input type="text" maxlength="80" value="falls,apart" data-falling-attr="ui-highlight-words" /></label>
+        <label>Preset<select data-falling-preset><option value="classic">Classic</option><option value="tiles">Tiles</option><option value="letters">Letters</option><option value="reverse">Reverse gravity</option></select></label>
+        <label>Trigger<select data-falling-attr="ui-trigger"><option value="click">Click</option><option value="hover">Hover</option><option value="auto">Auto</option><option value="scroll">Scroll</option></select></label>
+        <label>Variant<select data-falling-attr="ui-variant"><option value="text">Text</option><option value="tiles">Tiles</option></select></label>
+        <label>Split<select data-falling-attr="ui-split"><option value="words">Words</option><option value="letters">Letters</option></select></label>
+        <label>Order<select data-falling-attr="ui-order"><option value="random">Random</option><option value="sequence">Sequence</option><option value="center">Center</option><option value="together">Together</option></select></label>
+        <label>Accent<input type="color" value="#5b8cff" data-falling-color /></label>
+        <label>Font size <output>2rem</output><input type="range" min="1" max="3.5" step="0.1" value="2" data-falling-size /></label>
+        <label>Gravity <output>1</output><input type="range" min="-2" max="3" step="0.1" value="1" data-falling-attr="ui-gravity" /></label>
+        <label>Bounciness <output>0.2</output><input type="range" min="0" max="1" step="0.05" value="0.2" data-falling-attr="ui-bounciness" /></label>
+        <label>Scatter <output>0.5</output><input type="range" min="0" max="1" step="0.05" value="0.5" data-falling-attr="ui-scatter" /></label>
+        <label>Stagger <output>0.03s</output><input type="range" min="0" max="0.2" step="0.01" value="0.03" data-falling-attr="ui-stagger" data-unit="s" /></label>
+        <label>Cursor push <output>0.5</output><input type="range" min="0" max="2" step="0.1" value="0.5" data-falling-attr="ui-cursor-push" /></label>
+        <label>Drag stiffness <output>0.2</output><input type="range" min="0.05" max="1" step="0.05" value="0.2" data-falling-attr="ui-drag-stiffness" /></label>
+        <label>Restore delay <output>2s</output><input type="range" min="0" max="10" step="0.5" value="2" data-falling-attr="ui-restore-delay" data-unit="s" /></label>
+        <label class="falling-text-demo__toggle"><input type="checkbox" data-falling-flag="ui-draggable" checked /> Draggable</label>
+        <label class="falling-text-demo__toggle"><input type="checkbox" data-falling-flag="ui-wireframes" /> Wireframes</label>
+        <div class="falling-text-demo__actions"><button type="button" data-falling-replay>↻ Replay</button><button type="button" data-falling-reset>Reset</button><span role="status" aria-live="polite" data-falling-status>Ready</span></div>
+      </div>
+    </section>`;
     case 'ui-curved-loop': return `<section class="curved-loop-demo">
       <div class="curved-loop-demo__presets" role="group" aria-label="Curved Loop styles">
         <button type="button" class="is-active" data-curved-preset="arc">Arc</button>
@@ -2024,6 +2088,96 @@ function wireTechTextDemo(root: HTMLElement): void {
       });
     });
     demo.querySelector<HTMLButtonElement>('[data-tech-text-replay]')?.addEventListener('click', () => text.replay());
+  });
+}
+
+function wireFlexCarouselDemo(root: HTMLElement): void {
+  const demo = root.querySelector<HTMLElement>('.flex-demo');
+  const carousel = demo?.querySelector('ui-flex-carousel') as HTMLElement & { next(): void; previous(): void; replay(): void; index: number; length: number } | null;
+  if (!demo || !carousel) return;
+  demo.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[data-flex-attr]').forEach(control => {
+    control.addEventListener(control instanceof HTMLInputElement ? 'input' : 'change', () => {
+      const attr = control.dataset['flexAttr']; if (!attr) return;
+      carousel.setAttribute(attr, control.value);
+      if (attr === 'ui-preset') {
+        const presets: Record<string, Record<string, string>> = {
+          liquid: { 'ui-lens-width': '.74', 'ui-lens-height': '1.18', 'ui-tilt': '62', 'ui-bend': '.34', 'ui-reach': '.38', 'ui-roundness': '1', 'ui-dispersion': '.45', 'ui-curl': 'twist' },
+          ribbon: { 'ui-lens-width': '.86', 'ui-lens-height': '.68', 'ui-tilt': '0', 'ui-bend': '.56', 'ui-reach': '.28', 'ui-roundness': '.45', 'ui-dispersion': '.16', 'ui-curl': 'rise' },
+          vortex: { 'ui-lens-width': '.54', 'ui-lens-height': '.85', 'ui-tilt': '42', 'ui-bend': '.68', 'ui-reach': '.55', 'ui-roundness': '.8', 'ui-dispersion': '.7', 'ui-curl': 'twist' },
+          arch: { 'ui-lens-width': '.66', 'ui-lens-height': '1.2', 'ui-tilt': '90', 'ui-bend': '.48', 'ui-reach': '.32', 'ui-roundness': '.2', 'ui-dispersion': '.1', 'ui-curl': 'fall' },
+        };
+        Object.entries(presets[control.value] ?? {}).forEach(([key, value]) => {
+          carousel.removeAttribute(key);
+          const field = demo.querySelector<HTMLInputElement | HTMLSelectElement>(`[data-flex-attr="${key}"]`);
+          if (field) { field.value = value; const label = field.parentElement?.querySelector('output'); if (label) label.textContent = value + (field.dataset['unit'] ?? ''); }
+        });
+      }
+      const output = control.parentElement?.querySelector('output');
+      if (output) output.textContent = control.value + (control.dataset['unit'] ?? '');
+    });
+  });
+  demo.querySelectorAll<HTMLInputElement>('[data-flex-flag]').forEach(control => control.addEventListener('change', () => {
+    const attr = control.dataset['flexFlag']; if (!attr) return;
+    if (attr === 'ui-captions' || attr === 'ui-focus-on-click') carousel.setAttribute(attr, String(control.checked));
+    else carousel.toggleAttribute(attr, control.checked);
+  }));
+  demo.querySelectorAll<HTMLButtonElement>('[data-flex-action]').forEach(button => button.addEventListener('click', () => {
+    const action = button.dataset['flexAction'];
+    if (action === 'next') carousel.next(); else if (action === 'previous') carousel.previous(); else carousel.replay();
+  }));
+  const status = demo.querySelector<HTMLElement>('[data-flex-status]');
+  carousel.addEventListener('ui:flex-carousel:change', () => { if (status) status.textContent = `${carousel.index + 1} / ${carousel.length}`; });
+}
+
+function wireFallingTextDemo(root: HTMLElement): void {
+  root.querySelectorAll<HTMLElement>('.falling-text-demo').forEach((demo) => {
+    const text = demo.querySelector('ui-falling-text') as HTMLElement & { replay(): void; reset(): void; refresh(): void } | null;
+    if (!text) return;
+    const status = demo.querySelector<HTMLElement>('[data-falling-status]');
+    const updateOutput = (control: HTMLInputElement | HTMLSelectElement) => {
+      const output = control.parentElement?.querySelector('output');
+      if (output) output.textContent = `${control.value}${control.dataset['unit'] ?? ''}`;
+    };
+    demo.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[data-falling-attr]').forEach((control) => {
+      control.addEventListener('input', () => {
+        text.setAttribute(control.dataset['fallingAttr']!, control.value);
+        updateOutput(control);
+        if (status) status.textContent = 'Updated';
+      });
+    });
+    demo.querySelectorAll<HTMLInputElement>('[data-falling-flag]').forEach((control) => {
+      control.addEventListener('change', () => text.setAttribute(control.dataset['fallingFlag']!, String(control.checked)));
+    });
+    demo.querySelector<HTMLInputElement>('[data-falling-color]')?.addEventListener('input', (event) => {
+      text.style.setProperty('--ui-falling-text-accent', (event.currentTarget as HTMLInputElement).value);
+    });
+    demo.querySelector<HTMLInputElement>('[data-falling-size]')?.addEventListener('input', (event) => {
+      const control = event.currentTarget as HTMLInputElement;
+      text.style.setProperty('--ui-falling-text-font-size', `${control.value}rem`);
+      updateOutput(control);
+      text.refresh();
+    });
+    const presets: Record<string, Record<string, string>> = {
+      classic: { 'ui-variant': 'text', 'ui-split': 'words', 'ui-order': 'random', 'ui-gravity': '1', 'ui-bounciness': '.2', 'ui-scatter': '.5' },
+      tiles: { 'ui-variant': 'tiles', 'ui-split': 'words', 'ui-order': 'sequence', 'ui-gravity': '1.4', 'ui-bounciness': '.35', 'ui-scatter': '.2' },
+      letters: { 'ui-variant': 'text', 'ui-split': 'letters', 'ui-order': 'center', 'ui-gravity': '1', 'ui-bounciness': '.6', 'ui-scatter': '.8' },
+      reverse: { 'ui-variant': 'text', 'ui-split': 'words', 'ui-order': 'together', 'ui-gravity': '-1', 'ui-bounciness': '.3', 'ui-scatter': '.7' },
+    };
+    demo.querySelector<HTMLSelectElement>('[data-falling-preset]')?.addEventListener('change', (event) => {
+      const preset = presets[(event.currentTarget as HTMLSelectElement).value];
+      if (!preset) return;
+      Object.entries(preset).forEach(([name, value]) => text.setAttribute(name, value));
+      demo.querySelectorAll<HTMLInputElement | HTMLSelectElement>('[data-falling-attr]').forEach((control) => {
+        const value = preset[control.dataset['fallingAttr']!];
+        if (value !== undefined) { control.value = value; updateOutput(control); }
+      });
+      text.replay();
+    });
+    demo.querySelector<HTMLButtonElement>('[data-falling-replay]')?.addEventListener('click', () => text.replay());
+    demo.querySelector<HTMLButtonElement>('[data-falling-reset]')?.addEventListener('click', () => text.reset());
+    text.addEventListener('ui:falling-text:start', () => { if (status) status.textContent = 'Falling'; });
+    text.addEventListener('ui:falling-text:settle', () => { if (status) status.textContent = 'Settled'; });
+    text.addEventListener('ui:falling-text:restore', () => { if (status) status.textContent = 'Restoring'; });
   });
 }
 
