@@ -12,7 +12,8 @@
     "@ui/components": "workspace:*",
     "@ui/core": "workspace:*",
     "@ui/motion": "workspace:*",
-    "@ui/tokens": "workspace:*"
+    "@ui/tokens": "workspace:*",
+    "shiki": "1.29.2"
   },
   "devDependencies": {
     "typescript": "5.6.3",

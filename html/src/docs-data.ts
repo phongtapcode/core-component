@@ -293,7 +293,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
   },
   'orbit-gallery': {
     slug: 'orbit-gallery', tagName: 'ui-orbit-gallery', name: 'Orbit Gallery', category: 'Advanced',
-    summary: 'Arrange image cards on a rotating 3D ring. Card count and positions update automatically when cards change.',
+    summary: 'Arrange image cards on a rotating 3D ring. Drag or swipe to spin it with momentum; card positions update automatically.',
     usage: `<ui-orbit-gallery ui-duration="24000" aria-label="Photo gallery">
   <ui-orbit-gallery-track>
     <ui-orbit-gallery-item><img src="coast.jpg" alt="Coast" /></ui-orbit-gallery-item>
@@ -312,7 +312,7 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
       { name: '--ui-orbit-tilt', default: '-12deg', description: 'Angle of the ring.' },
       { name: '--ui-orbit-height', default: '560px', description: 'Height of the gallery viewport.' },
     ],
-    a11y: 'Give each image useful alt text and the gallery an accessible label. Animation pauses on hover or focus and stops when reduced motion is enabled.',
+    a11y: 'Give each image useful alt text and the gallery an accessible label. Drag with a mouse or swipe horizontally on touch; Arrow Left and Arrow Right rotate the focused gallery. Vertical touch scrolling remains available. Autoplay continues on hover and pauses during dragging or keyboard focus; reduced motion disables autoplay and release momentum.',
   },
   'expandable-grid': {
     slug: 'expandable-grid', tagName: 'ui-expandable-grid', name: 'Expandable Grid', category: 'Advanced',
@@ -855,12 +855,14 @@ uiToast.push({
     methods: [
       { name: 'next()', description: 'Advance to the next slide.' },
       { name: 'prev()', description: 'Go back to the previous slide.' },
-      { name: 'goto(index: number)', description: 'Jump directly to the specified zero-based slide index.' },
+      { name: 'goTo(index: number)', description: 'Jump directly to the specified zero-based slide index.' },
+      { name: 'play() / pause()', description: 'Resume or pause autoplay.' },
+      { name: 'refresh()', description: 'Recalculate slides and responsive layout after content changes.' },
     ],
     events: [
-      { name: 'ui-carousel:change', detail: '{ index: number }', description: 'Dispatched when active slide changes.' },
+      { name: 'ui-carousel:change', detail: '{ activeIndex, previousIndex, page, previousPage, direction, index }', description: 'Dispatched when active slide changes.' },
     ],
-    a11y: 'Full keyboard navigation with Left and Right arrow keys, WAI-ARIA tab/slide semantics, prefers-reduced-motion support.',
+    a11y: 'Arrow keys navigate the carousel. External trigger buttons work with click, tap, Enter, and Space; trigger="hover" also switches on mouse or pen hover. The active trigger button receives aria-current. Reduced motion suppresses autoplay.',
   },
 
   modal: {
@@ -1225,19 +1227,21 @@ uiToast.push({
 
   'image-flashlight': {
     slug: 'image-flashlight', tagName: 'ui-image-flashlight', name: 'Image Flashlight', category: 'Media',
-    summary: 'A dim grayscale photo is briefly explored by a soft circular spotlight before the light expands to reveal the entire original image.',
+    summary: 'A dim grayscale photo is revealed by an automatic spotlight or a pointer-following beam that expands when clicked.',
     usage: `<ui-image-flashlight ui-duration="6000" ui-radius="0.26" ui-loop>
   <img src="photo.jpg" alt="A meaningful description" />
 </ui-image-flashlight>`,
     attributes: [
       { name: 'ui-duration', type: 'number (ms)', default: '6000', description: 'Total time for the spotlight and full reveal, clamped to 800–15000 ms.' },
       { name: 'ui-radius', type: 'number', default: '0.26', description: 'Spotlight radius as a fraction of the shorter image side, clamped to 0.1–0.55.' },
+      { name: 'ui-hover', type: 'boolean', default: 'false', description: 'Follow the pointer instead of playing the automatic scan. Explicit false and 0 disable it.' },
+      { name: 'ui-hover-inertia', type: 'number', default: '0.55', description: 'Spring lag in hover mode, clamped to 0–1. Zero follows the pointer immediately.' },
       { name: 'ui-loop', type: 'boolean', default: 'false', description: 'Replay after the full image has remained visible for a short pause.' },
       { name: 'ui-loop-delay', type: 'number (ms)', default: '1800', description: 'Pause after the full reveal before ui-loop runs again, clamped to 0–10000 ms.' },
       { name: 'ui-start-target', type: 'CSS selector', default: 'nearest section', description: 'Ancestor that must be fully visible before the effect starts. For a section taller than the viewport, the effect starts when its bottom enters view.' },
     ],
     methods: [
-      { name: 'replay()', description: 'Darken the photo and play the spotlight sequence again.' },
+      { name: 'replay()', description: 'Restart the automatic scan or reset the hover spotlight.' },
       { name: 'refresh()', description: 'Re-read the child image after changing its src.' },
     ],
     events: [
@@ -1247,7 +1251,7 @@ uiToast.push({
     cssVars: [
       { name: '--ui-image-flashlight-darkness', default: '.24', description: 'Brightness of the dim grayscale image before the final reveal.' },
     ],
-    a11y: 'The authored image retains its alt text. The temporary color layer is hidden from assistive technology. Reduced motion shows the original image immediately.',
+    a11y: 'The authored image retains its alt text. The temporary color layer is hidden from assistive technology. Keyboard focus shows the full image in hover mode. Reduced motion shows the original image immediately in either mode.',
   },
 
   counter: {

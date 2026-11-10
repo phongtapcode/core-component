@@ -7,6 +7,7 @@ import { EFFECTS } from '@ui/motion';
 import './styles.css';
 import { COMPONENTS, type ComponentEntry } from './components.js';
 import { getDocForSlug } from './docs-data.js';
+import { renderCarouselExample, wireCarouselExamples } from './carousel-showcase.js';
 
 const appRoot = document.getElementById('app')!;
 const storedTheme = localStorage.getItem('ui-theme');
@@ -14,6 +15,7 @@ document.documentElement.dataset['theme'] = storedTheme === 'light' ? 'light' : 
 
 const CATEGORIES = ['Motion', 'Basic UI', 'Media', 'Utility', 'Advanced'] as const;
 let workspaceController: AbortController | null = null;
+let sidebarScrollTop = 0;
 
 function renderWorkspace(content: string, activeTag = ''): string {
   const groups = CATEGORIES.map((category) => {
@@ -42,6 +44,23 @@ function wireWorkspace(): void {
   const { signal } = workspaceController;
   const menu = appRoot.querySelector<HTMLButtonElement>('.workspace-menu');
   const sidebar = appRoot.querySelector<HTMLElement>('.workspace-sidebar');
+  const sidebarList = sidebar?.querySelector<HTMLElement>('.workspace-sidebar-list');
+  if (sidebarList) {
+    sidebarList.scrollTop = sidebarScrollTop;
+    const active = sidebarList.querySelector<HTMLElement>('.workspace-nav-item.is-active');
+    if (active) {
+      const listBounds = sidebarList.getBoundingClientRect();
+      const activeBounds = active.getBoundingClientRect();
+      const inset = 12;
+      if (activeBounds.top < listBounds.top + inset) {
+        sidebarList.scrollTop -= listBounds.top + inset - activeBounds.top;
+      } else if (activeBounds.bottom > listBounds.bottom - inset) {
+        sidebarList.scrollTop += activeBounds.bottom - listBounds.bottom + inset;
+      }
+      sidebarScrollTop = sidebarList.scrollTop;
+    }
+    sidebarList.addEventListener('scroll', () => { sidebarScrollTop = sidebarList.scrollTop; }, { passive: true, signal });
+  }
   const mobile = matchMedia('(max-width: 850px)');
   const syncSidebar = (): void => {
     if (!sidebar) return;
@@ -404,7 +423,7 @@ function renderDemo(tagName: string): void {
   }
   const slug = entry.tagName.replace(/^ui-/, '');
   appRoot.innerHTML = renderWorkspace(`
-    <main class="container demo-page">
+    <main class="container demo-page${entry.tagName === 'ui-carousel' ? ' demo-page--carousel' : ''}">
       <div class="page-nav-bar">
         <a class="back" href="#/">Components</a><span class="page-crumb-separator">›</span><span>${entry.category}</span><span class="page-crumb-separator">›</span><span>${entry.name}</span>
         <div class="page-switcher-tabs">
@@ -417,9 +436,10 @@ function renderDemo(tagName: string): void {
         <h1>${entry.name}</h1>
         <p>${entry.description}</p>
       </header>
-      ${entry.demos.map((d) => `
-        <section class="demo-block">
-          <header><h3>${d}</h3></header>
+      ${entry.tagName === 'ui-carousel' ? `<nav class="carousel-lab__jump" aria-label="Carousel examples">${entry.demos.map((d, index) => `<button type="button" data-carousel-jump="carousel-example-${index + 1}">${d}</button>`).join('')}</nav>` : ''}
+      ${entry.demos.map((d, index) => `
+        <section class="demo-block"${entry.tagName === 'ui-carousel' ? ` id="carousel-example-${index + 1}"` : ''}>
+          <header>${entry.tagName === 'ui-carousel' ? `<span class="carousel-lab__index" aria-hidden="true">${String(index + 1).padStart(2, '0')}</span>` : ''}<h3>${d}</h3></header>
           ${renderDemoBody(entry.tagName, d)}
         </section>
       `).join('')}
@@ -446,6 +466,7 @@ function renderDemo(tagName: string): void {
   wireCurvedLoopDemo(appRoot);
   wireFallingTextDemo(appRoot);
   wireFlexCarouselDemo(appRoot);
+  if (entry.tagName === 'ui-carousel') wireCarouselExamples(appRoot);
 }
 
 function renderFlyingWord(word: string, firstIndex: number): string {
@@ -659,14 +680,14 @@ function renderDemoBody(tag: string, variant: string): string {
     case 'ui-image-flashlight': {
       const botanical = variant === 'Botanical night';
       return `<section class="image-flashlight-demo">
-        <div class="image-flashlight-demo__intro"><span>LIGHT STUDY / 0${botanical ? '2' : '1'}</span><h2>From shadow<br>to <em>light.</em></h2><p>A moving beam reveals the real photo for a moment, then opens wide until every detail is visible.</p></div>
+        <div class="image-flashlight-demo__intro"><span>LIGHT STUDY / 0${botanical ? '2' : '1'}</span><h2>From shadow<br>to <em>light.</em></h2><p>${botanical ? 'Move across the photo to guide the beam. Click to flood the image with light, then watch it return to your pointer.' : 'A moving beam reveals the real photo for a moment, then opens wide until every detail is visible.'}</p></div>
         <div class="image-flashlight-demo__frame">
-          <ui-image-flashlight ui-duration="7200" ui-radius="${botanical ? '.22' : '.27'}" ui-loop style="--ui-image-flashlight-darkness:${botanical ? '.25' : '.21'}">
+          <ui-image-flashlight ui-duration="7200" ui-radius="${botanical ? '.22' : '.27'}" ui-hover-inertia="0.55" ui-loop ${botanical ? 'ui-hover' : ''} style="--ui-image-flashlight-darkness:${botanical ? '.25' : '.21'}">
             <img src="/images/${botanical ? 'botanical' : 'coast'}.jpg" width="1672" height="941" alt="${botanical ? 'Botanical leaves' : 'Coastal landscape'}" />
           </ui-image-flashlight>
           <span class="image-flashlight-demo__caption">${botanical ? 'NIGHT GARDEN' : 'COASTAL DAWN'}</span>
         </div>
-        <div class="image-flashlight-demo__footer"><span data-flashlight-status>LIGHT SCAN ACTIVE</span><div class="image-flashlight-demo__actions"><label>↑ Try your image<input type="file" accept="image/*" data-flashlight-upload /></label><button type="button" data-flashlight-replay>↻ Shine again</button></div></div>
+        <div class="image-flashlight-demo__footer"><span data-flashlight-status>${botanical ? 'MOVE POINTER TO REVEAL' : 'LIGHT SCAN ACTIVE'}</span><div class="image-flashlight-demo__actions"><label><input type="checkbox" data-flashlight-hover ${botanical ? 'checked' : ''} />Follow pointer</label><label class="image-flashlight-demo__inertia">Inertia <input type="range" min="0" max="1" step="0.05" value="0.55" data-flashlight-inertia ${botanical ? '' : 'disabled'} /><output data-flashlight-inertia-value>55%</output></label><label>↑ Try your image<input type="file" accept="image/*" data-flashlight-upload /></label><button type="button" data-flashlight-replay>↻ Shine again</button></div></div>
       </section>`;
     }
     case 'ui-image-trace': {
@@ -1426,33 +1447,7 @@ function renderDemoBody(tag: string, variant: string): string {
         </div>
       `;
     case 'ui-carousel': {
-      const withThumbnails = variant === 'With thumbnails';
-      const photos = [
-        { image: 'coast', title: 'Where the sea slows time', category: 'COASTAL JOURNAL', number: '01', position: 'center 52%' },
-        { image: 'architecture', title: 'The beauty of quiet lines', category: 'SPACES & FORM', number: '02', position: 'center 48%' },
-        { image: 'botanical', title: 'A little closer to nature', category: 'BOTANICAL STUDY', number: '03', position: 'center 55%' },
-        { image: 'coast', title: 'The light beyond the shore', category: 'OPEN HORIZONS', number: '04', position: '78% center' },
-        { image: 'architecture', title: 'A different point of view', category: 'ARCHITECTURAL NOTES', number: '05', position: '24% center' },
-        { image: 'botanical', title: 'The shapes of growing things', category: 'NATURAL FORMS', number: '06', position: '72% center' },
-      ];
-      const slides = photos.map((photo) =>
-        `<ui-carousel-slide><article class="carousel-photo"><img src="/images/${photo.image}.jpg" alt="${photo.title}" draggable="false" style="object-position:${photo.position}"><div class="carousel-photo__content"><span>${photo.category} / ${photo.number}</span><h3>${photo.title}</h3><p>Explore the collection →</p></div></article></ui-carousel-slide>`,
-      ).join('');
-      const thumbnails = photos.map((photo) =>
-        `<ui-carousel-slide><div class="carousel-photo-thumb"><img src="/images/${photo.image}.jpg" alt="" draggable="false" style="object-position:${photo.position}"><span>${photo.number} · ${photo.category}</span></div></ui-carousel-slide>`,
-      ).join('');
-      return `<section class="carousel-showcase">
-        <div class="carousel-showcase__heading"><div><span class="eyebrow">VISUAL STORIES / ${withThumbnails ? 'THUMBNAILS' : 'EDITORIAL'}</span><h2>Moments worth <em>exploring.</em></h2></div><p>Swipe the images or use the controls to move through the collection.</p></div>
-        <ui-carousel class="gallery-carousel" ui-per-view="1" ui-gap="0" ui-speed="550" aria-label="Visual stories gallery">
-          <ui-carousel-inner>
-            <ui-carousel-list>${slides}</ui-carousel-list>
-            <ui-carousel-prev><button type="button" aria-label="Previous photo">←</button></ui-carousel-prev>
-            <ui-carousel-pagination></ui-carousel-pagination>
-            <ui-carousel-next><button type="button" aria-label="Next photo">→</button></ui-carousel-next>
-          </ui-carousel-inner>
-          ${withThumbnails ? `<ui-carousel-thumbnail ui-per-view="3" class="gallery-thumbnail"><ui-carousel-inner><ui-carousel-list>${thumbnails}</ui-carousel-list></ui-carousel-inner></ui-carousel-thumbnail>` : ''}
-        </ui-carousel>
-      </section>`;
+      return renderCarouselExample(variant);
     }
     case 'ui-grid-hover-expand': {
       const compact = variant === 'Compact cards';
@@ -1533,13 +1528,13 @@ function renderDemoBody(tag: string, variant: string): string {
         { image: 'coast', name: 'Last light', position: '60% center' },
       ];
       return `<section class="orbit-demo">
-        <div class="orbit-demo__heading"><span class="eyebrow">A study in motion / 001</span><h2>Places in <em>orbit.</em></h2><p>Ten moments, one continuous journey. Hover over the gallery to pause and take a closer look.</p></div>
+        <div class="orbit-demo__heading"><span class="eyebrow">A study in motion / 001</span><h2>Places in <em>orbit.</em></h2><p>Ten moments, one continuous journey. Drag or swipe to spin the gallery; the images keep gliding before the automatic orbit takes over.</p></div>
         <ui-orbit-gallery ui-duration="${reverse ? 30000 : 24000}"${reverse ? ' ui-direction="reverse"' : ''} aria-label="Rotating photo gallery">
           <ui-orbit-gallery-track>
             ${photos.map((photo, index) => `<ui-orbit-gallery-item><img src="/images/${photo.image}.jpg" alt="${photo.name}" style="object-position:${photo.position}" /><span class="orbit-demo__caption"><small>${String(index + 1).padStart(2, '0')} / 10</small><strong>${photo.name}</strong></span></ui-orbit-gallery-item>`).join('')}
           </ui-orbit-gallery-track>
         </ui-orbit-gallery>
-        <div class="orbit-demo__footer"><span>✦ Curated perspectives</span><span>Hover to pause · ${reverse ? 'Reverse' : 'Forward'} rotation</span></div>
+        <div class="orbit-demo__footer"><span>✦ Curated perspectives</span><span>Drag or swipe to spin · ${reverse ? 'Reverse' : 'Forward'} rotation</span></div>
       </section>`;
     }
     case 'ui-dot-morph': {
@@ -2268,10 +2263,27 @@ function wireImageFlashlightDemo(root: HTMLElement): void {
   root.querySelectorAll<HTMLElement>('.image-flashlight-demo').forEach((demo) => {
     const flashlight = demo.querySelector('ui-image-flashlight') as HTMLElement & { replay(): void; refresh(): void } | null;
     const status = demo.querySelector<HTMLElement>('[data-flashlight-status]');
+    const hoverToggle = demo.querySelector<HTMLInputElement>('[data-flashlight-hover]');
+    const inertiaInput = demo.querySelector<HTMLInputElement>('[data-flashlight-inertia]');
     if (!flashlight) return;
     flashlight.addEventListener('ui-image-flashlight:start', () => { if (status) status.textContent = 'LIGHT SCAN ACTIVE'; });
     flashlight.addEventListener('ui-image-flashlight:complete', () => { if (status) status.textContent = 'FULLY ILLUMINATED'; });
-    demo.querySelector<HTMLButtonElement>('[data-flashlight-replay]')?.addEventListener('click', () => flashlight.replay());
+    flashlight.addEventListener('pointerenter', () => { if (status && hoverToggle?.checked) status.textContent = 'FOLLOWING POINTER'; });
+    flashlight.addEventListener('pointerleave', () => { if (status && hoverToggle?.checked) status.textContent = 'MOVE POINTER TO REVEAL'; });
+    hoverToggle?.addEventListener('change', () => {
+      flashlight.toggleAttribute('ui-hover', hoverToggle.checked);
+      if (inertiaInput) inertiaInput.disabled = !hoverToggle.checked;
+      if (status) status.textContent = hoverToggle.checked ? 'MOVE POINTER TO REVEAL' : 'LIGHT SCAN ACTIVE';
+    });
+    inertiaInput?.addEventListener('input', () => {
+      flashlight.setAttribute('ui-hover-inertia', inertiaInput.value);
+      const value = demo.querySelector<HTMLOutputElement>('[data-flashlight-inertia-value]');
+      if (value) value.textContent = `${Math.round(Number(inertiaInput.value) * 100)}%`;
+    });
+    demo.querySelector<HTMLButtonElement>('[data-flashlight-replay]')?.addEventListener('click', () => {
+      flashlight.replay();
+      if (status && hoverToggle?.checked) status.textContent = 'MOVE POINTER TO REVEAL';
+    });
     demo.querySelector<HTMLInputElement>('[data-flashlight-upload]')?.addEventListener('change', (event) => {
       const input = event.currentTarget as HTMLInputElement;
       const file = input.files?.[0];

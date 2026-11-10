@@ -270,7 +270,7 @@ export class UiCarousel extends BaseElement implements CarouselInstance {
     this.#updateResponsiveConfig();
     this.activeIndex = Math.min(this.activeIndex, Math.max(0, this.#slides.length - this.effectivePerView));
     this.#selectedIndex = this.activeIndex;
-    this.#render();
+    this.#render(undefined, true);
 
     this.#initAutoplay();
     this.#initDrag();
@@ -406,7 +406,12 @@ export class UiCarousel extends BaseElement implements CarouselInstance {
   goTo(targetIndex: number): void {
     const maxIndex = Math.max(0, this.#slides.length - this.effectivePerView);
     const clamped = Math.max(0, Math.min(maxIndex, Math.round(targetIndex)));
-    const dir = clamped > this.activeIndex ? 'next' : clamped < this.activeIndex ? 'prev' : 'none';
+    // At the loop boundary, the adjacent clone is closer than the real slide.
+    // This also covers pagination, external triggers and active-index updates.
+    const wrapsForward = this.#cloneCount > 0 && this.activeIndex === maxIndex && clamped === 0;
+    const wrapsBackward = this.#cloneCount > 0 && this.activeIndex === 0 && clamped === maxIndex;
+    const dir = wrapsForward ? 'next' : wrapsBackward ? 'prev'
+      : clamped > this.activeIndex ? 'next' : clamped < this.activeIndex ? 'prev' : 'none';
     this.#navigate(clamped, dir);
   }
 
@@ -550,6 +555,7 @@ export class UiCarousel extends BaseElement implements CarouselInstance {
         if (!(el instanceof HTMLElement)) return false;
         if (el === viewport) return false;
         const tag = el.tagName.toLowerCase();
+        if (authoredViewport) return /^(ui|core)-carousel-slide$/.test(tag);
         return (
           !tag.startsWith('core-carousel-') &&
           !tag.startsWith('ui-carousel-') &&
@@ -657,6 +663,10 @@ export class UiCarousel extends BaseElement implements CarouselInstance {
     track.style.transform = vertical
       ? `translateY(calc(-${percent}% - ${gapOffset}px))`
       : `translateX(calc(${sign}${percent}% ${sign} ${gapOffset}px))`;
+    // Commit the clone-to-real jump while transitions are disabled. Without this
+    // layout flush, the next frame can re-enable the transition before the
+    // browser paints, animating the track backwards across the entire carousel.
+    void track.offsetWidth;
     requestAnimationFrame(() => {
       if (this.isConnected && this.#track === track) {
         track.style.transition = `transform ${this.effectiveSpeed}ms ${toCssEasing(this.effectiveEasing)}`;
@@ -664,7 +674,7 @@ export class UiCarousel extends BaseElement implements CarouselInstance {
     });
   }
 
-  #render(loopVisualIndex?: number): void {
+  #render(loopVisualIndex?: number, initial = false): void {
     if (!this.#track || !this.#viewport) return;
 
     const { perView, gap, vertical, overflow } = this.#effectiveConfig;
@@ -677,7 +687,7 @@ export class UiCarousel extends BaseElement implements CarouselInstance {
 
     this.#viewport.style.overflow = overflow;
 
-    const cssDuration = isNone ? '0ms' : `${this.effectiveSpeed}ms`;
+    const cssDuration = isNone || initial ? '0ms' : `${this.effectiveSpeed}ms`;
     const cssEasing = toCssEasing(this.effectiveEasing || 'easeOutQuad');
 
     // Slide step offset formula
@@ -1072,7 +1082,7 @@ export class UiCarousel extends BaseElement implements CarouselInstance {
     // External triggers in document
     const triggers = document.querySelectorAll<any>('ui-carousel-trigger, core-carousel-trigger');
     triggers.forEach((trig) => {
-      trig.updateActive?.(active);
+      trig.updateActive?.(active, this);
     });
   }
 

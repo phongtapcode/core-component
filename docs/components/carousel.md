@@ -2,6 +2,10 @@
 
 `<ui-carousel>` accepts authored `inner → list → slide` markup. It supports arrows, pagination, responsive layouts, and a thumbnail rail. Import `@ui/components` and `@ui/components/css` before using it. Direct child slides from the earlier API still work.
 
+The live gallery now includes 19 examples: basic navigation, responsive cards, loop, autoplay, transitions, vertical stories, thumbnails, pagination, custom controls, center and overflow, auto height, synchronization, product rows, hero banners, testimonials, logo strips, RTL, external controls, and an interactive playground. Each example has **Xem code** below the preview, showing the markup used by that example.
+
+The gallery uses the library's `ui-*` tags and attributes. The supplied `xo-*` reference describes similar behavior but is not a drop-in API: use `ui-type`, `ui-loop`, `ui-breakpoints`, and the other attributes documented here. Looping slide transitions use inert end clones. Dynamic bullets use `per-view` on `<ui-carousel-pagination>`; external triggers use `carousel-selector` and `index` on `<ui-carousel-trigger>`.
+
 ## Basic carousel
 
 ```html
@@ -75,6 +79,25 @@ ui-carousel-inner > ui-carousel-pagination { left: 50%; transform: translateX(-5
 ```
 
 Clicking or keyboard activating a thumbnail selects that slide. The thumbnail rail scrolls ahead as the active slide approaches its visible edge, and it can be dragged horizontally to browse more thumbnails. When `ui-per-view` shows multiple slides, the main track moves as far as possible to bring the selection into view. `ui-loop` is disabled while a thumbnail rail exists.
+
+## External triggers
+
+```html
+<ui-carousel-trigger carousel-selector="#gallery" index="1" trigger="hover">
+  <button type="button">Second slide</button>
+</ui-carousel-trigger>
+
+<ui-carousel id="gallery">
+  <ui-carousel-inner>
+    <ui-carousel-list>
+      <ui-carousel-slide>First slide</ui-carousel-slide>
+      <ui-carousel-slide>Second slide</ui-carousel-slide>
+    </ui-carousel-list>
+  </ui-carousel-inner>
+</ui-carousel>
+```
+
+`index` starts at zero. `trigger="click"` is the default. `trigger="hover"` switches on mouse or pen hover and still accepts click, tap, Enter, and Space through the button. Only triggers targeting the carousel's current slide receive `[active]`; their button also receives `aria-current="true"`. The selected slide remains selected after the pointer leaves.
 
 ## Attributes
 

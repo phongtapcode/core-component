@@ -206,7 +206,7 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     name: 'Image Flashlight',
     tagName: 'ui-image-flashlight',
     category: 'Media',
-    description: 'A soft spotlight searches a dim photo, then expands to reveal the full image.',
+    description: 'A soft spotlight scans a dim photo or follows the pointer in hover mode.',
     demos: ['Coastal dawn', 'Botanical night'],
   },
   {
@@ -235,7 +235,7 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     tagName: 'ui-carousel',
     category: 'Advanced',
     description: 'Composable slider with thumbnails, pagination, arrows, and responsive layouts.',
-    demos: ['Basic carousel', 'With thumbnails'],
+    demos: ['Basic', 'Responsive', 'Loop', 'Autoplay', 'Transitions', 'Vertical', 'Thumbnails', 'Pagination', 'Custom controls', 'Center and overflow', 'Auto height', 'Synchronized', 'Product row', 'Hero', 'Testimonials', 'Logo strip', 'RTL', 'External controls', 'Playground'],
   },
   {
     name: 'Expandable Grid',

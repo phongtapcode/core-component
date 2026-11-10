@@ -189,6 +189,52 @@ describe('<ui-carousel> / <core-carousel> Spec Test Suite', () => {
     });
   });
 
+  describe('External triggers', () => {
+    it('updates active state only from the targeted carousel', async () => {
+      const first = createCarousel({ 'ui-name': 'trigger-first' }, 3);
+      const second = createCarousel({ 'ui-name': 'trigger-second' }, 3);
+      const trigger = document.createElement('ui-carousel-trigger');
+      trigger.setAttribute('carousel-selector', '[ui-name="trigger-first"]');
+      trigger.setAttribute('index', '1');
+      trigger.innerHTML = '<button type="button">Second slide</button>';
+      container.appendChild(trigger);
+      await Promise.resolve();
+
+      expect((trigger as HTMLElement & { carouselSelector: string }).carouselSelector).toBe('[ui-name="trigger-first"]');
+      expect(document.querySelector('[ui-name="trigger-first"]')).toBe(first);
+
+      first.goTo(1);
+      expect(trigger.hasAttribute('active')).toBe(true);
+      expect(trigger.querySelector('button')?.getAttribute('aria-current')).toBe('true');
+      second.goTo(2);
+      expect(trigger.hasAttribute('active')).toBe(true);
+
+      first.goTo(2);
+      expect(trigger.hasAttribute('active')).toBe(false);
+      expect(trigger.querySelector('button')?.hasAttribute('aria-current')).toBe(false);
+    });
+
+    it('switches on mouse hover while retaining tap and keyboard button activation', () => {
+      const carousel = createCarousel({ 'ui-name': 'hover-gallery' }, 3);
+      const trigger = document.createElement('ui-carousel-trigger');
+      trigger.setAttribute('carousel-selector', '[ui-name="hover-gallery"]');
+      trigger.setAttribute('index', '2');
+      trigger.setAttribute('trigger', 'hover');
+      trigger.innerHTML = '<button type="button">Third slide</button>';
+      container.appendChild(trigger);
+
+      expect((trigger as HTMLElement & { carouselSelector: string }).carouselSelector).toBe('[ui-name="hover-gallery"]');
+
+      trigger.dispatchEvent(new PointerEvent('pointerenter', { pointerType: 'touch' }));
+      expect(carousel.activeIndex).toBe(0);
+      trigger.dispatchEvent(new PointerEvent('pointerenter', { pointerType: 'mouse' }));
+      expect(carousel.activeIndex).toBe(2);
+      carousel.goTo(0);
+      trigger.querySelector('button')?.click();
+      expect(carousel.activeIndex).toBe(2);
+    });
+  });
+
   describe('7. Custom Events', () => {
     it('dispatches ui-carousel:change with detailed normalized payload', () => {
       const c = createCarousel({}, 4);
@@ -367,6 +413,22 @@ describe('<ui-carousel> / <core-carousel> Spec Test Suite', () => {
       expect(el.querySelectorAll('ui-carousel-pagination ui-carousel-bullet')[1]?.hasAttribute('active')).toBe(true);
     });
 
+    it('keeps an authored control wrapper outside the slide track', () => {
+      const el = document.createElement('ui-carousel') as UiCarousel;
+      el.innerHTML = `<ui-carousel-inner><ui-carousel-list>
+        <ui-carousel-slide>One</ui-carousel-slide><ui-carousel-slide>Two</ui-carousel-slide>
+        </ui-carousel-list></ui-carousel-inner>
+        <div class="controls"><ui-carousel-prev><button type="button">Previous</button></ui-carousel-prev>
+        <ui-carousel-next><button type="button">Next</button></ui-carousel-next></div>`;
+      container.appendChild(el);
+
+      expect(el.slidesCount).toBe(2);
+      expect(el.querySelector('.controls')?.parentElement).toBe(el);
+      expect(el.querySelector('[data-carousel-track] .controls')).toBeNull();
+      el.querySelector<HTMLButtonElement>('ui-carousel-next button')?.click();
+      expect(el.activeIndex).toBe(1);
+    });
+
     it('moves misplaced controls out of an authored slide list', () => {
       const el = document.createElement('ui-carousel') as UiCarousel;
       el.innerHTML = `<ui-carousel-inner><ui-carousel-list>
@@ -476,6 +538,37 @@ describe('<ui-carousel> / <core-carousel> Spec Test Suite', () => {
       el.goTo(2);
       el.next();
       expect(el.activeIndex).toBe(0);
+    });
+
+    it('places the first real slide without an animated entrance on connection', () => {
+      const el = createCarousel({ loop: 'true', gap: '0' }, 4);
+      const track = el.querySelector<HTMLElement>('[data-carousel-track]')!;
+
+      expect(track.style.transform).toContain('translateX(calc(-100%');
+      expect(track.style.transition).toContain('0ms');
+      el.next();
+      expect(track.style.transition).toContain('200ms');
+    });
+
+    it('uses adjacent clones when goTo crosses either loop boundary', () => {
+      const el = createCarousel({ loop: 'true', 'per-view': '2', gap: '0' }, 5);
+      const track = el.querySelector<HTMLElement>('[data-carousel-track]')!;
+
+      el.goTo(3);
+      expect(el.activeIndex).toBe(3);
+      expect(track.style.transform).toContain('translateX(calc(-0%');
+
+      const transitionEnd = new Event('transitionend');
+      Object.defineProperty(transitionEnd, 'propertyName', { value: 'transform' });
+      track.dispatchEvent(transitionEnd);
+      expect(track.style.transform).toContain('translateX(calc(-250%');
+
+      el.goTo(0);
+      expect(el.activeIndex).toBe(0);
+      expect(track.style.transform).toContain('translateX(calc(-350%');
+
+      track.dispatchEvent(transitionEnd);
+      expect(track.style.transform).toContain('translateX(calc(-100%');
     });
 
     it('maps the last pagination bullet to the last valid multi-view start', () => {

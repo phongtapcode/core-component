@@ -42,6 +42,8 @@ Nhớ import `@ui/components` và `@ui/components/css`. Kích thước, phối m
 | `--ui-orbit-perspective` | `1100px` | Độ sâu phối cảnh. |
 | `--ui-orbit-tilt` | `-12deg` | Độ nghiêng của vòng. |
 
-Vòng xoay tạm dừng khi rê chuột hoặc focus vào nội dung bên trong. Khi người dùng bật **reduced motion**, vòng dừng quay. Ở viewport nhỏ hơn 700px, card và bán kính thu lại theo CSS mặc định; có thể override bằng CSS của trang.
+Kéo ngang bằng chuột hoặc vuốt ngang trên màn hình cảm ứng để xoay vòng ảnh. Khi thả tay, vòng tiếp tục trôi rõ rệt rồi chậm dần; sau đó chế độ tự quay tiếp tục kể cả khi con trỏ vẫn ở trên gallery. Vuốt dọc vẫn cuộn trang. Focus vào gallery rồi nhấn **←** hoặc **→** để xoay từng bước 24°. Một lần chạm hoặc click không xoay vòng; nếu card chứa link, kéo sẽ không mở link.
+
+Vòng xoay vẫn chạy khi rê chuột qua gallery; chỉ tạm dừng khi đang kéo hoặc khi focus bằng bàn phím. Khi người dùng bật **reduced motion**, vòng dừng tự quay và thao tác kéo vẫn hoạt động nhưng không có quán tính sau khi thả. Ở viewport nhỏ hơn 700px, card và bán kính thu lại theo CSS mặc định; có thể override bằng CSS của trang.
 
 Component tạo thêm mặt sau cho mỗi card để ảnh và caption vẫn hiển thị đúng chiều khi card đi qua nửa sau của vòng. Mặt sao chép này chỉ để hiển thị và được ẩn khỏi trình đọc màn hình.

@@ -289,7 +289,7 @@ export class UiCarouselSize extends BaseElement {
 export class UiCarouselTrigger extends BaseElement {
   static override properties = {
     index: { name: 'index', default: 0 },
-    carouselSelector: { name: 'carousel-selector', default: '' },
+    carouselSelector: { name: 'carouselSelector', attr: 'carousel-selector', default: '' },
     trigger: { name: 'trigger', default: 'click' }, // 'click' | 'hover'
   };
 
@@ -298,27 +298,41 @@ export class UiCarouselTrigger extends BaseElement {
   declare trigger: 'click' | 'hover';
 
   protected override onConnect(): void {
-    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    const mode = isTouch && this.trigger === 'hover' ? 'click' : this.trigger;
+    const control = this.querySelector('button, a');
+    if (!control) {
+      if (!this.hasAttribute('role')) this.setAttribute('role', 'button');
+      if (!this.hasAttribute('tabindex')) this.tabIndex = 0;
+    }
 
     const action = (): void => {
       const c = findTargetCarousel(this, this.carouselSelector);
-      if (c) c.goTo(Number(this.index));
+      if (c) { c.interact(); c.goTo(Number(this.index)); }
     };
 
-    if (mode === 'hover') {
-      this.$on(this, 'mouseenter', action);
-    } else {
-      this.$on(this, 'click', action);
-    }
+    this.$on(this, 'click', action);
+    this.$on(this, 'pointerenter', ((event: PointerEvent) => {
+      if (this.trigger === 'hover' && event.pointerType !== 'touch') action();
+    }) as EventListener);
+    if (!control) this.$on(this, 'keydown', ((event: KeyboardEvent) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      action();
+    }) as EventListener);
+
+    queueMicrotask(() => {
+      if (!this.isConnected) return;
+      const carousel = findTargetCarousel(this, this.carouselSelector);
+      if (carousel) this.updateActive(carousel.activeIndex, carousel);
+    });
   }
 
-  updateActive(targetActiveIndex: number): void {
-    if (Number(this.index) === targetActiveIndex) {
-      this.setAttribute('active', '');
-    } else {
-      this.removeAttribute('active');
-    }
+  updateActive(targetActiveIndex: number, carousel: UiCarousel): void {
+    if (findTargetCarousel(this, this.carouselSelector) !== carousel) return;
+    const active = Number(this.index) === targetActiveIndex;
+    this.toggleAttribute('active', active);
+    const control = this.querySelector('button, a');
+    if (active) control?.setAttribute('aria-current', 'true');
+    else control?.removeAttribute('aria-current');
   }
 }
 
