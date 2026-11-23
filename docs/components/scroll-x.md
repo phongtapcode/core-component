@@ -5,8 +5,8 @@
 Dùng component này cho storytelling, portfolio hoặc showcase nhiều cảnh. Với danh sách cần kéo ngang trực tiếp, dùng `ui-carousel`.
 
 ```js
-import '@ui/motion';
-import '@ui/motion/css';
+import '@element-works/motion';
+import '@element-works/motion/css';
 ```
 
 ## Cấu trúc

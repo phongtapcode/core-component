@@ -1,5 +1,5 @@
 /**
- * @ui/tokens — JS-side constants mirrored from css/tokens.css.
+ * @element-works/tokens — JS-side constants mirrored from css/tokens.css.
  *
  * Why both: CSS variables give consumers runtime rethemeability, but JS code
  * needs concrete values (for IntersectionObserver rootMargin, RAF math,

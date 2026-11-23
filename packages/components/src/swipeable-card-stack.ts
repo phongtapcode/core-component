@@ -1,5 +1,5 @@
 /** Swipe a card away to reveal the next card without reordering its DOM nodes. */
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 type SwipeDirection = 'left' | 'right';
 type StackStyle = 1 | 2 | 3;

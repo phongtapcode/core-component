@@ -1,5 +1,5 @@
 /** A CSS-powered 3D image ring that keeps its card positions in sync with the DOM. */
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 const TRACK = 'ui-orbit-gallery-track';
 const ITEM = 'ui-orbit-gallery-item';

@@ -1,4 +1,4 @@
-import type { UiCarousel } from '@ui/components';
+import type { UiCarousel } from '@element-works/components';
 
 const images = [
   { src: 'coast.jpg', title: 'Open water', note: 'Coastal journal' },

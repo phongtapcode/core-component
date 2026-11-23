@@ -266,6 +266,13 @@ export const COMPONENTS: readonly ComponentEntry[] = [
     demos: ['Photo orbit', 'Reverse orbit'],
   },
   {
+    name: 'Disintegrating Gallery',
+    tagName: 'ui-disintegrating-gallery',
+    category: 'Advanced',
+    description: 'An endless image strip whose photos scatter into pixels at the edges and reassemble in the center.',
+    demos: ['Photo stream', 'Fine pixels'],
+  },
+  {
     name: 'Dot Morph',
     tagName: 'ui-dot-morph',
     category: 'Advanced',

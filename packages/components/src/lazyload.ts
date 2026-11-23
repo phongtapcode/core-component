@@ -10,7 +10,7 @@
  * when the element enters the viewport, then disconnects.
  */
 
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 
 export class UiLazyload extends BaseElement {
   static override properties = {

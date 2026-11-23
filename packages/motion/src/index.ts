@@ -1,5 +1,5 @@
 /**
- * @ui/motion — public entry point.
+ * @element-works/motion — public entry point.
  *
  * Side-effect imports (register custom elements).
  */

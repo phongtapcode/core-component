@@ -3,8 +3,8 @@
 `ui-swipeable-card-stack` xếp các thẻ thành một chồng. Kéo thẻ trên cùng sang trái hoặc phải để đưa thẻ kế tiếp lên; kéo chưa đủ ngưỡng thì thẻ trở về. Dùng cho bộ ảnh, câu chuyện ngắn hoặc lựa chọn theo từng thẻ.
 
 ```js
-import '@ui/components';
-import '@ui/components/css';
+import '@element-works/components';
+import '@element-works/components/css';
 ```
 
 ## Dùng cơ bản

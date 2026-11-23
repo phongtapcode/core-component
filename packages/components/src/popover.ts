@@ -17,7 +17,7 @@
  *   ui-popover-close
  */
 
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 
 export class UiPopover extends BaseElement {
   static override properties = {

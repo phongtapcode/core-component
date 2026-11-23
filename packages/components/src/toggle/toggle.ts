@@ -12,7 +12,7 @@
  * - Seamless backwards compatibility for standalone switch use-cases
  */
 
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 import { toggleRegistry } from './registry.js';
 import type { ToggleInstance } from './types.js';
 

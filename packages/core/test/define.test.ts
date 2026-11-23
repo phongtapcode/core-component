@@ -6,7 +6,7 @@ import {
   getTagNames,
   isDefined,
   isSupported,
-} from '@ui/core';
+} from '@element-works/core';
 
 // Each test must use a UNIQUE tag name and a UNIQUE constructor. The platform
 // customElements registry can only register a tag once, and a constructor can

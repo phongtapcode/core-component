@@ -1,4 +1,4 @@
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 import { Bodies, Body, Composite, Constraint, Engine, Events, Query, Sleeping } from 'matter-js';
 
 type Trigger = 'auto' | 'hover' | 'click' | 'scroll';

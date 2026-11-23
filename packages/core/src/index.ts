@@ -1,5 +1,5 @@
 /**
- * @ui/core — public entry point.
+ * @element-works/core — public entry point.
  *
  * Order of exports is intentional:
  *   1. Types first (zero runtime cost).

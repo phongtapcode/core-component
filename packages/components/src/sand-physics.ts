@@ -1,4 +1,4 @@
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 import { SandCell, SandPhysicsEngine, type SandGravity, type SandMaterial, type SandPreset } from './sand-physics-engine.js';
 
 type SandTool = SandMaterial | 'wall' | 'eraser' | 'brush' | 'attract' | 'explode';

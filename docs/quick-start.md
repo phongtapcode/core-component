@@ -1,7 +1,7 @@
 # Quick start
 
 ```html
-<script type="module" src="https://esm.sh/@ui/components"></script>
+<script type="module" src="https://esm.sh/@element-works/components"></script>
 
 <!-- Motion -->
 <ui-animate effect="fade-up">Hello</ui-animate>

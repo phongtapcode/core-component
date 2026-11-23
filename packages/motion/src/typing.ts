@@ -1,4 +1,4 @@
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 
 type TypingEffect = 'typing' | 'slide' | 'goo';
 
@@ -96,7 +96,8 @@ export class UiTyping extends BaseElement {
       [data-effect='slide'][data-transitioning] .word.current { transform: translateY(-100%); }
       [data-effect='slide'][data-transitioning] .word.next { transform: translateY(0); }
       [data-effect='goo'] ui-typing-content { overflow: visible; }
-      [data-effect='goo'] .goo-blob { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .55; filter: url(#${id}); }
+      [data-effect='goo'] .goo-blob { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0; filter: url(#${id}); transition: opacity 180ms ease; }
+      [data-effect='goo'][data-transitioning] .goo-blob { opacity: .55; }
       [data-effect='goo'] .goo-blob .word { transform-origin: left center; }
       [data-effect='goo'] .goo-blob .word.next { opacity: 0; filter: blur(8px); transform: scale(.9); }
       [data-effect='goo'][data-transitioning] .goo-blob .word { transition: opacity var(--ui-typing-duration) ease, filter var(--ui-typing-duration) ease, transform var(--ui-typing-duration) ease; }

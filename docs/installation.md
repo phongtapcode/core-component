@@ -3,19 +3,19 @@
 ## From CDN
 
 ```html
-<script type="module" src="https://esm.sh/@ui/components"></script>
+<script type="module" src="https://esm.sh/@element-works/components"></script>
 ```
 
 ## From npm (after publish)
 
 ```bash
-pnpm add @ui/components
+pnpm add @element-works/components
 ```
 
 Then import:
 
 ```ts
-import '@ui/components';
+import '@element-works/components';
 ```
 
 The components are registered as side-effects of the import. They upgrade
@@ -23,11 +23,11 @@ automatically when their tags appear in the DOM.
 
 ## CSS
 
-The default styles are in `@ui/components/css/components.css`. Import them
+The default styles are in `@element-works/components/css/components.css`. Import them
 separately alongside the JavaScript entry:
 
 ```ts
-import '@ui/components/css';
+import '@element-works/components/css';
 ```
 
 To customise, override the CSS Custom Properties on `:root`:
@@ -44,11 +44,11 @@ To customise, override the CSS Custom Properties on `:root`:
 For just the design tokens:
 
 ```ts
-import '@ui/tokens/css/tokens.css';
+import '@element-works/tokens/css';
 ```
 
 For just the motion CSS:
 
 ```ts
-import '@ui/motion/css/motion.css';
+import '@element-works/motion/css';
 ```

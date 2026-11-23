@@ -5,8 +5,8 @@
 Dùng cho before/after của chỉnh sửa ảnh, sản phẩm hoặc không gian. Với gallery nhiều ảnh, dùng carousel.
 
 ```js
-import '@ui/components';
-import '@ui/components/css';
+import '@element-works/components';
+import '@element-works/components/css';
 ```
 
 ## Cấu trúc cơ bản

@@ -4,8 +4,8 @@
     "outDir": "dist",
     "types": ["vitest/globals"],
     "paths": {
-      "@ui/tokens": ["../tokens/src/index.ts"],
-      "@ui/tokens/*": ["../tokens/src/*"]
+      "@element-works/tokens": ["../tokens/src/index.ts"],
+      "@element-works/tokens/*": ["../tokens/src/*"]
     }
   },
   "include": ["src", "../tokens/src"]

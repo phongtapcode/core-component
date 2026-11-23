@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { BaseElement, define, forgetForTests, getRegistered } from '@ui/core';
+import { BaseElement, define, forgetForTests, getRegistered } from '@element-works/core';
 
 /** A test element factory: returns a fresh class each call. */
 function makeCounter(tagName: string): typeof BaseElement {

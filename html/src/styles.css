@@ -2,9 +2,9 @@
  * Gallery styles. Component CSS is imported from the packages.
  */
 
-@import '@ui/tokens/css/tokens.css';
-@import '@ui/motion/css/motion.css';
-@import '@ui/components/css/components.css';
+@import '@element-works/tokens/css/tokens.css';
+@import '@element-works/motion/css/motion.css';
+@import '@element-works/components/css/components.css';
 
 * { box-sizing: border-box; }
 
@@ -861,16 +861,38 @@ button { font: inherit; }
 }
 @media (prefers-reduced-motion: reduce) { .scene-image-story ui-scroll-scene-item, .scene-image-copy, .scene-image-portrait, .scene-image-background { opacity: 1; transform: none; transition: none; } .scene-image-fixed-stage { display: none; } .scene-image-portrait { display: block; } }
 @media (prefers-reduced-motion: reduce) { .scroll-scene-demo ui-scroll-scene-item, .scroll-scene-copy, .scroll-scene-panel img { opacity: 1; transform: none; transition: none; } }
-.typing-stage { position: relative; min-height: 430px; padding: clamp(2rem, 6vw, 5rem); border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; justify-content: center; color: #fff; isolation: isolate; }
-.typing-stage::before { content: ''; position: absolute; z-index: -1; width: 45vw; height: 45vw; max-width: 650px; max-height: 650px; right: -10%; top: -60%; border-radius: 50%; background: #ffffff1c; filter: blur(14px); }
-.typing-stage--type { background: linear-gradient(135deg, #152a49, #315fc7 72%, #26aeb8); }
-.typing-stage--slide { background: linear-gradient(135deg, #173830, #278d79 70%, #a8be79); }
-.typing-stage--goo { background: linear-gradient(135deg, #38245c, #8862bc 66%, #c879a4); }
-.typing-stage-kicker { font-size: .74rem; font-weight: 800; letter-spacing: .22em; }
-.typing-stage h2 { margin: 1.4rem 0 1.2rem; font-size: clamp(2.7rem, 6.7vw, 6.5rem); line-height: 1.04; letter-spacing: -.065em; }
-.typing-stage ui-typing { color: #fff1ab; }
-.typing-stage--goo ui-typing { color: #eaffaf; }
-.typing-stage p { max-width: 38rem; margin: 0; color: #ffffffd9; font-size: 1rem; }
+.typing-showcase { box-sizing: border-box; min-height: 520px; overflow: hidden; padding: clamp(24px, 4vw, 48px); border-radius: 4px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.typing-showcase__masthead { display: flex; justify-content: space-between; gap: 18px; font-size: .92rem; font-weight: 560; }
+.typing-showcase__masthead span:last-child { opacity: .7; }
+.typing-showcase h2 { margin: 0; font-size: clamp(3.2rem, 5.3vw, 5.8rem); font-weight: 700; line-height: .99; letter-spacing: -.065em; }
+.typing-showcase h2 ui-typing { font: inherit; letter-spacing: inherit; }
+.typing-showcase p { max-width: 25rem; margin: 0; font-size: clamp(1rem, 1.45vw, 1.16rem); line-height: 1.55; }
+.typing-showcase figure { min-width: 0; margin: 0; }
+.typing-showcase figure img { display: block; width: 100%; object-fit: cover; }
+.typing-showcase figcaption { padding-top: 10px; font-size: .86rem; }
+.typing-showcase--type { color: #eff3e8; background: #14251e; }
+.typing-showcase--type h2 ui-typing { color: #c7ed8b; }
+.typing-showcase__type-body { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(220px, .85fr); align-items: end; gap: clamp(28px, 5vw, 70px); min-height: 440px; padding-top: 42px; }
+.typing-showcase__type-copy { align-self: center; min-width: 0; }
+.typing-showcase__type-copy > p { margin-top: 26px; color: #c4cec3; }
+.typing-showcase__botanical img { height: 360px; object-position: center; }
+.typing-showcase__botanical figcaption { color: #b9c9b5; }
+.typing-showcase__sets { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 42px; }
+.typing-showcase__sets button { min-height: 40px; padding: 9px 16px; border: 0; border-radius: 2px; background: #304239; color: #edf4e9; cursor: pointer; font: inherit; font-size: .86rem; transition: background-color .18s ease, color .18s ease; }
+.typing-showcase__sets button:hover { background: #46604e; }
+.typing-showcase__sets button[aria-pressed='true'] { background: #c7ed8b; color: #14251e; }
+.typing-showcase__sets button:focus-visible { outline: 2px solid #c7ed8b; outline-offset: 3px; }
+.typing-showcase--slide { color: #1c2923; background: #eeece3; }
+.typing-showcase--slide h2 ui-typing { color: #28634c; }
+.typing-showcase__slide-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(230px, .72fr); align-items: end; gap: clamp(30px, 5vw, 80px); min-height: 440px; padding-top: 38px; }
+.typing-showcase__slide-copy { align-self: center; min-width: 0; }
+.typing-showcase__slide-copy > p { margin-top: 28px; color: #52635b; }
+.typing-showcase__architecture img { height: 365px; object-position: 43% center; }
+.typing-showcase__architecture figcaption { color: #52635b; }
+.typing-showcase--goo { color: #19261e; background: #c8e98b; }
+.typing-showcase--goo h2 { font-size: clamp(4rem, 8vw, 8.5rem); }
+.typing-showcase__goo-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(170px, .45fr); align-items: end; gap: 30px; min-height: 430px; padding-top: 38px; }
+.typing-showcase__goo-body > p { max-width: 16rem; padding-bottom: 14px; color: #394a35; }
 .comparison-demo { max-width: 100%; border-radius: 18px; box-shadow: 0 24px 60px #08172634; }
 .comparison-demo--coast ui-image-comparison-before img { filter: grayscale(1) contrast(.88) brightness(.82); }
 .comparison-demo--architecture ui-image-comparison-before img { filter: grayscale(1) sepia(.36) contrast(.7) brightness(.78); }
@@ -879,9 +901,15 @@ button { font: inherit; }
   .scroll-x-panel-copy h2 { font-size: clamp(3rem, 12vw, 5rem); }
   .scroll-y-panel-copy { bottom: 13vh; left: 7%; }
   .scroll-y-panel-copy h2 { font-size: clamp(3rem, 12vw, 5rem); }
-  .typing-stage { min-height: 350px; border-radius: 16px; }
-  .typing-stage h2 { font-size: clamp(2.4rem, 9vw, 4.5rem); }
-  .typing-stage--type ui-typing { font-size: clamp(1.35rem, 5vw, 2.4rem); }
+  .typing-showcase { min-height: 0; padding: 24px; }
+  .typing-showcase__masthead { flex-direction: column; gap: 3px; font-size: .82rem; }
+  .typing-showcase h2 { font-size: clamp(2.45rem, 10vw, 4.3rem); }
+  .typing-showcase--goo h2 { font-size: clamp(3.6rem, 13vw, 6rem); }
+  .typing-showcase__type-body, .typing-showcase__slide-body, .typing-showcase__goo-body { grid-template-columns: minmax(0, 1fr); min-height: 0; gap: 30px; padding-top: 60px; }
+  .typing-showcase__goo-body { padding-bottom: 36px; }
+  .typing-showcase__sets { margin-top: 30px; }
+  .typing-showcase__botanical img, .typing-showcase__architecture img { height: 230px; }
+  .typing-showcase__goo-body > p { padding-bottom: 0; }
 }
 
 .photo-story, .photo-aperture, .photo-botanical { display: block; position: relative; height: 205vh; }
@@ -1562,6 +1590,15 @@ ui-toast[data-toast-live].gallery-toast--custom { --toast-accent:#8b64c7; }
 .orbit-demo__heading h2 em { color:#a8d9c8; font-weight:400; font-family:Georgia,serif; }
 .orbit-demo__heading p { max-width:450px; margin:18px auto 0; color:#c2d0cf; line-height:1.65; }
 .orbit-demo ui-orbit-gallery { margin:-35px 0 -55px; }
+.disintegrating-demo { padding: clamp(24px, 4vw, 56px) 0 22px; background: #f8f7f4; color: #252b2b; overflow: hidden; }
+.disintegrating-demo__heading { padding: 0 clamp(24px, 5vw, 72px) 30px; }
+.disintegrating-demo__heading .eyebrow { color: #8d7969; letter-spacing: .18em; font-size: .7rem; font-weight: 700; }
+.disintegrating-demo__heading h2 { margin: 12px 0 8px; font-family: Georgia, serif; font-size: clamp(2.2rem, 5vw, 4.5rem); font-weight: 400; letter-spacing: -.05em; line-height: 1; }
+.disintegrating-demo__heading h2 em { color: #a36f55; font-weight: 400; }
+.disintegrating-demo__heading p { margin: 0; max-width: 560px; color: #686e6a; font-size: .9rem; }
+.disintegrating-demo ui-disintegrating-gallery { --ui-disintegrating-gallery-height: min(50vw, 500px); min-height: 290px; }
+.disintegrating-demo__footer { display: flex; justify-content: space-between; gap: 16px; padding: 18px clamp(24px, 5vw, 72px) 0; color: #9a918b; font-size: .68rem; letter-spacing: .14em; }
+@media (max-width: 600px) { .disintegrating-demo ui-disintegrating-gallery { --ui-disintegrating-gallery-height: 330px; } .disintegrating-demo__footer { font-size: .58rem; } }
 .orbit-demo ui-orbit-gallery-item > .ui-orbit-gallery-face { border:1px solid #ffffff55; }
 .orbit-demo__caption { position:absolute; inset:auto 0 0; display:flex; flex-direction:column; gap:3px; padding:36px 14px 13px; background:linear-gradient(transparent,#06141edb); text-align:left; }
 .orbit-demo__caption small { font-size:.6rem; letter-spacing:.16em; color:#cfe0dc; }

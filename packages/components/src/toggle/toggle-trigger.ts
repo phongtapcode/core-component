@@ -4,7 +4,7 @@
  * Trigger button that toggles visibility of associated <xo-toggle> containers.
  */
 
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 import { toggleRegistry } from './registry.js';
 import type { UiToggle } from './toggle.js';
 

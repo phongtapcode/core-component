@@ -7,7 +7,7 @@
  * Persists to localStorage under 'ui-theme' unless `storage` is 'none'.
  */
 
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 
 export type ThemeMode = 'light' | 'dark' | 'auto';
 

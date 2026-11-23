@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import '../src/index.js';
-import { _resetObserverManagerForTests } from '@ui/core';
+import { _resetObserverManagerForTests } from '@element-works/core';
 import { instances } from './setup.js';
 
 interface MockIO {

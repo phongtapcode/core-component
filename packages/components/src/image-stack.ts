@@ -1,5 +1,5 @@
 /** A layered photo stack with an accessible, navigable image preview. */
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 import { UiModal } from './modal.js';
 
 const ITEM = 'ui-image-stack-item';

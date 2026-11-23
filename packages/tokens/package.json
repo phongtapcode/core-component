@@ -1,8 +1,9 @@
 {
-  "name": "@ui/tokens",
+  "name": "@element-works/tokens",
   "version": "0.1.0",
   "description": "Design tokens (CSS custom properties + JS constants). The visual vocabulary of the library.",
   "type": "module",
+  "publishConfig": { "access": "public" },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -23,7 +24,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "test": "echo \"(@ui/tokens has no runtime logic — no tests)\" && exit 0"
+    "test": "echo \"(@element-works/tokens has no runtime logic — no tests)\" && exit 0"
   },
   "devDependencies": {
     "typescript": "5.6.3"

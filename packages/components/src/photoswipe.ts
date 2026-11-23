@@ -1,5 +1,5 @@
 /** PhotoSwipe 5 lightbox, loaded from a pinned CDN only on first use. */
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 const VERSION = '5.4.4';
 const CDN = `https://unpkg.com/photoswipe@${VERSION}/dist`;

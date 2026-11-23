@@ -1,5 +1,5 @@
 /** Particles travel from beyond the field into a readable word. */
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 type Point = { x: number; y: number };
 type Particle = Point & { startX: number; startY: number; radius: number; delay: number };

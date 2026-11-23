@@ -1,5 +1,5 @@
 /**
- * Vitest setup for @ui/motion. Wires a mock IntersectionObserver into the
+ * Vitest setup for @element-works/motion. Wires a mock IntersectionObserver into the
  * observer manager so Animate can be unit-tested in happy-dom.
  *
  * Exports `instances` so test files can read the live mock list — happy-dom
@@ -7,7 +7,7 @@
  * unreliable. Import the set directly from this module.
  */
 
-import { setObserverConstructors } from '@ui/core';
+import { setObserverConstructors } from '@element-works/core';
 
 class MockIntersectionObserver implements IntersectionObserver {
   readonly root: Element | Document | null = null;

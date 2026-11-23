@@ -119,7 +119,7 @@
 |---|---|---|---|---|
 | Carousel | Carousel | P2 | To build | Touch-friendly slider with keyboard, reduced-motion, autoplay-pause-on-focus, internal physics engine (internal scope, public API stays `<ui-carousel>`). |
 | CircleBar | CircleBar | P2 | To build | Circular progress / skill indicator. Pure SVG + WAAPI. |
-| LineChart | LineChart | P3 | REVIEW_REQUIRED | A charting primitive is useful but is a *whole subsystem* on its own. **RECOMMENDATION:** keep a `<ui-progress>` linear-bar primitive in core utilities and *skip* LineChart. If charts are needed later, ship them as a separate `@ui/charts` package outside this monorepo. |
+| LineChart | LineChart | P3 | REVIEW_REQUIRED | A charting primitive is useful but is a *whole subsystem* on its own. **RECOMMENDATION:** keep a `<ui-progress>` linear-bar primitive in core utilities and *skip* LineChart. If charts are needed later, ship them as a separate `@element-works/charts` package outside this monorepo. |
 | Magic move | Magic move | P3 | REVIEW_REQUIRED | See §3. |
 | GridHoverExpand | GridHoverExpand | P3 | REVIEW_REQUIRED | See §3. |
 

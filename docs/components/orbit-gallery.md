@@ -23,7 +23,7 @@
 </ui-orbit-gallery>
 ```
 
-Nhớ import `@ui/components` và `@ui/components/css`. Kích thước, phối màu, caption và ảnh do CSS của trang quyết định. Demo có sẵn trong gallery ở mục **Orbit Gallery**.
+Nhớ import `@element-works/components` và `@element-works/components/css`. Kích thước, phối màu, caption và ảnh do CSS của trang quyết định. Demo có sẵn trong gallery ở mục **Orbit Gallery**.
 
 ## Tùy chỉnh
 

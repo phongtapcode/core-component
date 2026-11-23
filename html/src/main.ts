@@ -2,8 +2,8 @@
  * Gallery SPA entry. Hash-based routing.
  */
 
-import { uiToast, type ToastPlacement, type UiModal, type UiDrawer, type UiAnimatedBackground } from '@ui/components';
-import { EFFECTS } from '@ui/motion';
+import { uiToast, type ToastPlacement, type UiModal, type UiDrawer, type UiAnimatedBackground } from '@element-works/components';
+import { EFFECTS } from '@element-works/motion';
 import './styles.css';
 import { COMPONENTS, type ComponentEntry } from './components.js';
 import { getDocForSlug } from './docs-data.js';
@@ -227,7 +227,7 @@ function thumbFor(tag: string): string {
     'ui-collapse': '⌄', 'ui-accordion': '☷', 'ui-tabs': '▤', 'ui-modal': '▣', 'ui-cursor': '◎', 'ui-fake-cursor': '➤',
     'ui-drawer': '◧', 'ui-popover': '▢', 'ui-tooltip': '?', 'ui-lazyload': '◐',
     'ui-image-comparison': '◒', 'ui-image-trace': '✎', 'ui-image-flashlight': '◉', 'ui-counter': '99', 'ui-dark-mode': '☼',
-    'ui-marquee': '→', 'ui-carousel': '◫', 'ui-expandable-grid': '▦', 'ui-grid-hover-expand': '▥', 'ui-swipeable-card-stack': '▤', 'ui-orbit-gallery': '◌', 'ui-dot-morph': '✳', 'ui-logo-assembly': '✦', 'ui-sand-physics': '▨', 'ui-image-solid': '⬡', 'ui-image-stack': '▰', 'ui-flip-book': '▣',
+    'ui-marquee': '→', 'ui-carousel': '◫', 'ui-expandable-grid': '▦', 'ui-grid-hover-expand': '▥', 'ui-swipeable-card-stack': '▤', 'ui-orbit-gallery': '◌', 'ui-disintegrating-gallery': '▦', 'ui-dot-morph': '✳', 'ui-logo-assembly': '✦', 'ui-sand-physics': '▨', 'ui-image-solid': '⬡', 'ui-image-stack': '▰', 'ui-flip-book': '▣',
   };
   return `<span class="thumb-art thumb-${tag}" aria-hidden="true"><span class="thumb-orbit"></span><span class="thumb-symbol">${symbols[tag] ?? '✦'}</span><span class="thumb-caption">${tag.replace(/^ui-/, '')}</span></span>`;
 }
@@ -466,7 +466,24 @@ function renderDemo(tagName: string): void {
   wireCurvedLoopDemo(appRoot);
   wireFallingTextDemo(appRoot);
   wireFlexCarouselDemo(appRoot);
+  if (entry.tagName === 'ui-typing') wireTypingDemo(appRoot);
   if (entry.tagName === 'ui-carousel') wireCarouselExamples(appRoot);
+}
+
+function wireTypingDemo(root: HTMLElement): void {
+  const stage = root.querySelector<HTMLElement>('.typing-showcase--type');
+  const typing = stage?.querySelector<HTMLElement>('ui-typing');
+  if (!stage || !typing) return;
+  stage.querySelectorAll<HTMLButtonElement>('[data-typing-set]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const words = button.dataset['typingSet'];
+      if (!words) return;
+      typing.setAttribute('ui-content', words);
+      stage.querySelectorAll<HTMLButtonElement>('[data-typing-set]').forEach((choice) => {
+        choice.setAttribute('aria-pressed', String(choice === button));
+      });
+    });
+  });
 }
 
 function renderFlyingWord(word: string, firstIndex: number): string {
@@ -988,23 +1005,40 @@ function renderDemoBody(tag: string, variant: string): string {
     }
     case 'ui-typing': {
       if (variant === 'Slide headline') return `
-        <div class="typing-stage typing-stage--slide">
-          <span class="typing-stage-kicker">BUILT FOR WHAT'S NEXT</span>
-          <h2>Our <ui-typing ui-effect="slide" ui-content='["Mission", "Vision", "Future"]' ui-duration="450" ui-delay="2200"></ui-typing><br />starts here.</h2>
-          <p>Short phrases slide through the same space without shifting the headline layout.</p>
-        </div>`;
+        <section class="typing-showcase typing-showcase--slide" aria-label="Architecture studio headline example">
+          <div class="typing-showcase__masthead"><span>Common Ground</span><span>Architecture for everyday life</span></div>
+          <div class="typing-showcase__slide-body">
+            <div class="typing-showcase__slide-copy">
+              <h2>Spaces for<br /><ui-typing ui-effect="slide" ui-content='["living", "meeting", "making"]' ui-duration="520" ui-delay="2100"></ui-typing></h2>
+              <p>Thoughtful places begin with the people who use them.</p>
+            </div>
+            <figure class="typing-showcase__architecture"><img src="/images/architecture.jpg" alt="Warm stone staircase and sculptural architecture" loading="lazy" /><figcaption>Form follows feeling.</figcaption></figure>
+          </div>
+        </section>`;
       if (variant === 'Goo morph') return `
-        <div class="typing-stage typing-stage--goo">
-          <span class="typing-stage-kicker">THE SHAPE OF IDEAS</span>
-          <h2><ui-typing ui-effect="goo" ui-content='["Creative", "Curious", "Brave"]' ui-duration="900" ui-delay="1900"></ui-typing><br />by design.</h2>
-          <p>An SVG goo filter blends one word into the next.</p>
-        </div>`;
+        <section class="typing-showcase typing-showcase--goo" aria-label="Creative studio poster example">
+          <div class="typing-showcase__masthead"><span>Open Form</span><span>A studio for what comes next</span></div>
+          <div class="typing-showcase__goo-body">
+            <h2>Stay<br /><ui-typing ui-effect="goo" ui-content='["curious", "open", "brave"]' ui-duration="1050" ui-delay="1800"></ui-typing></h2>
+            <p>Good work begins when you leave room for the unexpected.</p>
+          </div>
+        </section>`;
       return `
-        <div class="typing-stage typing-stage--type">
-          <span class="typing-stage-kicker">DIGITAL STUDIO</span>
-          <h2>Chúng tôi tạo<br /><ui-typing ui-effect="typing" ui-content='["website đẹp", "trải nghiệm tuyệt vời", "sản phẩm số"]' ui-duration="80" ui-delay="2000" ui-cursor-char="|"></ui-typing></h2>
-          <p>One headline, many ideas. The cursor types each phrase and erases it before the next.</p>
-        </div>`;
+        <section class="typing-showcase typing-showcase--type" aria-label="Editorial typewriter headline example">
+          <div class="typing-showcase__masthead"><span>Kindred Journal</span><span>Independent stories, carefully told</span></div>
+          <div class="typing-showcase__type-body">
+            <div class="typing-showcase__type-copy">
+              <h2>Make room<br />for <ui-typing ui-effect="typing" ui-content='["wonder", "ideas", "people"]' ui-duration="95" ui-delay="1900"></ui-typing></h2>
+              <p>A place to notice more, feel more, and keep the stories that matter.</p>
+              <div class="typing-showcase__sets" role="group" aria-label="Choose headline words">
+                <button type="button" data-typing-set='["wonder","ideas","people"]' aria-pressed="true">Journal</button>
+                <button type="button" data-typing-set='["places","moments","stories"]' aria-pressed="false">Travel</button>
+                <button type="button" data-typing-set='["design","purpose","progress"]' aria-pressed="false">Studio</button>
+              </div>
+            </div>
+            <figure class="typing-showcase__botanical"><img src="/images/botanical.jpg" alt="White flowers among deep green leaves" loading="lazy" /><figcaption>Slow stories, lasting impressions.</figcaption></figure>
+          </div>
+        </section>`;
     }
     case 'ui-cursor': {
       if (variant === 'Text image reveal') {
@@ -1207,7 +1241,7 @@ function renderDemoBody(tag: string, variant: string): string {
               </ui-collapse-trigger>
               <ui-collapse>
                 <div style="padding:1rem;background:var(--gallery-panel-strong);border-top:1px solid var(--ui-color-border);color:var(--ui-color-text-muted);line-height:1.6;font-size:0.9rem">
-                  Dễ dàng ghi đè biến CSS Design Tokens (@ui/tokens) hoặc viết style custom theo thiết kế Figma.
+                  Dễ dàng ghi đè biến CSS Design Tokens (@element-works/tokens) hoặc viết style custom theo thiết kế Figma.
                 </div>
               </ui-collapse>
             </div>
@@ -1535,6 +1569,21 @@ function renderDemoBody(tag: string, variant: string): string {
           </ui-orbit-gallery-track>
         </ui-orbit-gallery>
         <div class="orbit-demo__footer"><span>✦ Curated perspectives</span><span>Drag or swipe to spin · ${reverse ? 'Reverse' : 'Forward'} rotation</span></div>
+      </section>`;
+    }
+    case 'ui-disintegrating-gallery': {
+      const fine = variant === 'Fine pixels';
+      const photos = [
+        ['coast', 'Blue coast'], ['architecture', 'Sunlit architecture'],
+        ['flex-4', 'Clay sculpture'], ['flex-5', 'Low tops'],
+        ['flex-6', 'Portrait'], ['botanical', 'Botanical garden'],
+      ];
+      return `<section class="disintegrating-demo">
+        <div class="disintegrating-demo__heading"><span class="eyebrow">IMAGE / IN MOTION</span><h2>Pieces of <em>a moment.</em></h2><p>Drag, swipe or scroll horizontally. Each photograph gathers at the center and scatters into pixels as it moves away.</p></div>
+        <ui-disintegrating-gallery aria-label="Disintegrating photo gallery" ui-speed="${fine ? 28 : 40}" ui-cell-size="${fine ? 8 : 12}" ui-scatter="${fine ? 180 : 140}">
+          ${photos.map(([file, alt]) => `<ui-disintegrating-gallery-item><img src="/images/${file}.jpg" alt="${alt}" /></ui-disintegrating-gallery-item>`).join('')}
+        </ui-disintegrating-gallery>
+        <div class="disintegrating-demo__footer"><span>01 — 06 / VISUAL STUDIES</span><span>← DRAG TO EXPLORE →</span></div>
       </section>`;
     }
     case 'ui-dot-morph': {

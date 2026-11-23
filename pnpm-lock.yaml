@@ -23,16 +23,16 @@ importers:
 
   html:
     dependencies:
-      '@ui/components':
+      '@element-works/components':
         specifier: workspace:*
         version: link:../packages/components
-      '@ui/core':
+      '@element-works/core':
         specifier: workspace:*
         version: link:../packages/core
-      '@ui/motion':
+      '@element-works/motion':
         specifier: workspace:*
         version: link:../packages/motion
-      '@ui/tokens':
+      '@element-works/tokens':
         specifier: workspace:*
         version: link:../packages/tokens
       shiki:
@@ -48,13 +48,13 @@ importers:
 
   packages/components:
     dependencies:
-      '@ui/core':
+      '@element-works/core':
         specifier: workspace:*
         version: link:../core
-      '@ui/motion':
+      '@element-works/motion':
         specifier: workspace:*
         version: link:../motion
-      '@ui/tokens':
+      '@element-works/tokens':
         specifier: workspace:*
         version: link:../tokens
       matter-js:
@@ -76,7 +76,7 @@ importers:
 
   packages/core:
     dependencies:
-      '@ui/tokens':
+      '@element-works/tokens':
         specifier: workspace:*
         version: link:../tokens
     devDependencies:
@@ -92,10 +92,10 @@ importers:
 
   packages/motion:
     dependencies:
-      '@ui/core':
+      '@element-works/core':
         specifier: workspace:*
         version: link:../core
-      '@ui/tokens':
+      '@element-works/tokens':
         specifier: workspace:*
         version: link:../tokens
     devDependencies:

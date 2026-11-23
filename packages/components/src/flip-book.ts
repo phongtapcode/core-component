@@ -1,5 +1,5 @@
 /** A small, navigable book whose authored leaves turn in 3D. */
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 const PAGE = 'ui-flip-book-page';
 const COVER = 'ui-flip-book-cover';

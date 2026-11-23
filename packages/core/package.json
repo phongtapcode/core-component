@@ -1,6 +1,8 @@
 {
-  "name": "@ui/core",
+  "name": "@element-works/core",
   "version": "0.1.0",
+  "type": "module",
+  "publishConfig": { "access": "public" },
   "description": "Foundation for every <ui-*> component: BaseElement, CleanupRegistry, ObserverManager, attribute reflection, events, define().",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -22,7 +24,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@ui/tokens": "workspace:*"
+    "@element-works/tokens": "workspace:*"
   },
   "devDependencies": {
     "typescript": "5.6.3",

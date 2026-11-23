@@ -7,7 +7,7 @@
  * Uses requestAnimationFrame; respects prefers-reduced-motion (jumps immediately).
  */
 
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 
 export class UiCounter extends BaseElement {
   static override properties = {

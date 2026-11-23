@@ -1,4 +1,4 @@
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 /** A soft pointer-following light that reveals an inert visual copy of authored text. */
 export class UiTextSpotlight extends HTMLElement {

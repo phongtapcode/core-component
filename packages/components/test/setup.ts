@@ -1,8 +1,8 @@
 /**
- * Vitest setup for @ui/components. Empty stub — components don't need IO/RO
+ * Vitest setup for @element-works/components. Empty stub — components don't need IO/RO
  * mocks here; per-test setup handles observer reset.
  */
-import { setObserverConstructors } from '@ui/core';
+import { setObserverConstructors } from '@element-works/core';
 
 class NoopIO implements IntersectionObserver {
   readonly root: Element | Document | null = null;

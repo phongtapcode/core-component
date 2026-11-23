@@ -1,5 +1,5 @@
 /** Pointer-following cursor for <ui-cursor> and <div is="ui-cursor">. */
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 type CursorItem = HTMLElement;
 const activeItems = new WeakMap<CursorItem, CursorController>();

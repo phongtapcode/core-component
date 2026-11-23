@@ -1,5 +1,5 @@
 /** A responsive grid whose cards expand in place while their siblings move with FLIP. */
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 const ITEM = 'ui-expandable-grid-item';
 const TRIGGER = '[ui-expandable-grid-trigger]';

@@ -3,8 +3,8 @@
 `ui-flip-book` tạo một cuốn sách 3D với bìa và các tờ hai mặt. Ban đầu chỉ hiển thị bìa. Bấm hoặc vuốt bìa sang trái để mở; sau đó vuốt ngang, dùng phím ←/→ hoặc gọi `next()` và `previous()` để lật từng tờ. Nội dung của mỗi mặt do bạn viết trong HTML.
 
 ```js
-import '@ui/components';
-import '@ui/components/css';
+import '@element-works/components';
+import '@element-works/components/css';
 ```
 
 ```html

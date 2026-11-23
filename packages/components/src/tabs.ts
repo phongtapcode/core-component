@@ -20,7 +20,7 @@
  * Keyboard: ArrowLeft/Right (RTL: opposite), Home, End.
  */
 
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 
 export class UiTabs extends BaseElement {
   static override properties = {

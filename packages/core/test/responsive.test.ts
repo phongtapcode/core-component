@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { CleanupRegistry, getBreakpointState } from '@ui/core';
-import { currentBreakpoint, onBreakpointChange } from '@ui/core';
+import { CleanupRegistry, getBreakpointState } from '@element-works/core';
+import { currentBreakpoint, onBreakpointChange } from '@element-works/core';
 
 interface Mql {
   matches: boolean;

@@ -421,7 +421,7 @@ Components **must not** invent new global tokens. New globals require updating t
 
 ```ts
 // packages/components/<name>/meta.ts
-import type { ComponentMeta } from '@ui/core/meta';
+import type { ComponentMeta } from '@element-works/core/meta';
 
 export const meta: ComponentMeta = {
   name: 'Animate',
@@ -650,7 +650,7 @@ Performance is a first-class requirement, applied at every layer of the architec
 **Bundle:**
 
 - ESM, `sideEffects: false`, tree-shakeable.
-- Per-effect motion entry points (`@ui/motion/fade-up`) so apps pay only for what they use.
+- Per-effect motion entry points (`@element-works/motion/fade-up`) so apps pay only for what they use.
 - A bundle budget per package (enforced in CI): `core` ≤ 8 kB gz; `motion` ≤ 4 kB gz per effect; each `components/<x>` ≤ 6 kB gz.
 
 **Runtime budgets** (smoke-tested by Playwright on a mid-range mobile profile):
@@ -699,7 +699,7 @@ The phases defined in §26 of `README.MD` are restated here as a checklist. Each
 
 1. **Shadow DOM + form-associated elements:** `<input>` inside Shadow DOM has historically been fiddly. Mitigation — use `ElementInternals` (CustomElementRegistry) for form-associated custom elements where needed.
 2. **CSS Custom Properties don't pierce shadow by default** for arbitrary properties (only inherited properties). Mitigation — pass tokens through `:host { color: var(--ui-color-text); }` and let inheritance do the work; expose non-inheritable tokens via `::part` overrides.
-3. **Bundle duplication:** if a package is built with the wrong output format, an app may import two copies and observers/listeners won't share. Mitigation — single `dist/index.mjs`, `sideEffects: false`, project-wide `tsconfig` paths, Vite alias to `@ui/core` etc.
+3. **Bundle duplication:** if a package is built with the wrong output format, an app may import two copies and observers/listeners won't share. Mitigation — single `dist/index.mjs`, `sideEffects: false`, project-wide `tsconfig` paths, Vite alias to `@element-works/core` etc.
 4. **Memory leaks in detached subtrees:** Shadow DOM subtrees may keep timers alive. Mitigation — strict `$cleanup.run()` on disconnect, Playwright leak test per component.
 5. **Framework adapter drift:** if we add a React adapter later, it may "rewrite" behaviour. Mitigation — adapters are a wrapper layer; component logic stays in `core/components`. Adapter tests verify behaviour parity with the web-component version.
 6. **Web Component lifecycle surprises on `adoptedCallback`** (element moved across documents): explicit re-init required. Covered by lifecycle tests.

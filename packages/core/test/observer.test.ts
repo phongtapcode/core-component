@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { ObserverManager, getObserverManager } from '@ui/core';
-import type { Disposer } from '@ui/core';
+import { ObserverManager, getObserverManager } from '@element-works/core';
+import type { Disposer } from '@element-works/core';
 import { mocks } from './setup.js';
 
 /**

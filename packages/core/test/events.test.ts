@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { CleanupRegistry, emit, on, once } from '@ui/core';
+import { CleanupRegistry, emit, on, once } from '@element-works/core';
 
 describe('on()', () => {
   it('attaches a listener and registers removal with the registry', () => {

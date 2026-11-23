@@ -1,4 +1,4 @@
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 export type FlexCarouselPreset = 'liquid' | 'ribbon' | 'vortex' | 'arch';
 export type FlexCarouselFit = 'natural' | 'portrait' | 'square' | 'landscape';

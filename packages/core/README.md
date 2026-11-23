@@ -1,4 +1,4 @@
-# @ui/core
+# @element-works/core
 
 Foundation for every `<ui-…>` element. The only mandatory dependency of the rest of the library.
 
@@ -17,7 +17,7 @@ Foundation for every `<ui-…>` element. The only mandatory dependency of the re
 ## Quick start
 
 ```ts
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 
 class Counter extends BaseElement {
   static properties = {
@@ -72,7 +72,7 @@ define('ui-counter', Counter);
 ## Testing
 
 ```bash
-pnpm --filter @ui/core test
+pnpm --filter @element-works/core test
 ```
 
 Tests run in `happy-dom` and inject mocks for `IntersectionObserver` / `ResizeObserver` via `setObserverConstructors({ io, ro })`.

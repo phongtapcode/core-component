@@ -2,10 +2,10 @@
  * Breakpoint / responsive utilities. Wraps `matchMedia` and routes every
  * listener through a CleanupRegistry so component teardown is automatic.
  *
- * The breakpoint values come from @ui/tokens — do not duplicate them here.
+ * The breakpoint values come from @element-works/tokens — do not duplicate them here.
  */
 
-import { breakpointQueries, breakpoints, type Breakpoint } from '@ui/tokens';
+import { breakpointQueries, breakpoints, type Breakpoint } from '@element-works/tokens';
 import type { CleanupRegistry, Disposer } from './index.js';
 
 /** Snapshot of which named breakpoints are currently matching. */
@@ -91,5 +91,5 @@ export function currentBreakpoint(
   return null;
 }
 
-/** Pixel values, mirrored from @ui/tokens for cases where the consumer wants a number. */
+/** Pixel values, mirrored from @element-works/tokens for cases where the consumer wants a number. */
 export { breakpoints };

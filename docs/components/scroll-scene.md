@@ -3,8 +3,8 @@
 `ui-scroll-scene` đổi nội dung trong một vùng sticky theo quãng cuộn dọc. Dùng cho story, giới thiệu tính năng hoặc chuỗi ảnh toàn màn hình. Với animation của một phần tử riêng lẻ, dùng `ui-animate` hoặc `ui-parallax-scroll`.
 
 ```js
-import '@ui/motion';
-import '@ui/motion/css';
+import '@element-works/motion';
+import '@element-works/motion/css';
 ```
 
 ## Cấu trúc

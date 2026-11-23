@@ -1,5 +1,5 @@
 /**
- * @ui/components — default stylesheet.
+ * @element-works/components — default stylesheet.
  *
  * Animation philosophy (Senior FE standard):
  *  - Modal:   backdrop fade + dialog scale-in from 96% → 100%
@@ -2086,3 +2086,43 @@ ui-flex-carousel:not([data-ready]) {
 ui-flex-carousel:not([data-ready]) > ui-flex-carousel-item { display: block; flex: 0 0 auto; width: min(70vw, 240px); height: 75%; scroll-snap-align: center; }
 ui-flex-carousel:not([data-ready]) > ui-flex-carousel-item img { display: block; width: 100%; height: 100%; object-fit: cover; }
 @media (prefers-reduced-motion: reduce) { ui-flex-carousel { scroll-behavior: auto; } }
+
+/* Disintegrating Gallery */
+ui-disintegrating-gallery {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: var(--ui-disintegrating-gallery-height, 480px);
+  overflow: hidden;
+  cursor: grab;
+  touch-action: pan-y;
+  background: var(--ui-disintegrating-gallery-background, transparent);
+}
+ui-disintegrating-gallery[data-dragging] { cursor: grabbing; user-select: none; }
+ui-disintegrating-gallery:focus-visible { outline: 2px solid currentColor; outline-offset: -3px; }
+ui-disintegrating-gallery > .ui-disintegrating-gallery__canvas { display: block; width: 100%; height: 100%; pointer-events: none; }
+ui-disintegrating-gallery[data-ready] > ui-disintegrating-gallery-item {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+ui-disintegrating-gallery:not([data-ready]) {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding-inline: calc(50% - min(35vw, 140px));
+  overflow-x: auto;
+  scroll-snap-type: x proximity;
+}
+ui-disintegrating-gallery:not([data-ready]) > ui-disintegrating-gallery-item {
+  display: block;
+  flex: 0 0 auto;
+  width: min(70vw, 280px);
+  height: min(95%, 360px);
+  scroll-snap-align: center;
+}
+ui-disintegrating-gallery:not([data-ready]) > ui-disintegrating-gallery-item img { display: block; width: 100%; height: 100%; object-fit: cover; }
+ui-disintegrating-gallery:not([data-ready]) > .ui-disintegrating-gallery__canvas { display: none; }

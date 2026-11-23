@@ -1,6 +1,8 @@
 {
-  "name": "@ui/components",
+  "name": "@element-works/components",
   "version": "0.1.0",
+  "type": "module",
+  "publishConfig": { "access": "public" },
   "description": "Basic UI: Toggle, Collapse, Accordion, Tabs, Modal, Drawer, Popover.",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -24,9 +26,9 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@ui/core": "workspace:*",
-    "@ui/motion": "workspace:*",
-    "@ui/tokens": "workspace:*",
+    "@element-works/core": "workspace:*",
+    "@element-works/motion": "workspace:*",
+    "@element-works/tokens": "workspace:*",
     "matter-js": "^0.20.0"
   },
   "devDependencies": {

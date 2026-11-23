@@ -3,8 +3,8 @@
 `ui-typing` thay đổi các cụm từ ngắn trong headline theo ba hiệu ứng: đánh máy (`typing`), trượt dọc (`slide`) và hòa chữ bằng SVG filter (`goo`). Phù hợp cho hero, slogan hoặc tiêu đề trang trí; với đoạn văn dài cần đọc, dùng text bình thường.
 
 ```js
-import '@ui/motion';
-import '@ui/motion/css';
+import '@element-works/motion';
+import '@element-works/motion/css';
 ```
 
 ## Typewriter
@@ -13,12 +13,12 @@ import '@ui/motion/css';
 
 ```html
 <h1>
-  Chúng tôi tạo
+  Make room for
   <ui-typing
     ui-effect="typing"
-    ui-content='["website đẹp", "trải nghiệm tuyệt vời", "sản phẩm số"]'
-    ui-duration="80"
-    ui-delay="2000"
+    ui-content='["wonder", "ideas", "people"]'
+    ui-duration="95"
+    ui-delay="1900"
     ui-cursor-char="|"
   ></ui-typing>
 </h1>
@@ -26,35 +26,37 @@ import '@ui/motion/css';
 
 Component tách ký tự theo grapheme khi trình duyệt hỗ trợ `Intl.Segmenter`, để dấu tiếng Việt và emoji không bị xóa giữa chừng.
 
+Trong demo gallery, các nút **Journal**, **Travel** và **Studio** thay `ui-content` trực tiếp để thử nhiều bộ từ trên cùng một headline.
+
 ## Slide
 
 `ui-duration` là thời gian chuyển **cả cụm từ**. Từ cũ trượt lên, từ mới đi từ dưới vào. Component chừa sẵn chiều rộng của cụm dài nhất để bố cục headline không nhảy khi đổi chữ.
 
 ```html
 <h1>
-  Our
+  Spaces for
   <ui-typing
     ui-effect="slide"
-    ui-content='["Mission", "Vision", "Goal"]'
-    ui-duration="300"
-    ui-delay="2500"
+    ui-content='["living", "meeting", "making"]'
+    ui-duration="520"
+    ui-delay="2100"
   ></ui-typing>
 </h1>
 ```
 
 ## Goo
 
-Hai cụm từ chồng lên nhau trong lúc chuyển. SVG filter làm mờ và kết nối vùng chữ ở lớp phía sau để tạo cảm giác morphing/blob; lớp chữ phía trước vẫn sắc nét, dễ đọc. Mỗi instance có filter riêng để nhiều component có thể xuất hiện trên cùng trang.
+Hai cụm từ chồng lên nhau trong lúc chuyển. SVG filter làm mờ và kết nối vùng chữ ở lớp phía sau để tạo cảm giác morphing/blob; lớp này chỉ hiện trong lúc chuyển nên chữ đứng yên vẫn sắc nét. Mỗi instance có filter riêng để nhiều component có thể xuất hiện trên cùng trang.
 
 ```html
 <h1>
+  Stay
   <ui-typing
     ui-effect="goo"
-    ui-content='["Creative", "Innovative", "Bold"]'
-    ui-duration="1000"
-    ui-delay="2000"
+    ui-content='["curious", "open", "brave"]'
+    ui-duration="1050"
+    ui-delay="1800"
   ></ui-typing>
-  Design
 </h1>
 ```
 

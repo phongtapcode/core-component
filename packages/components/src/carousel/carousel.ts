@@ -12,8 +12,8 @@
  * - Subcomponents (prev, next, pagination, bullets, page/size, triggers)
  */
 
-import { BaseElement, define } from '@ui/core';
-import { toCssEasing } from '@ui/tokens';
+import { BaseElement, define } from '@element-works/core';
+import { toCssEasing } from '@element-works/tokens';
 import { AutoplayEngine } from './autoplay.js';
 import { parseBreakpoints, resolveResponsiveConfig } from './breakpoints.js';
 import { DragController } from './drag.js';

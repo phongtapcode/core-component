@@ -1,4 +1,4 @@
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 type Point = { x: number; y: number };
 type Particle = Point & {

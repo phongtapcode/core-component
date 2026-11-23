@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { CleanupRegistry } from '@ui/core';
+import { CleanupRegistry } from '@element-works/core';
 
 describe('CleanupRegistry', () => {
   it('runs every registered task exactly once on run()', () => {

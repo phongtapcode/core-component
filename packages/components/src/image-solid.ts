@@ -1,5 +1,5 @@
 /** Images on the actual planes of a draggable CSS 3D solid. */
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 export type ImageSolidShape = 'cube' | 'box' | 'triangle' | 'hexagon' | 'octagon';
 export type ImageSolidFace = { name: string; width: number; height: number; transform: string; clipPath?: string };

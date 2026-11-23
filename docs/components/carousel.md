@@ -1,6 +1,6 @@
 # Carousel
 
-`<ui-carousel>` accepts authored `inner → list → slide` markup. It supports arrows, pagination, responsive layouts, and a thumbnail rail. Import `@ui/components` and `@ui/components/css` before using it. Direct child slides from the earlier API still work.
+`<ui-carousel>` accepts authored `inner → list → slide` markup. It supports arrows, pagination, responsive layouts, and a thumbnail rail. Import `@element-works/components` and `@element-works/components/css` before using it. Direct child slides from the earlier API still work.
 
 The live gallery now includes 19 examples: basic navigation, responsive cards, loop, autoplay, transitions, vertical stories, thumbnails, pagination, custom controls, center and overflow, auto height, synchronization, product rows, hero banners, testimonials, logo strips, RTL, external controls, and an interactive playground. Each example has **Xem code** below the preview, showing the markup used by that example.
 

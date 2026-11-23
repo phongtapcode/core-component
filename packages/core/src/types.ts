@@ -1,5 +1,5 @@
 /**
- * Shared types for @ui/core.
+ * Shared types for @element-works/core.
  * Zero runtime cost — type-only module.
  */
 

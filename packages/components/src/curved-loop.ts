@@ -1,4 +1,4 @@
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 export type CurvedLoopShape = 'arc' | 'wave' | 'circle' | 'line';
 

@@ -1,4 +1,4 @@
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 
 const VIEWPORT_DEFAULT = 768;
 

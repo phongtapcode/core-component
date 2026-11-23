@@ -79,7 +79,7 @@ Các giá trị có thể override: `disabled`, `duration`, `easing`, `animate`,
 ## JavaScript
 
 ```js
-import { uiModal } from '@ui/components';
+import { uiModal } from '@element-works/components';
 
 uiModal.open('contact');
 uiModal.close('contact');

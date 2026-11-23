@@ -10,7 +10,7 @@
  * - Dynamic mutation observer for children
  */
 
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 import type { UiCollapse } from './collapse.js';
 import type { UiCollapseTrigger } from './collapse-trigger.js';
 

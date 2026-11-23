@@ -157,7 +157,7 @@ CSS kèm theo:
 
 ## Danh sách hàm Easing hỗ trợ
 
-Các đường cong easing được tối ưu hóa mượt mà từ `@ui/tokens`:
+Các đường cong easing được tối ưu hóa mượt mà từ `@element-works/tokens`:
 
 | Tên Easing | Mô tả |
 |---|---|

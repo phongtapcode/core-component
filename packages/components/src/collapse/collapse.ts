@@ -4,14 +4,14 @@
  * Enterprise-grade collapsible panel with hardware-accelerated height animation.
  * Features:
  * - Smooth transition from 0 to auto height
- * - Rich easing function support via @ui/tokens (decay, easeOutQuad, spring, etc.)
+ * - Rich easing function support via @element-works/tokens (decay, easeOutQuad, spring, etc.)
  * - Sync with <ui-collapse-trigger> by name
  * - Accordion mode when wrapped in <ui-collapse-provider>
  * - Accessible ARIA attributes and focus handling
  */
 
-import { BaseElement, define } from '@ui/core';
-import { toCssEasing } from '@ui/tokens';
+import { BaseElement, define } from '@element-works/core';
+import { toCssEasing } from '@element-works/tokens';
 import { collapseRegistry } from './registry.js';
 import type { CollapseInstance } from './types.js';
 

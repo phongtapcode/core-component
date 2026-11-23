@@ -314,6 +314,30 @@ export const COMPONENT_DOCS: Record<string, ComponentDoc> = {
     ],
     a11y: 'Give each image useful alt text and the gallery an accessible label. Drag with a mouse or swipe horizontally on touch; Arrow Left and Arrow Right rotate the focused gallery. Vertical touch scrolling remains available. Autoplay continues on hover and pauses during dragging or keyboard focus; reduced motion disables autoplay and release momentum.',
   },
+  'disintegrating-gallery': {
+    slug: 'disintegrating-gallery', tagName: 'ui-disintegrating-gallery', name: 'Disintegrating Gallery', category: 'Advanced',
+    summary: 'An infinite marquee of images that dissolve progressively from their outer edge into scattered tiles and assemble again at the center.',
+    usage: `<ui-disintegrating-gallery ui-speed="40" ui-cell-size="12" ui-scatter="140" aria-label="Photo gallery">
+  <ui-disintegrating-gallery-item><img src="coast.jpg" alt="Blue coast" /></ui-disintegrating-gallery-item>
+  <ui-disintegrating-gallery-item><img src="forest.jpg" alt="Sunlit forest" /></ui-disintegrating-gallery-item>
+  <ui-disintegrating-gallery-item><img src="sunset.jpg" alt="Sunset meadow" /></ui-disintegrating-gallery-item>
+</ui-disintegrating-gallery>`,
+    attributes: [
+      { name: 'ui-speed', type: 'number', default: '40', description: 'Automatic horizontal speed in pixels per second; negative reverses direction.' },
+      { name: 'ui-cell-size', type: 'number', default: '12', description: 'Image tile size in CSS pixels (4–48).' },
+      { name: 'ui-scatter', type: 'number', default: '140', description: 'Maximum tile drift near the edges in CSS pixels (0–400).' },
+      { name: 'ui-card-width', type: 'number', default: '280', description: 'Image width in CSS pixels, capped by the available gallery width.' },
+      { name: 'ui-card-height', type: 'number', default: '360', description: 'Image height in CSS pixels, capped by the gallery height.' },
+      { name: 'ui-gap', type: 'number', default: '28', description: 'Gap between images in CSS pixels.' },
+    ],
+    methods: [{ name: 'moveBy(pixels)', description: 'Move the strip horizontally by CSS pixels.' }],
+    events: [{ name: 'ui:disintegrating-gallery:change', detail: '{ index, item }', description: 'The image nearest the center changed.' }],
+    cssVars: [
+      { name: '--ui-disintegrating-gallery-height', default: '480px', description: 'Gallery height.' },
+      { name: '--ui-disintegrating-gallery-background', default: 'transparent', description: 'Backdrop behind the images.' },
+    ],
+    a11y: 'Give images meaningful alt text and the gallery an accessible label. Drag/swipe, mouse wheel, trackpad scrolling, and Arrow Left/Right move the strip. Vertical touch scrolling remains available. Reduced motion disables autoplay and inertia. Original images remain in the DOM for assistive technology and serve as a fallback if Canvas is unavailable.',
+  },
   'expandable-grid': {
     slug: 'expandable-grid', tagName: 'ui-expandable-grid', name: 'Expandable Grid', category: 'Advanced',
     summary: 'Expand a card inside a responsive grid while the other cards animate to their new positions.',
@@ -569,12 +593,12 @@ uiToast.push({
     category: 'Motion',
     summary: 'Rotate short headline phrases with typewriter, vertical slide, or SVG goo morph effects.',
     usage: `<h1>
-  Chúng tôi tạo
+  Make room for
   <ui-typing
     ui-effect="typing"
-    ui-content='["website đẹp", "trải nghiệm tuyệt vời", "sản phẩm số"]'
-    ui-duration="80"
-    ui-delay="2000"
+    ui-content='["wonder", "ideas", "people"]'
+    ui-duration="95"
+    ui-delay="1900"
     ui-cursor-char="|"
   ></ui-typing>
 </h1>`,
@@ -1023,7 +1047,7 @@ uiToast.push({
     tagName: 'ui-collapse',
     name: 'Collapse',
     category: 'Basic UI',
-    summary: 'Hardware-accelerated height transition from 0 to auto, standalone triggers with active-binding (selector[attribute]), rich easing curves via @ui/tokens, and accordion mode via <ui-collapse-provider>.',
+    summary: 'Hardware-accelerated height transition from 0 to auto, standalone triggers with active-binding (selector[attribute]), rich easing curves via @element-works/tokens, and accordion mode via <ui-collapse-provider>.',
     usage: `<ui-collapse-trigger name="faq-1" active-binding="button[data-state], .icon[rotate]">
   <button type="button">
     <span>FAQ Question 1</span>

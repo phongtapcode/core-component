@@ -3,8 +3,8 @@
 `<ui-falling-text>` biến từng từ hoặc ký tự thành rigid body bằng Matter.js. Chúng rơi theo thứ tự chọn trước, va chạm và bật nảy trong khung. Người dùng có thể kéo, ném hoặc quét chuột để đẩy chúng. Hiệu ứng lấy cảm hứng từ [Falling Text của React Bits](https://reactbits.dev/text-animations/falling-text), được viết thành Web Component để dùng không cần React.
 
 ```js
-import '@ui/components';
-import '@ui/components/css';
+import '@element-works/components';
+import '@element-works/components/css';
 ```
 
 ```html
@@ -58,4 +58,4 @@ Component phát `ui:falling-text:start` với `{ count }`, `ui:falling-text:sett
 
 Câu gốc vẫn nằm trong DOM cho trình đọc màn hình; các mảnh chuyển động được đánh dấu trang trí. Tab vào component, Enter/Space để bắt đầu hoặc chạy lại, Escape để reset. Trên màn hình cảm ứng, có thể kéo chữ đã rơi. `prefers-reduced-motion` giữ câu đứng yên, vẫn đọc được. Component đo theo vùng chứa khi resize, tạm dừng vòng lặp khi khuất màn hình hoặc tab ẩn, và dọn observer, listener, timer, RAF khi tháo khỏi DOM.
 
-Cần trình duyệt hiện đại hỗ trợ Custom Elements, Pointer Events và CSS transforms. `ResizeObserver`/`IntersectionObserver` được dùng khi có sẵn; nếu thiếu, vẫn có thể gọi `refresh()` hoặc `start()` bằng mã. `matter-js` được đóng gói theo dependency của `@ui/components`.
+Cần trình duyệt hiện đại hỗ trợ Custom Elements, Pointer Events và CSS transforms. `ResizeObserver`/`IntersectionObserver` được dùng khi có sẵn; nếu thiếu, vẫn có thể gọi `refresh()` hoặc `start()` bằng mã. `matter-js` được đóng gói theo dependency của `@element-works/components`.

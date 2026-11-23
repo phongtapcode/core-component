@@ -613,6 +613,19 @@ All components share a predictable API — attributes are `kebab-case`, events a
 
 <div class="comp-card">
   <div class="comp-card-header">
+    <h3>Disintegrating Gallery</h3>
+    <span class="comp-badge advanced">Advanced</span>
+  </div>
+  <p class="comp-tag">&lt;ui-disintegrating-gallery&gt;</p>
+  <p class="comp-desc">Scroll an endless image strip that breaks into pixels at the edges.</p>
+  <div class="comp-actions">
+    <a class="comp-btn docs" href="/components/disintegrating-gallery">📄 Docs</a>
+    <a class="comp-btn demo" href="http://localhost:5173/#/ui-disintegrating-gallery" target="_blank">▶ Demo</a>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-card-header">
     <h3>Grid Hover Expand</h3>
     <span class="comp-badge advanced">Advanced</span>
   </div>

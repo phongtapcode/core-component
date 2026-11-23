@@ -1,5 +1,5 @@
 /**
- * @ui/components — public entry point. Side-effect imports register all
+ * @element-works/components — public entry point. Side-effect imports register all
  * custom elements.
  */
 
@@ -23,6 +23,7 @@ import './toast.js';
 import './photoswipe.js';
 import './expandable-grid.js';
 import './orbit-gallery.js';
+import './disintegrating-gallery.js';
 import './dot-morph.js';
 import './logo-assembly.js';
 import './sand-physics.js';
@@ -91,6 +92,7 @@ export { UiToast, UiToastPortal, UiToastCloseButton, uiToast, type ToastOptions,
 export { UiPhotoSwipe, parsePhotoSwipeOptions } from './photoswipe.js';
 export { UiExpandableGrid, UiExpandableGridItem } from './expandable-grid.js';
 export { UiOrbitGallery, UiOrbitGalleryTrack, UiOrbitGalleryItem } from './orbit-gallery.js';
+export { UiDisintegratingGallery, UiDisintegratingGalleryItem } from './disintegrating-gallery.js';
 export { UiDotMorph } from './dot-morph.js';
 export { UiLogoAssembly, sampleLogoPixels } from './logo-assembly.js';
 export { UiSandPhysics } from './sand-physics.js';

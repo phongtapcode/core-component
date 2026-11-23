@@ -1,5 +1,5 @@
 /** Temporary notifications rendered into one fixed portal per placement. */
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 export type ToastPlacement = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
 

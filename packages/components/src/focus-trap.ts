@@ -7,7 +7,7 @@
  * Both go through the host element's CleanupRegistry.
  */
 
-import type { BaseElement } from '@ui/core';
+import type { BaseElement } from '@element-works/core';
 
 /** Selector for elements that can receive focus. */
 const FOCUSABLE_SELECTOR = [

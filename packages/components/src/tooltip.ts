@@ -1,5 +1,5 @@
 /** Short, non-interactive hint anchored to the first child of <ui-tooltip>. */
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 
 type Side = 'top' | 'bottom' | 'left' | 'right';
 type Align = 'start' | 'center' | 'end';

@@ -62,6 +62,7 @@ export default defineConfig({
         { text: 'Grid Hover Expand', link: '/components/grid-hover-expand' },
         { text: 'Swipeable Card Stack', link: '/components/swipeable-card-stack' },
         { text: 'Orbit Gallery', link: '/components/orbit-gallery' },
+        { text: 'Disintegrating Gallery', link: '/components/disintegrating-gallery' },
         { text: 'Dot Morph', link: '/components/dot-morph' },
         { text: 'Logo Assembly', link: '/components/logo-assembly' },
         { text: 'Sand Physics', link: '/components/sand-physics' },

@@ -5,8 +5,8 @@
 Dùng cho storytelling hoặc showcase nhiều cảnh. Với danh sách dọc thông thường, dùng CSS layout.
 
 ```js
-import '@ui/motion';
-import '@ui/motion/css';
+import '@element-works/motion';
+import '@element-works/motion/css';
 ```
 
 ## Cấu trúc cơ bản

@@ -3,8 +3,8 @@
 `ui-image-stack` xếp nhiều ảnh thành các lớp có chiều sâu. Hover hoặc focus làm các lớp tách ra; bấm vào một lớp để mở ảnh lớn. Trong bản xem lớn, dùng nút mũi tên hoặc phím ←/→ để chuyển ảnh, Escape hoặc nút × để đóng.
 
 ```js
-import '@ui/components';
-import '@ui/components/css';
+import '@element-works/components';
+import '@element-works/components/css';
 ```
 
 ```html

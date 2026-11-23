@@ -1,5 +1,5 @@
 /**
- * @ui/tokens — global CSS Custom Properties.
+ * @element-works/tokens — global CSS Custom Properties.
  * Consumed by every component via var(--ui-*).
  * Override at :root or any ancestor to retheme without touching component CSS.
  */

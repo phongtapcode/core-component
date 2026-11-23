@@ -7,8 +7,8 @@
 Import component **và** CSS trước khi dùng; CSS đặt canvas phủ kín vùng chứa.
 
 ```js
-import '@ui/components';
-import '@ui/components/css';
+import '@element-works/components';
+import '@element-works/components/css';
 ```
 
 ## SVG paths

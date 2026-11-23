@@ -1,5 +1,5 @@
 /** A scripted, decorative cursor that travels to a target inside its host. */
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 
 const durationOf = (host: HTMLElement): number => {
   const value = Number(host.getAttribute('ui-duration'));

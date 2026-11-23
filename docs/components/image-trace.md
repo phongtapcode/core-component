@@ -3,8 +3,8 @@
 `ui-image-trace` nhận một ảnh, đọc pixel ở độ phân giải nhỏ, tìm các đường biên theo độ sáng rồi vẽ chúng bằng SVG. Khi nét vẽ hoàn tất, component làm hiện ảnh gốc. Demo nằm trong gallery tại `#/ui-image-trace`.
 
 ```js
-import '@ui/components';
-import '@ui/components/css';
+import '@element-works/components';
+import '@element-works/components/css';
 ```
 
 ```html

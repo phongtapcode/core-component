@@ -5,8 +5,8 @@
 Import both the component registration and its stylesheet:
 
 ```js
-import '@ui/motion';
-import '@ui/motion/css';
+import '@element-works/motion';
+import '@element-works/motion/css';
 ```
 
 ## Basic usage

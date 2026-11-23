@@ -1,4 +1,4 @@
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 export interface ImageTracePath { d: string; length: number }
 type Point = { x: number; y: number };

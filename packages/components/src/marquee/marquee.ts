@@ -11,7 +11,7 @@
  * - Full support for both standard and xo-* HTML attributes
  */
 
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 import type { MarqueeDirection, MarqueeInstance } from './types.js';
 
 let marqueeUid = 0;

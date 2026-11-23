@@ -3,8 +3,8 @@
 `ui-image-flashlight` bắt đầu với ảnh xám tối nhưng vẫn thấy nội dung. Mặc định, vùng sáng tự quét qua ảnh rồi mở rộng để hiện toàn bộ ảnh. Thêm `ui-hover` để vùng sáng đi theo con trỏ thay cho chuỗi tự động.
 
 ```js
-import '@ui/components';
-import '@ui/components/css';
+import '@element-works/components';
+import '@element-works/components/css';
 ```
 
 ```html

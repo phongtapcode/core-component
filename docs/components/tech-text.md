@@ -3,8 +3,8 @@
 `<ui-tech-text>` biến chữ thành đường viền nét đứt khi con trỏ đi qua từng ký tự. Khung chọn cho thấy ký tự đang tác động; bạn có thể kéo ký tự ra khỏi dòng rồi thả để nó trở về. Hiệu ứng lấy cảm hứng từ [Tech Text của React Bits](https://reactbits.dev/text-animations/tech-text), được viết lại thành Web Component không phụ thuộc React.
 
 ```js
-import '@ui/components';
-import '@ui/components/css';
+import '@element-works/components';
+import '@element-works/components/css';
 ```
 
 ```html

@@ -15,7 +15,7 @@ import {
   serializeBoolean,
   serializeNumber,
   serializeString,
-} from '@ui/core';
+} from '@element-works/core';
 
 describe('kebab / camel', () => {
   it('kebab() converts camelCase', () => {

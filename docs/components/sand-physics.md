@@ -3,8 +3,8 @@
 `ui-sand-physics` là hộp cát tương tác chạy bằng lưới ô trên Canvas. Mỗi ô chứa tối đa một vật liệu nên hạt không xuyên qua nhau hay xuyên tường. Giữ và kéo chuột hoặc chạm để rải vật liệu; nét vẽ được nối liền giữa các sự kiện pointer. Kéo nhanh tạo nhiều hạt hơn và truyền xung lực theo hướng kéo.
 
 ```js
-import '@ui/components';
-import '@ui/components/css';
+import '@element-works/components';
+import '@element-works/components/css';
 ```
 
 ```html

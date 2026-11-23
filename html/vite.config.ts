@@ -10,18 +10,18 @@ export default defineConfig({
   resolve: {
     alias: {
       // CSS subpaths resolve to the package root + the requested file.
-      '@ui/tokens/css/tokens.css': `${tokensRoot}/css/tokens.css`,
-      '@ui/motion/css/motion.css': `${motionRoot}/css/motion.css`,
-      '@ui/components/css/components.css': `${componentsRoot}/css/components.css`,
+      '@element-works/tokens/css/tokens.css': `${tokensRoot}/css/tokens.css`,
+      '@element-works/motion/css/motion.css': `${motionRoot}/css/motion.css`,
+      '@element-works/components/css/components.css': `${componentsRoot}/css/components.css`,
       // JS subpaths resolve to the package source.
-      '@ui/tokens': `${tokensRoot}/src/index.ts`,
-      '@ui/tokens/': `${tokensRoot}/src/`,
-      '@ui/core': `${coreRoot}/src/index.ts`,
-      '@ui/core/': `${coreRoot}/src/`,
-      '@ui/motion': `${motionRoot}/src/index.ts`,
-      '@ui/motion/': `${motionRoot}/src/`,
-      '@ui/components': `${componentsRoot}/src/index.ts`,
-      '@ui/components/': `${componentsRoot}/src/`,
+      '@element-works/tokens': `${tokensRoot}/src/index.ts`,
+      '@element-works/tokens/': `${tokensRoot}/src/`,
+      '@element-works/core': `${coreRoot}/src/index.ts`,
+      '@element-works/core/': `${coreRoot}/src/`,
+      '@element-works/motion': `${motionRoot}/src/index.ts`,
+      '@element-works/motion/': `${motionRoot}/src/`,
+      '@element-works/components': `${componentsRoot}/src/index.ts`,
+      '@element-works/components/': `${componentsRoot}/src/`,
     },
   },
   build: {

@@ -1,5 +1,5 @@
 /** Colored image pixels become independent particles that assemble into a logo. */
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 type Mode = 'scattered' | 'assembling' | 'assembled' | 'exploding';
 type Target = { x: number; y: number; color: string; alpha: number };

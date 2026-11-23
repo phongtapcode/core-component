@@ -11,7 +11,7 @@
  * <ui-carousel-trigger>
  */
 
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 import type { UiCarousel } from './carousel.js';
 import { getCarouselByName } from './sync.js';
 

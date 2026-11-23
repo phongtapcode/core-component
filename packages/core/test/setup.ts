@@ -4,7 +4,7 @@
  * `globalThis.__uiMocks`.
  */
 
-import { setObserverConstructors } from '@ui/core';
+import { setObserverConstructors } from '@element-works/core';
 
 class MockIntersectionObserver implements IntersectionObserver {
   readonly root: Element | Document | null = null;

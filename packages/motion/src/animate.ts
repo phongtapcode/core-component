@@ -18,7 +18,7 @@
  *   reset()    method   : hide again, re-arm observer
  */
 
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 import { DEFAULT_DURATIONS, isValidEffect, type EffectName } from './effects.js';
 
 export class UiAnimate extends BaseElement {

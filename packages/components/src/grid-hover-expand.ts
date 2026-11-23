@@ -1,5 +1,5 @@
 /** Expands the hovered item while keeping its siblings in the same row. */
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 const readColumn = (styles: CSSStyleDeclaration, name: string, fallback: number): number => {
   const value = Number.parseInt(styles.getPropertyValue(name), 10);

@@ -4,7 +4,7 @@
  * Header trigger button that toggles visibility of associated <ui-collapse> panels.
  */
 
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 import { collapseRegistry } from './registry.js';
 import type { UiCollapse } from './collapse.js';
 

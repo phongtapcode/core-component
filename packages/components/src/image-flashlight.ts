@@ -1,4 +1,4 @@
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 
 export interface FlashlightFrame { x: number; y: number; radius: number }
 type Keyframe = { at: number; x: number; y: number; radius: number };

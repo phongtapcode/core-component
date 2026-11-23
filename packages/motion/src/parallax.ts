@@ -1,4 +1,4 @@
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 import {
   parseKeyframes, parseParallaxBreakpoints, resolveKeyframes, resolveScrollPosition, sampleKeyframes,
   type ParallaxBreakpoints, type ParallaxFrame, type ParallaxKeyframes, type ParallaxValue,

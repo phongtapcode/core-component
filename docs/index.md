@@ -18,7 +18,7 @@ A framework-agnostic, production-quality web component library.
 
 ```html
 <script type="module">
-  import '@ui/components';
+  import '@element-works/components';
 </script>
 
 <ui-animate effect="fade-up">

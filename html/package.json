@@ -1,5 +1,5 @@
 {
-  "name": "@ui/html-gallery",
+  "name": "@element-works/html-gallery",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -9,10 +9,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@ui/components": "workspace:*",
-    "@ui/core": "workspace:*",
-    "@ui/motion": "workspace:*",
-    "@ui/tokens": "workspace:*",
+    "@element-works/components": "workspace:*",
+    "@element-works/core": "workspace:*",
+    "@element-works/motion": "workspace:*",
+    "@element-works/tokens": "workspace:*",
     "shiki": "1.29.2"
   },
   "devDependencies": {

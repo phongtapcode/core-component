@@ -3,8 +3,8 @@
 `ui-image-solid` đặt ảnh thật trên các mặt của một khối 3D bằng CSS transforms. Có thể xoay 360° quanh cả hai trục bằng chuột, cảm ứng hoặc bàn phím; khi thả, khối tiếp tục xoay theo quán tính. Component hỗ trợ cube, box chữ nhật và lăng trụ 3, 6 hoặc 8 cạnh.
 
 ```js
-import '@ui/components';
-import '@ui/components/css';
+import '@element-works/components';
+import '@element-works/components/css';
 ```
 
 ```html

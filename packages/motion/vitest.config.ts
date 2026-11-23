@@ -4,8 +4,8 @@ import path from 'node:path';
 export default defineConfig({
   resolve: {
     alias: {
-      '@ui/core': path.resolve(__dirname, '../core/src/index.ts'),
-      '@ui/tokens': path.resolve(__dirname, '../tokens/src/index.ts'),
+      '@element-works/core': path.resolve(__dirname, '../core/src/index.ts'),
+      '@element-works/tokens': path.resolve(__dirname, '../tokens/src/index.ts'),
     },
   },
   test: {

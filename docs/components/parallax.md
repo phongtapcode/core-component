@@ -3,8 +3,8 @@
 `ui-parallax` đo vùng cuộn và vị trí con trỏ. Đặt `ui-parallax-scroll` bên trong để nội suy CSS theo scroll, hoặc `ui-parallax-hover` để dịch chuyển / nghiêng 3D theo chuột. Có thể lồng hover trong scroll để kết hợp hai hiệu ứng. Với hiệu ứng hiện ra một lần khi vào màn hình, dùng [`ui-animate`](./animate.md).
 
 ```js
-import '@ui/motion';
-import '@ui/motion/css';
+import '@element-works/motion';
+import '@element-works/motion/css';
 ```
 
 | Element | Vai trò | Yêu cầu |

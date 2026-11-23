@@ -1,6 +1,6 @@
 /** Interactive before/after image comparison. */
 
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 
 const clamp = (value: number) => Math.max(0, Math.min(100, value));
 

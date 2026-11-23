@@ -1,5 +1,5 @@
 /**
- * @ui/motion — default stylesheet.
+ * @element-works/motion — default stylesheet.
  *
  * The motion engine is CSS-driven: components toggle [data-revealed] and the
  * CSS rules below translate to the visual effect. This keeps the runtime

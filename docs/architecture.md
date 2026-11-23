@@ -14,7 +14,7 @@ document. Highlights:
 
 ## Lifecycle
 
-Every element extends `BaseElement` from `@ui/core`:
+Every element extends `BaseElement` from `@element-works/core`:
 
 - `onConnect()` — every time the element is attached.
 - `onReady()` — once, after first paint following the first attach.

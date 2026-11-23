@@ -3,8 +3,8 @@
 `ui-logo-assembly` biến các pixel có màu của SVG, PNG hoặc WebP thành những hạt canvas độc lập. Hạt trôi trong không gian rồi tụ lại thành logo, giữ màu gốc của từng điểm. Sau khi hình thành, chúng dao động và nhấp nháy nhẹ.
 
 ```js
-import '@ui/components';
-import '@ui/components/css';
+import '@element-works/components';
+import '@element-works/components/css';
 ```
 
 ## Dùng cơ bản

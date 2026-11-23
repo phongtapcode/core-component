@@ -1,4 +1,4 @@
-import { define } from '@ui/core';
+import { define } from '@element-works/core';
 import { UiParallax } from './parallax.js';
 
 const clamp = (value: number) => Math.max(0, Math.min(1, value));

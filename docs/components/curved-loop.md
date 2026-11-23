@@ -3,8 +3,8 @@
 `<ui-curved-loop>` làm chữ chạy liên tục trên đường cong SVG. Có bốn hình dạng: `arc`, `wave`, `circle` và `line`. Demo cung cấp bốn preset Arc, Wave, Circle, Outline và các control để tùy chỉnh riêng từng thuộc tính. Ý tưởng dựa trên [Curved Loop của React Bits](https://reactbits.dev/text-animations/curved-loop); phần triển khai là Web Component thuần, không cần React.
 
 ```js
-import '@ui/components';
-import '@ui/components/css';
+import '@element-works/components';
+import '@element-works/components/css';
 ```
 
 ```html

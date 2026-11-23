@@ -1,5 +1,5 @@
 /** Dialog, drawer and lightbox with named triggers. */
-import { BaseElement, define } from '@ui/core';
+import { BaseElement, define } from '@element-works/core';
 import { lockScroll, trapFocus, unlockScroll } from './focus-trap.js';
 
 type State = 'closed' | 'entering' | 'open' | 'leaving';

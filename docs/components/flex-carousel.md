@@ -4,7 +4,7 @@
 
 ## Cài đặt và sử dụng
 
-Import `@ui/components` cùng `@ui/components/css`, rồi thêm các item trực tiếp vào carousel:
+Import `@element-works/components` cùng `@element-works/components/css`, rồi thêm các item trực tiếp vào carousel:
 
 ```html
 <ui-flex-carousel ui-preset="liquid" ui-intro="rise" aria-label="Studio work"
