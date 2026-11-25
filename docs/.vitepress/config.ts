@@ -8,13 +8,25 @@ export default defineConfig({
     nav: [
       { text: 'Components', link: '/components/' },
       { text: 'Installation', link: '/installation' },
+      { text: 'React / Next.js', link: '/react/' },
       { text: 'Architecture', link: '/architecture' },
     ],
-    sidebar: [
+    sidebar: {
+      '/react/': [
+        { text: 'React / Next.js', items: [
+          { text: 'Tổng quan', link: '/react/' },
+          { text: 'Cài đặt', link: '/react/installation' },
+          { text: 'Dùng với Next.js', link: '/react/nextjs' },
+          { text: 'Dùng components', link: '/react/components' },
+          { text: 'API và giới hạn', link: '/react/api' },
+        ] },
+      ],
+      '/': [
       { text: 'Get started', items: [
         { text: 'Introduction', link: '/' },
         { text: 'Installation', link: '/installation' },
         { text: 'Quick start', link: '/quick-start' },
+        { text: 'React / Next.js', link: '/react/' },
         { text: 'All components', link: '/components/' },
       ] },
       { text: 'Motion', items: [
@@ -74,6 +86,7 @@ export default defineConfig({
         { text: 'Architecture', link: '/architecture' },
         { text: 'Roadmap', link: '/roadmap' },
       ] },
-    ],
+      ],
+    },
   },
 });

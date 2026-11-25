@@ -1,5 +1,7 @@
 # Installation
 
+For React or Next.js, see the dedicated [React / Next.js documentation](/react/). The adapter is being prepared and is not yet published.
+
 ## From CDN
 
 ```html

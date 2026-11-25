@@ -1984,6 +1984,7 @@ ui-flip-book-page > .flip-book-demo__page--note { display:flex; flex-direction:c
 .workspace-sidebar-home { display: flex; align-items: center; justify-content: space-between; min-height: 39px; padding: 0 12px; border-radius: 8px; font-size: .89rem; font-weight: 650; }
 .workspace-sidebar-home span, .workspace-nav-group h2 span { color: var(--ui-color-text-muted); font-size: .72rem; font-weight: 500; }
 .workspace-sidebar-home.is-active, .workspace-nav-item.is-active { background: var(--gallery-soft); color: var(--ui-color-text); }
+.workspace-guide-link { margin-top: 7px; }
 .workspace-sidebar-search { display: block; margin: 13px 0 12px; }
 .workspace-sidebar-search input { width: 100%; min-height: 36px; padding: 0 11px; border: 1px solid var(--ui-color-border); border-radius: 7px; background: transparent; color: var(--ui-color-text); font: inherit; font-size: .82rem; }
 .workspace-sidebar-list { overflow-y: auto; min-height: 0; padding-bottom: 12px; scrollbar-width: thin; }

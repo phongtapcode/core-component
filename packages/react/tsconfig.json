@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "jsx": "react-jsx",
+    "types": ["vitest/globals"],
+    "paths": {
+      "@element-works/components": ["../components/src/index.ts"],
+      "@element-works/motion": ["../motion/src/index.ts"],
+      "@element-works/core": ["../core/src/index.ts"],
+      "@element-works/tokens": ["../tokens/src/index.ts"]
+    }
+  },
+  "include": ["src", "test", "../components/src", "../motion/src", "../core/src", "../tokens/src"]
+}

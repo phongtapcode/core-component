@@ -14,6 +14,8 @@ const storedTheme = localStorage.getItem('ui-theme');
 document.documentElement.dataset['theme'] = storedTheme === 'light' ? 'light' : 'dark';
 
 const CATEGORIES = ['Motion', 'Basic UI', 'Media', 'Utility', 'Advanced'] as const;
+const REACT_DOCS_URL = import.meta.env.VITE_REACT_DOCS_URL ||
+  (import.meta.env.DEV ? 'http://localhost:5174/react/nextjs' : '/react/nextjs');
 let workspaceController: AbortController | null = null;
 let sidebarScrollTop = 0;
 
@@ -27,11 +29,12 @@ function renderWorkspace(content: string, activeTag = ''): string {
     <header class="workspace-topbar">
       <button class="workspace-menu" type="button" aria-label="Open component navigation" aria-expanded="false" aria-controls="workspace-sidebar">Menu</button>
       <a class="workspace-brand" href="#/" aria-label="UI Core home"><span class="workspace-brand-mark">ui</span><span>UI Core</span><small>components</small></a>
-      <nav class="workspace-toplinks" aria-label="Site"><a href="#/">Components</a><a href="#/docs/animate">API Docs</a></nav>
+      <nav class="workspace-toplinks" aria-label="Site"><a href="#/">Components</a><a href="#/docs/animate">API Docs</a><a href="${escapeHtml(REACT_DOCS_URL)}">React / Next.js</a></nav>
       <button type="button" id="gallery-theme" class="workspace-theme" aria-label="Switch color theme"></button>
     </header>
     <div class="workspace-layout"><aside class="workspace-sidebar" id="workspace-sidebar" aria-label="Component navigation">
       <a class="workspace-sidebar-home${activeTag ? '' : ' is-active'}" href="#/">All components <span>${COMPONENTS.length}</span></a>
+      <a class="workspace-nav-item workspace-guide-link" href="${escapeHtml(REACT_DOCS_URL)}">React / Next.js docs</a>
       <label class="workspace-sidebar-search"><span class="sr-only">Filter component navigation</span><input type="search" placeholder="Filter navigation…" data-nav-filter autocomplete="off" /></label>
       <div class="workspace-sidebar-list">${groups}</div>
     </aside><div class="workspace-content">${content}</div></div>

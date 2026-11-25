@@ -1,7 +1,9 @@
 # Phát hành các package
 
-Workspace có bốn package public: `tokens` → `core` → `motion` → `components`.
+Workspace có năm package có thể publish: `tokens` → `core` → `motion` → `components` → `react`. Bốn package nền đã public; package React đang chờ phát hành lần đầu.
 `docs` và `html` là ứng dụng nội bộ, không publish lên npm.
+
+Gallery có liên kết `React / Next.js` trong menu. Khi chạy local, liên kết mở `http://localhost:5174/react/nextjs` (chạy docs bằng `pnpm --filter @element-works/docs dev`). Nếu triển khai gallery và docs ở hai địa chỉ khác nhau, đặt `VITE_REACT_DOCS_URL` thành URL đầy đủ của trang Next.js trước khi build gallery. Khi cùng một domain, đường dẫn mặc định là `/react/nextjs`.
 
 ## Trước mỗi lần phát hành
 
@@ -16,9 +18,9 @@ pnpm install --frozen-lockfile
 pnpm release:check
 ```
 
-Lệnh này build gallery và docs, typecheck, chạy các bài test, sau đó pack bốn package và kiểm tra JS, types, CSS exports cùng version của dependency nội bộ trong tarball. Không dùng `pnpm test:e2e` hay `pnpm lint` làm điều kiện phát hành vì hai script đó hiện chỉ là placeholder.
+Lệnh này build gallery và docs, typecheck, chạy các bài test, sau đó pack năm package và kiểm tra JS, types, CSS exports cùng version của dependency nội bộ trong tarball. Không dùng `pnpm test:e2e` hay `pnpm lint` làm điều kiện phát hành vì hai script đó hiện chỉ là placeholder.
 
-Version `0.1.0` của bốn package đã được phát hành. Khi phát hành bản mới, cập nhật version của các package liên quan, chạy `pnpm install` để cập nhật lockfile, rồi chạy lại `pnpm release:check`. Đảm bảo version chưa tồn tại trên npm.
+Version `0.1.0` của bốn package nền đã được phát hành. Package `@element-works/react` là package mới, chưa được phát hành. Khi phát hành bản mới, cập nhật version của các package liên quan, chạy `pnpm install` để cập nhật lockfile, rồi chạy lại `pnpm release:check`. Đảm bảo version chưa tồn tại trên npm.
 
 ## Publish
 
@@ -30,6 +32,21 @@ pnpm -r publish --access public
 ```
 
 `pnpm` bỏ qua các workspace package có `private: true` và chuyển `workspace:*` thành version cụ thể trong package được publish. Xem lại output của dry run trước khi thực hiện lệnh publish.
+
+Để chỉ phát hành lần đầu package React sau khi các package nền đã có trên npm:
+
+```bash
+pnpm --filter @element-works/react publish --dry-run --no-git-checks
+pnpm --filter @element-works/react publish --access public --no-git-checks
+```
+
+Nếu npm yêu cầu OTP khi phát hành React package, nhập mã kín trong terminal `zsh`:
+
+```zsh
+read -rs "otp?Mã OTP npm: "; echo
+pnpm --filter @element-works/react publish --access public --no-git-checks --otp "$otp"
+unset otp
+```
 
 Nếu npm báo `EOTP`, nhập mã trong terminal của bạn (không chia sẻ mã trong chat). Với shell `zsh`, có thể nhập kín mã và phát hành từ trạng thái repo chưa commit bằng:
 

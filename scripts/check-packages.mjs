@@ -5,7 +5,7 @@ import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
-const packages = ['tokens', 'core', 'motion', 'components'];
+const packages = ['tokens', 'core', 'motion', 'components', 'react'];
 const versions = new Map(packages.map((name) => {
   const manifest = JSON.parse(readFileSync(join(root, 'packages', name, 'package.json'), 'utf8'));
   return [manifest.name, manifest.version];
@@ -32,8 +32,12 @@ try {
     for (const path of ['dist/index.js', 'dist/index.d.ts']) {
       if (!files.has(path)) throw new Error(`${manifest.name}: missing ${path}`);
     }
-    if (name !== 'core' && !files.has(`css/${name}.css`)) {
+    const cssFile = name === 'react' ? 'dist/styles.css' : `css/${name}.css`;
+    if (name !== 'core' && !files.has(cssFile)) {
       throw new Error(`${manifest.name}: missing CSS export`);
+    }
+    if (name === 'react' && !manifest.peerDependencies?.react) {
+      throw new Error(`${manifest.name}: React must be declared as a peer dependency`);
     }
 
     for (const [dependency, range] of Object.entries(manifest.dependencies ?? {})) {
